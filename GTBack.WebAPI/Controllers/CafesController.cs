@@ -110,6 +110,32 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+
+
+
+            var result = _service.Where(x => x.UserName == username).FirstOrDefault();
+            if (result == null)
+            {
+                return BadRequest(" Wrong Username");
+            }
+
+
+            if (!_cService.VerifyPass(result.PasswordSalt, result.PasswordHash, password))
+            {
+                return BadRequest("Wrong Password");
+            }
+
+
+            var customerDto = _mapper.Map<CafeDto>(result);
+
+
+
+            return CreateActionResult(CustomResponseDto<CafeDto>.Success(200, customerDto));
+
+        }
 
     }
 

@@ -23,6 +23,11 @@ namespace GTBack.Service.Mapping
             CreateMap<Customer, CustomerRegisterResponseDto>().ReverseMap();
             CreateMap<Customer, UpdateCustomer>().ReverseMap();
             CreateMap<Customer,CustomerDto>().ReverseMap();
+            CreateMap<Customer, LoginDto>().ReverseMap();
+            CreateMap<Cafe, LoginDto>().ReverseMap();
+
+            CreateMap<Restourant, LoginDto>().ReverseMap();
+
 
 
 
