@@ -3,13 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTBack.Core", "GTBack\GTBack.Core.csproj", "{2266A4D0-9627-44D3-B27C-52026358CE72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTBack.Core", "GTBack\GTBack.Core.csproj", "{2266A4D0-9627-44D3-B27C-52026358CE72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTBack.Repository", "GTBack.Repository\GTBack.Repository.csproj", "{633772D4-9006-4043-A809-29CEB3C8AC8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTBack.Repository", "GTBack.Repository\GTBack.Repository.csproj", "{633772D4-9006-4043-A809-29CEB3C8AC8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTBack.Service", "GTBack.Service\GTBack.Service.csproj", "{1D19AA4D-AA0B-41AC-BAE8-54D4E042DE43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTBack.Service", "GTBack.Service\GTBack.Service.csproj", "{1D19AA4D-AA0B-41AC-BAE8-54D4E042DE43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTBack.WebAPI", "GTBack.WebAPI\GTBack.WebAPI.csproj", "{D364455D-B39E-4FF4-8B2E-014BE6581113}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTBack.WebAPI", "GTBack.WebAPI\GTBack.WebAPI.csproj", "{D364455D-B39E-4FF4-8B2E-014BE6581113}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F10945C-9790-4D2A-9BB3-BBF091C2119A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
