@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GTBack.Core.DTO;
 using GTBack.Core.Entities;
+using GTBack.Core.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;

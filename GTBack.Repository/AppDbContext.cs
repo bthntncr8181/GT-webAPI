@@ -13,13 +13,13 @@ namespace GTBack.Repository
         }
    
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Place> Place { get; set; }
 
 
 
 
 
 
-        
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

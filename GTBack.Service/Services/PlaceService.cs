@@ -3,6 +3,7 @@ using GTBack.Core.DTO;
 using GTBack.Core.Enums;
 using GTBack.Core.Repositories;
 using GTBack.Core.Results;
+using GTBack.Core.Services;
 using GTBack.Core.UnitOfWorks;
 using GTBack.Repository.Models;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +15,18 @@ using System.Threading.Tasks;
 
 namespace GTBack.Service.Services
 {
-    public class PlaceService
+    public class PlaceService:IPlaceService
     {
 
         private readonly PlaceRepository _topicTermRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public PlaceService(IUnitOfWork unitOfWork,
-            IMapper mapper,
-
-
-            PlaceRepository topicTermRepository
-         
-            )
+        public PlaceService(IUnitOfWork unitOfWork,IMapper mapper,PlaceRepository topicTermRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-        
-            _topicTermRepository = topicTermRepository;
+             _topicTermRepository = topicTermRepository;
         
         }
 

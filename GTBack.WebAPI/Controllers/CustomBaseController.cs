@@ -1,9 +1,10 @@
 ﻿
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GTBack.Core.DTO;
 using AutoMapper;
 using GTBack.Core.Services;
+using GTBack.Core.Results;
+using System.Net;
 
 namespace GTBack.WebAPI.Controllers
 {
@@ -31,7 +32,15 @@ namespace GTBack.WebAPI.Controllers
                 StatusCode = response.StatusCode
             };
         }
+        protected IActionResult ApiResult(IResults result)
+        {
+            if ((int)result.StatusCode == 0)
+            {
+                return StatusCode((int)HttpStatusCode.OK, result);
+            }
 
+            return StatusCode((int)result.StatusCode, result);
+        }
 
 
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GTBack.Core.Results
 {
-    public interface IDataResults<T>: IResult
+    public interface IDataResults<T>: IResults
     {
         T Data { get; }
     }

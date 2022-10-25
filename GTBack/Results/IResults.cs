@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GTBack.Core.Results
 {
-    public interface IResult
+    public interface IResults
     {
         bool Success { get; }
         string Message { get; }

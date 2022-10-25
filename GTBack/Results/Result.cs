@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GTBack.Core.Results
 {
-    public class Result
+    public class Result:IResults
     {
         public Result(bool success, string message, HttpStatusCode statusCode) : this(success)
         {

@@ -1,3 +1,4 @@
+using GTBack.Core.Entities;
 using GTBack.Core.Repositories;
 using GTBack.Core.Services;
 using GTBack.Core.UnitOfWorks;
@@ -18,8 +19,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
+builder.Services.AddScoped<PlaceRepository>();
+builder.Services.AddScoped(typeof(IPlaceService), typeof(PlaceService));
 builder.Services.AddScoped(typeof(IService<>),typeof(Service<>));
 builder.Services.AddAutoMapper(typeof(MapProfile));
 
