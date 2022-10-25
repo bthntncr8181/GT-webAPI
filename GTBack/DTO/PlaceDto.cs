@@ -4,29 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GTBack.Core.Entities
+namespace GTBack.Core.DTO
 {
-    public class Customer:BaseEntity
+    public  class PlaceDto
     {
-     
-
 
         public string Username { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Mail { get; set; }
 
-        public int placeId { get; set; }
-
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
 
 
-
-        
-
-
-
-
+        public string password { get; set; }
     }
 }

@@ -14,19 +14,12 @@ namespace GTBack.Service.Mapping
 
         public MapProfile()
         {
-            CreateMap<Cafe, CafeDto>().ReverseMap();
-            CreateMap<Cafe, UpdateCafe>().ReverseMap();
-            CreateMap<Cafe, CafeRegisterResponseDto>().ReverseMap();
-            CreateMap<Category, CategoryDto >().ReverseMap();
-            CreateMap<Restourant, RestourantDto>().ReverseMap();
-            CreateMap<Restourant, UpdateRestourant>().ReverseMap();
-            CreateMap<Customer, CustomerRegisterResponseDto>().ReverseMap();
+            
             CreateMap<Customer, UpdateCustomer>().ReverseMap();
             CreateMap<Customer,CustomerDto>().ReverseMap();
             CreateMap<Customer, LoginDto>().ReverseMap();
-            CreateMap<Cafe, LoginDto>().ReverseMap();
+            CreateMap<Place, PlaceDto>().ReverseMap();
 
-            CreateMap<Restourant, LoginDto>().ReverseMap();
 
 
 

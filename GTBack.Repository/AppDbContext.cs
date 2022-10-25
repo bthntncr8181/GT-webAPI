@@ -11,12 +11,10 @@ namespace GTBack.Repository
         {
 
         }
-        public DbSet<Category> Categories { get; set; }
+   
         public DbSet<Customer> Customers { get; set; }
 
-        public DbSet<Cafe> Cafes { get; set; }
 
-        public DbSet<CustomerFavoriteCafeRelation> CustomerFavoriteCafeRelation { get; set; }
 
 
 
@@ -30,8 +28,7 @@ namespace GTBack.Repository
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
          
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<CustomerFavoriteCafeRelation>().HasOne(a => a.Customer).WithMany(a => a.CustomerFavoriteCafeRelations).HasForeignKey(a=>a.CustomerId);
-            modelBuilder.Entity<CustomerFavoriteCafeRelation>().HasOne(a => a.Cafe).WithMany(a => a.CustomerFavoriteCafeRelations).HasForeignKey(a => a.CafeId);
+    
 
         }
     }

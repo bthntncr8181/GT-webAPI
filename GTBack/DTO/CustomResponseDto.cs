@@ -10,7 +10,7 @@ namespace GTBack.Core.DTO
     public class CustomResponseDto<T>
     {
         public T Data { get; set; }
-        public List<string> Errors { get; set; }
+        public List<string>? Errors { get; set; }
         [JsonIgnore]
         public int StatusCode { get; set; }
 

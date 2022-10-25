@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GTBack.Core.DTO
+namespace GTBack.Repository.Models
 {
-    public class CategoryDto:BaseDTO_
+    public class PlaceListParameters:DefaultListParameters
     {
-        public string Name { get; set; }
+        public int? placeId { get; set; }
     }
 }

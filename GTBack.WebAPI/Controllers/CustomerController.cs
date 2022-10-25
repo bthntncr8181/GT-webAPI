@@ -46,7 +46,7 @@ namespace GTBack.WebAPI.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(int take)
         {
             var customer = await _service.GetAllAsync();
             var customerDto = _mapper.Map<List<CustomerDto>>(customer.ToList());
@@ -112,25 +112,25 @@ namespace GTBack.WebAPI.Controllers
 
         [HttpPost("Login")]
 
-        public async Task<IActionResult> Login(string username,string password)
+        public IActionResult Login(LoginDto log)
         {
 
 
 
-            var result = _service.Where(x => x.UserName == username).FirstOrDefault();
+            var result = _service.Where(x => x.Username == log.UserName).FirstOrDefault();
             if (result == null)
             {
-                return BadRequest(" Wrong Username");
+                return BadRequest("Wrong Username");
             }
 
 
-            if (!_cService.VerifyPass(result.PasswordSalt,result.PasswordHash,password))
+            if (!_cService.VerifyPass(result.PasswordSalt, result.PasswordHash, log.password))
             {
                 return BadRequest("Wrong Password");
             }
 
 
-         var customerDto=_mapper.Map<CustomerDto>(result);
+            var customerDto = _mapper.Map<CustomerDto>(result);
 
 
 
