@@ -8,8 +8,12 @@ namespace GTBack.Core.Entities
 {
     public class Customer:BaseEntity
     {
-     
 
+        public Customer()
+        {
+           
+            placeId = 0;
+        }
 
         public string Username { get; set; }
         public string Name { get; set; }

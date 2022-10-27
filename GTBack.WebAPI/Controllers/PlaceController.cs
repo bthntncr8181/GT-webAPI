@@ -15,15 +15,46 @@ namespace GTBack.WebAPI.Controllers
 
         private readonly IMapper _mapper;
         private readonly IService<Place> _service;
+        private readonly IService<Attributes> _Attservice;
+        private readonly IService<Comments> _comService;
         private readonly CustomService _cService = new CustomService();
         private readonly IPlaceService _pService;
 
 
-        public PlaceController(IService<Place> service, IMapper mapper, IPlaceService pService)
+        public PlaceController(IService<Place> service,IService<Attributes> attservice, IMapper mapper, IPlaceService pService, IService<Comments> comments)
         {
             _service = service;
             _mapper = mapper;
             _pService = pService;
+            _Attservice = attservice;
+            _comService = comments;
+        }
+        [HttpPost("Login")]
+
+        public IActionResult Login(LoginDto log)
+        {
+
+
+
+            var result = _service.Where(x => x.Username == log.UserName).FirstOrDefault();
+            if (result == null)
+            {
+                return BadRequest("Wrong Username");
+            }
+
+
+            if (!_cService.VerifyPass(result.PasswordSalt, result.PasswordHash, log.password))
+            {
+                return BadRequest("Wrong Password");
+            }
+
+
+            var customerDto = _mapper.Map<PlaceDto>(result);
+
+
+
+            return CreateActionResult(CustomResponseDto<PlaceDto>.Success(200, customerDto));
+
         }
 
         [HttpPost("Register")]
@@ -56,6 +87,7 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
+
 
         [HttpGet("{id}")]
 
@@ -104,38 +136,44 @@ namespace GTBack.WebAPI.Controllers
 
 
             var cafe = await _service.GetByIdAsync(x => x.Id == id);
-            await _service.RemoveAsync(cafe);
+            cafe.IsDeleted = true;
+            await _service.UpdateAsync(cafe);
 
             return CreateActionResult(CustomResponseDto<PlaceDto>.Success(204));
 
 
         }
 
-        [HttpPost("Login")]
+        [HttpGet("Attr")]
+        public async Task<IActionResult> Attr([FromQuery] int placeId)
+        {
+            return ApiResult(await _pService.GetAttr(placeId));
 
-        public IActionResult Login(LoginDto log)
+
+        }
+        [HttpPost("Attr")]
+        public async Task<IActionResult> AddAttr(AttrDto attr)
+        {
+
+
+            var user = await _Attservice.AddAsync(_mapper.Map<Attributes>(attr));
+
+
+            var userDto = _mapper.Map<AttrDto>(user);
+
+
+
+            return CreateActionResult(CustomResponseDto<AttrDto>.Success(201, userDto));
+
+        }
+
+        [HttpGet("Comment")]
+        public async Task<IActionResult> Comment([FromQuery] int placeId)
         {
 
 
 
-            var result = _service.Where(x => x.Username == log.UserName).FirstOrDefault();
-            if (result == null)
-            {
-                return BadRequest("Wrong Username");
-            }
-
-
-            if (!_cService.VerifyPass(result.PasswordSalt, result.PasswordHash, log.password))
-            {
-                return BadRequest("Wrong Password");
-            }
-
-
-            var customerDto = _mapper.Map<PlaceDto>(result);
-
-
-
-            return CreateActionResult(CustomResponseDto<PlaceDto>.Success(200, customerDto));
+            return ApiResult(await _pService.GetPlaceComments(placeId));
 
         }
 

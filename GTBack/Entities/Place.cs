@@ -8,6 +8,11 @@ namespace GTBack.Core.Entities
 {
     public class Place:BaseEntity
     {
+        public Place()
+        {
+            
+            cusutomerId = 0;
+        }
 
         public string Username { get; set; }
         public string Name { get; set; }
@@ -16,6 +21,8 @@ namespace GTBack.Core.Entities
         public string Phone { get; set; }
         public string Address {get; set; }
     
+        public ICollection<Attributes> Attributes { get; set; }
+        public int? cusutomerId { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
 

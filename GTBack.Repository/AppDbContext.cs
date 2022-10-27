@@ -14,6 +14,8 @@ namespace GTBack.Repository
    
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Place> Place { get; set; }
+        public DbSet<Comments> Comments { get; set; }
+        public DbSet<Attributes> Attributes { get; set; }
 
 
 

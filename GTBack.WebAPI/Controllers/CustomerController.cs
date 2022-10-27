@@ -14,12 +14,42 @@ namespace GTBack.WebAPI.Controllers
 
         private readonly IMapper _mapper;
         private readonly IService<Customer> _service;
+        private readonly IService<Comments> _comService;
         private readonly CustomService _cService = new CustomService();
 
-        public CustomerController(IService<Customer> service, IMapper mapper)
+        public CustomerController(IService<Customer> service, IMapper mapper,IService<Comments> comments)
         {
             _service = service;
             _mapper = mapper;
+            _comService = comments;
+        }
+
+        [HttpPost("Login")]
+
+        public IActionResult Login(LoginDto log)
+        {
+
+
+
+            var result = _service.Where(x => x.Username == log.UserName).FirstOrDefault();
+            if (result == null)
+            {
+                return BadRequest("Wrong Username");
+            }
+
+
+            if (!_cService.VerifyPass(result.PasswordSalt, result.PasswordHash, log.password))
+            {
+                return BadRequest("Wrong Password");
+            }
+
+
+            var customerDto = _mapper.Map<CustomerDto>(result);
+
+
+
+            return CreateActionResult(CustomResponseDto<CustomerDto>.Success(200, customerDto));
+
         }
 
         [HttpPost("Register")]
@@ -103,38 +133,28 @@ namespace GTBack.WebAPI.Controllers
 
 
             var cafe = await _service.GetByIdAsync(x => x.Id == id);
-            await _service.RemoveAsync(cafe);
+            cafe.IsDeleted = true;
+            await _service.UpdateAsync(cafe);
 
             return CreateActionResult(CustomResponseDto<CustomerDto>.Success(204));
 
 
         }
 
-        [HttpPost("Login")]
+        [HttpPost("Comment")]
 
-        public IActionResult Login(LoginDto log)
+        public async Task<IActionResult> Comment(CommentDto com)
         {
 
 
-
-            var result = _service.Where(x => x.Username == log.UserName).FirstOrDefault();
-            if (result == null)
-            {
-                return BadRequest("Wrong Username");
-            }
+            var user = await _comService.AddAsync(_mapper.Map<Comments>(com));
 
 
-            if (!_cService.VerifyPass(result.PasswordSalt, result.PasswordHash, log.password))
-            {
-                return BadRequest("Wrong Password");
-            }
-
-
-            var customerDto = _mapper.Map<CustomerDto>(result);
+            var userDto = _mapper.Map<CommentDto>(user);
 
 
 
-            return CreateActionResult(CustomResponseDto<CustomerDto>.Success(200, customerDto));
+            return CreateActionResult(CustomResponseDto<CommentDto>.Success(201, userDto));
 
         }
 
