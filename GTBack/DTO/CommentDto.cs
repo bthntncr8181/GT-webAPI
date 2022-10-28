@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace GTBack.Core.DTO
 {
     public class CommentDto
-    {
+    {   
+        public int Id { get; set; }
         public int placeId { get; set; }
 
 

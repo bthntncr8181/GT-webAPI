@@ -167,15 +167,6 @@ namespace GTBack.WebAPI.Controllers
 
         }
 
-        [HttpGet("Comment")]
-        public async Task<IActionResult> Comment([FromQuery] int placeId)
-        {
-
-
-
-            return ApiResult(await _pService.GetPlaceComments(placeId));
-
-        }
 
     }
 }

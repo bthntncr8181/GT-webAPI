@@ -41,7 +41,7 @@ namespace GTBack.Service.Services
         {
             var realAttr = _mapper.Map<Attributes>(attr);
             await _attributesRepository.AddAsync(realAttr);
-
+            
             return new SuccessResult();
         }
 
@@ -54,7 +54,7 @@ namespace GTBack.Service.Services
         }
         public async Task<IDataResults<ICollection<CommentResDto>>> GetPlaceComments(int placeId)
         {
-            var query = _commmentsService.Where(x => x.placeId == placeId);
+            var query = _commmentsService.Where(x => x.placeId == placeId&& !x.IsDeleted);
             var data = _mapper.Map<ICollection<CommentResDto>>(await query.ToListAsync());
             foreach (var comment in data)
             {

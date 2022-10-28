@@ -141,22 +141,6 @@ namespace GTBack.WebAPI.Controllers
 
         }
 
-        [HttpPost("Comment")]
-
-        public async Task<IActionResult> Comment(CommentDto com)
-        {
-
-
-            var user = await _comService.AddAsync(_mapper.Map<Comments>(com));
-
-
-            var userDto = _mapper.Map<CommentDto>(user);
-
-
-
-            return CreateActionResult(CustomResponseDto<CommentDto>.Success(201, userDto));
-
-        }
 
     }
 }
