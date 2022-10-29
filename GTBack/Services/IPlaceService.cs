@@ -16,5 +16,9 @@ namespace GTBack.Core.Services
         Task<IDataResults<ICollection<AttrDto>>> GetAttr(int placeId);
         Task<IResults> AddAttr(AttrDto attr);
         Task<IDataResults<ICollection<CommentResDto>>> GetPlaceComments(int placeId);
+
+        Task<IDataResults<PlaceDto>> GetById (int id);
+
+        Task<IResults> Put(UpdatePlace place); 
     }
 }

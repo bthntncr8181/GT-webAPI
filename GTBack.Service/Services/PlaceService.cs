@@ -21,13 +21,15 @@ namespace GTBack.Service.Services
     {
 
         private readonly PlaceRepository _placeRepository;
+        private readonly IService<Place> _service;
+        private readonly IService<Attributes> _Attservice;
         private readonly AttributesRepository _attributesRepository;
         private readonly IService<Comments> _commmentsService;
         private readonly IService<Customer> _customerService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public PlaceService(IUnitOfWork unitOfWork,IMapper mapper, PlaceRepository placeRepository, AttributesRepository attributesRepository, IService<Comments> commmentsService, IService<Customer> customerService )
+        public PlaceService(IService<Attributes> attservice, IService<Place> service,IUnitOfWork unitOfWork,IMapper mapper, PlaceRepository placeRepository, AttributesRepository attributesRepository, IService<Comments> commmentsService, IService<Customer> customerService )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -35,12 +37,14 @@ namespace GTBack.Service.Services
             _attributesRepository = attributesRepository;
             _commmentsService = commmentsService;
             _customerService = customerService;
+            _service= service;
+            _Attservice = attservice;
         }
 
         public async Task<IResults> AddAttr(AttrDto attr)
         {
             var realAttr = _mapper.Map<Attributes>(attr);
-            await _attributesRepository.AddAsync(realAttr);
+            await _Attservice.AddAsync(realAttr);
             
             return new SuccessResult();
         }
@@ -63,6 +67,41 @@ namespace GTBack.Service.Services
             }
             var totalCount = await query.CountAsync();
             return new SuccessDataResult<ICollection<CommentResDto>>(data, totalCount);
+        }
+        public async Task<IDataResults<PlaceDto>> GetById(int id)
+        {
+            var place = await  _placeRepository.GetByIdAsync(x => x.Id == id);
+
+           
+            var data = _mapper.Map<PlaceDto>( place);
+            return new SuccessDataResult<PlaceDto>(data);
+        }
+        public async Task<IResults> Put(UpdatePlace entiti)
+        {
+            var place = await _placeRepository.GetByIdAsync(x => x.Id == entiti.Id);
+
+            var place2 = _mapper.Map<Place>(place);
+
+            place2.PasswordSalt = place.PasswordSalt;
+            place2.PasswordHash = place.PasswordHash;
+            await _service.UpdateAsync(place2);
+                
+
+            return new SuccessResult();
+        }
+        public async Task<IResults> Delete(int id)
+        {
+            var place = await _placeRepository.GetByIdAsync(x => x.Id == id);
+
+            var place2 = _mapper.Map<Place>(place);
+
+            place2.PasswordSalt = place.PasswordSalt;
+            place2.PasswordHash = place.PasswordHash;
+            place2.IsDeleted = true;
+            await _service.UpdateAsync(place2);
+
+
+            return new SuccessResult();
         }
 
 
@@ -103,6 +142,5 @@ namespace GTBack.Service.Services
             return new SuccessDataResult<ICollection<PlaceDto>>(data, totalCount);
         }
 
-     
     }
 }

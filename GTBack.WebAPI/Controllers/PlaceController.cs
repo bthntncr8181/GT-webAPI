@@ -93,37 +93,17 @@ namespace GTBack.WebAPI.Controllers
 
         public async Task<IActionResult> GetById(int id)
         {
-            var customer = await _service.GetByIdAsync(x => x.Id == id);
-            var customerDto = _mapper.Map<PlaceDto>(customer);
-
-            return CreateActionResult(CustomResponseDto<PlaceDto>.Success(200, customerDto));
+            return ApiResult(await _pService.GetById(id));
 
 
         }
 
 
         [HttpPut]
-        public async Task<IActionResult> Put(UpdateCustomer Entiti)
+        public async Task<IActionResult> Put(UpdatePlace Entiti)
         {
 
-            var cafe = await _service.GetByIdAsync(x => x.Id == Entiti.Id);
-
-            var cafe2 = _mapper.Map<Place>(Entiti);
-
-            cafe2.PasswordSalt = cafe.PasswordSalt;
-            cafe2.PasswordHash = cafe.PasswordHash;
-
-
-
-
-            await _service.UpdateAsync(cafe2);
-
-
-
-
-
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204));
-
+            return ApiResult(await _pService.Put(Entiti));
 
         }
 
@@ -156,14 +136,7 @@ namespace GTBack.WebAPI.Controllers
         {
 
 
-            var user = await _Attservice.AddAsync(_mapper.Map<Attributes>(attr));
-
-
-            var userDto = _mapper.Map<AttrDto>(user);
-
-
-
-            return CreateActionResult(CustomResponseDto<AttrDto>.Success(201, userDto));
+            return ApiResult(await _pService.AddAttr(attr));
 
         }
 
