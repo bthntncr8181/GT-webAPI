@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using GTBack.Core.DTO;
+using GTBack.Core.Entities;
+using System.Linq.Expressions;
 
 namespace GTBack.Core.Services
 {
@@ -19,5 +21,15 @@ namespace GTBack.Core.Services
         Task RemoveAsync(T entity);
 
         Task RemoveRangeAsync(IEnumerable<T> entities);
+
+        Task<T?> FindAsNoTrackingAsync(Expression<Func<T, bool>> expression);
+
+
+
+        Task<T?> FindAsync(Expression<Func<T, bool>> expression);
+
+        void Remove(Expression<Func<T, bool>> expression);
+
+
     }
 }

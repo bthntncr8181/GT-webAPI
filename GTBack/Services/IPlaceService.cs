@@ -19,6 +19,9 @@ namespace GTBack.Core.Services
 
         Task<IDataResults<PlaceDto>> GetById (int id);
 
-        Task<IResults> Put(UpdatePlace place); 
+        Task<IResults> Put(UpdatePlace place);
+        Task<IDataResults<PlaceDto>> Register(PlaceDto place);
+
+        Task<IResults> Delete(int id);
     }
 }

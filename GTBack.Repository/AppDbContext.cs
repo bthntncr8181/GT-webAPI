@@ -17,6 +17,8 @@ namespace GTBack.Repository
         public DbSet<Comments> Comments { get; set; }
         public DbSet<Attributes> Attributes { get; set; }
 
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
 
 
 

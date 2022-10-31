@@ -25,11 +25,9 @@ namespace GTBack.WebAPI.Controllers
             _comService = comments;
             _pService = pService;
         }
-       
 
 
 
-       
 
 
 

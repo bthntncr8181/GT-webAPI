@@ -1,4 +1,6 @@
-﻿using GTBack.Core.Repositories;
+﻿using GTBack.Core.DTO;
+using GTBack.Core.Entities;
+using GTBack.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -61,6 +63,24 @@ namespace GTBack.Repository.Repositories
         public IQueryable<T> Where(Expression<Func<T, bool>> expression)
         {
             return _dbSet.Where(expression);    
+        }
+        public async Task<T?> FindAsNoTrackingAsync(Expression<Func<T, bool>> expression)
+        {
+            return await _context
+               .Set<T>()
+               .Where(expression)
+               .AsNoTracking()
+               .SingleOrDefaultAsync();
+        }
+        public async Task<T?> FindAsync(Expression<Func<T, bool>> expression)
+        {
+            return await _context.Set<T>()
+                .Where(expression)
+                .FirstOrDefaultAsync();
+        }
+        public void Remove(Expression<Func<T, bool>> expression)
+        {
+            _context.Set<T>().RemoveRange(_context.Set<T>().Where(expression));
         }
     }
 }

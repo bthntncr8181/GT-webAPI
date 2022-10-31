@@ -23,9 +23,10 @@ namespace GTBack.Service.Mapping
             CreateMap<Attributes, AttrDto>().ReverseMap();
             CreateMap<Comments, CommentDto>().ReverseMap();
             CreateMap<CommentResDto, Comments>().ReverseMap();
+            CreateMap<RefreshToken, RefreshTokenDto>().ReverseMap();
 
 
-
+       
 
 
         }

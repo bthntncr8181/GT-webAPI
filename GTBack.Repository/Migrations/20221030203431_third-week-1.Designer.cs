@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GTBack.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221027113214_second-week-5")]
-    partial class secondweek5
+    [Migration("20221030203431_third-week-1")]
+    partial class thirdweek1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -116,13 +116,13 @@ namespace GTBack.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("PasswordHash")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("PasswordSalt")
+                    b.Property<string>("PasswordSalt")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -135,10 +135,14 @@ namespace GTBack.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("placeId")
+                    b.Property<int?>("placeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("placeId")
+                        .IsUnique()
+                        .HasFilter("[placeId] IS NOT NULL");
 
                     b.ToTable("Customers");
                 });
@@ -169,35 +173,39 @@ namespace GTBack.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("cusutomerId")
+                    b.Property<int>("cusutomerId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.ToTable("Place");
+                });
+
+            modelBuilder.Entity("GTBack.Core.Entities.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("customerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("customerId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.Attributes", b =>
@@ -230,9 +238,35 @@ namespace GTBack.Repository.Migrations
                     b.Navigation("Place");
                 });
 
+            modelBuilder.Entity("GTBack.Core.Entities.Customer", b =>
+                {
+                    b.HasOne("GTBack.Core.Entities.Place", "Place")
+                        .WithOne("customer")
+                        .HasForeignKey("GTBack.Core.Entities.Customer", "placeId");
+
+                    b.Navigation("Place");
+                });
+
+            modelBuilder.Entity("GTBack.Core.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("GTBack.Core.Entities.Customer", "Customer")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("customerId");
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("GTBack.Core.Entities.Customer", b =>
+                {
+                    b.Navigation("RefreshTokens");
+                });
+
             modelBuilder.Entity("GTBack.Core.Entities.Place", b =>
                 {
                     b.Navigation("Attributes");
+
+                    b.Navigation("customer")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

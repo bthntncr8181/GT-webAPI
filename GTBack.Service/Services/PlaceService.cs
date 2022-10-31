@@ -78,13 +78,11 @@ namespace GTBack.Service.Services
         }
         public async Task<IResults> Put(UpdatePlace entiti)
         {
-            var place = await _placeRepository.GetByIdAsync(x => x.Id == entiti.Id);
+            
 
-            var place2 = _mapper.Map<Place>(place);
+            var place = _mapper.Map<Place>(entiti);
 
-            place2.PasswordSalt = place.PasswordSalt;
-            place2.PasswordHash = place.PasswordHash;
-            await _service.UpdateAsync(place2);
+            await _service.UpdateAsync(place);
                 
 
             return new SuccessResult();
@@ -93,15 +91,31 @@ namespace GTBack.Service.Services
         {
             var place = await _placeRepository.GetByIdAsync(x => x.Id == id);
 
-            var place2 = _mapper.Map<Place>(place);
+         
 
-            place2.PasswordSalt = place.PasswordSalt;
-            place2.PasswordHash = place.PasswordHash;
-            place2.IsDeleted = true;
-            await _service.UpdateAsync(place2);
+            place.IsDeleted = true;
+            await _service.UpdateAsync(place);
 
 
             return new SuccessResult();
+        }
+        public async Task<IDataResults<PlaceDto>> Register(PlaceDto place)
+        {
+
+       
+
+
+
+
+            var user = await _service.AddAsync(_mapper.Map<Place>(place));
+
+
+            var userDto = _mapper.Map<PlaceDto>(user);
+
+
+
+         
+            return new SuccessDataResult<PlaceDto>(userDto);
         }
 
 
@@ -138,6 +152,10 @@ namespace GTBack.Service.Services
             {
                 query = query.Take(parameters.Take.Value);
             }
+
+            query = query.Where(x => x.Name == parameters.Search);
+
+
             var data = _mapper.Map<ICollection<PlaceDto>>(await query.ToListAsync());
             return new SuccessDataResult<ICollection<PlaceDto>>(data, totalCount);
         }

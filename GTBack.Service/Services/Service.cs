@@ -1,4 +1,6 @@
 ﻿
+using GTBack.Core.DTO;
+using GTBack.Core.Entities;
 using GTBack.Core.Repositories;
 using GTBack.Core.Services;
 using GTBack.Core.UnitOfWorks;
@@ -12,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace GTBack.Service.Services
 {
+
     public class Service<T>: IService<T> where T : class
     {
 
@@ -87,5 +90,24 @@ return await _repository.AnyAsync(expression);
 
             return _repository.Where(expression);
         }
+
+        public Task<T?> FindAsNoTrackingAsync(Expression<Func<T, bool>> expression)
+        {
+            return _repository.FindAsNoTrackingAsync(expression);
+        }
+
+
+        public async Task<T?> FindAsync(Expression<Func<T, bool>> expression)
+        {
+            return await _repository.FindAsync(expression);
+                
+                
+                }
+
+        public void Remove(Expression<Func<T, bool>> expression)
+        {
+              _repository.Remove(expression);
+        }
+
     }
 }
