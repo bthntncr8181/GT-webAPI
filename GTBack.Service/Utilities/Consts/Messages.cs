@@ -10,10 +10,13 @@ namespace GTBack.Service.Utilities
     {
         public const string User_Login_Message_Notvalid = "Username or Password is wrong";
         public const string User_Email_Exists = "This email is already registered";
+        public const string User_Username_Exist = "This Username is already registered";
         public const string User_NotFound_Message = "No such user";
         public const string User_Login_Success_Message = "Login succesful";
         public const string User_Register_Success_Message = "User have been registered succesfully";
         public const string Old_Password_Wrong = "Old password is wrong";
+        public const string Password_Wrong = "Password is wrong";
+
 
         public const string Add_Operation_Success_Message = "The record have been added succesfully";
         public const string Add_Operation_Error_Message = "An error occured on adding record";

@@ -13,7 +13,8 @@ using GTBack.Service.Services;
 using GTBack.Service.Utilities.Jwt;
 using GTBack.WebAPI.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.Swagger;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -60,11 +61,10 @@ builder.Services.AddDbContext<AppDbContext>(x =>
 var app = builder.Build(); 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+
 app.UseAuthentication();
 
 
