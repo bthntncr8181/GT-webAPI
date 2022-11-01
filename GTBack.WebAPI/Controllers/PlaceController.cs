@@ -4,6 +4,7 @@ using GTBack.Core.Entities;
 using GTBack.Core.Services;
 using GTBack.Repository.Models;
 using GTBack.Service.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,8 +30,14 @@ namespace GTBack.WebAPI.Controllers
             _Attservice = attservice;
             _comService = comments;
         }
+        [Authorize]
+        [HttpPost("register")]
+        public async Task<IActionResult> List( PlaceDto place)
+        {
+            return ApiResult(await _pService.Register(place));
 
-     
+
+        }
 
         [HttpGet("")] 
         public async Task<IActionResult> List([FromQuery] PlaceListParameters place)

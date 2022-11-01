@@ -78,13 +78,21 @@ namespace GTBack.Service.Services
             }
 
             var username = registerDto.UserName.ToLower().Trim();
+            var mail = registerDto.Mail.ToLower().Trim();
             var user = await _service.GetByIdAsync((x => x.Username.ToLower() == username && !x.IsDeleted));//get by mail eklenecek
+            var user2 = await _service.GetByIdAsync((x => x.Mail.ToLower() == mail && !x.IsDeleted));//get by mail eklenecek
 
-            if (user != null)
+            if (user!=null)
+            {
+                valResult.Errors.Add("", Messages.User_Username_Exist);
+                return new ErrorDataResults<AuthenticatedUserResponseDto>(HttpStatusCode.BadRequest, valResult.Errors);
+            }
+            else if (user2!=null)
             {
                 valResult.Errors.Add("", Messages.User_Email_Exists);
                 return new ErrorDataResults<AuthenticatedUserResponseDto>(HttpStatusCode.BadRequest, valResult.Errors);
             }
+
 
 
             user = new Customer()
@@ -180,7 +188,7 @@ namespace GTBack.Service.Services
             var valResult = FluentValidationTool.ValidateModelWithKeyResult(_validatorFactory.GetValidator<LoginDto>(), loginDto);
             if (valResult.Success == false)
             {
-                return new ErrorDataResults<AuthenticatedUserResponseDto>( "ErrorValidate",HttpStatusCode.BadRequest);
+                return new ErrorDataResults<AuthenticatedUserResponseDto>( HttpStatusCode.BadRequest,valResult.Errors);
             }
            var  username = loginDto.UserName.ToLower().Trim();
             var parent = await _service.GetByIdAsync((x => x.Username.ToLower() == username && !x.IsDeleted));//get by mail eklenecek
@@ -188,13 +196,13 @@ namespace GTBack.Service.Services
            
             if (parent?.PasswordHash == null)
             {
-                valResult.Errors.Add("", Messages.User_Login_Message_Notvalid);
-                return new ErrorDataResults<AuthenticatedUserResponseDto>("ErrorValidate", HttpStatusCode.BadRequest);
+                valResult.Errors.Add("", Messages.User_NotFound_Message);
+                return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.User_NotFound_Message, HttpStatusCode.BadRequest);
             }
             if (!Utilities.SHA1.Verify(loginDto.password, parent.PasswordHash))
             {
                 valResult.Errors.Add("", Messages.User_Login_Message_Notvalid);
-                return new ErrorDataResults<AuthenticatedUserResponseDto>("ErrorValidate", HttpStatusCode.BadRequest);
+                return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.Password_Wrong, HttpStatusCode.BadRequest);
             }
             parent.UpdatedDate = DateTime.UtcNow;
             await _unitOfWork.CommitAsync();

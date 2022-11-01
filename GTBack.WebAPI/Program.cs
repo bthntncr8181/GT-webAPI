@@ -13,7 +13,8 @@ using GTBack.Service.Services;
 using GTBack.Service.Utilities.Jwt;
 using GTBack.WebAPI.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.Swagger;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +26,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Info { title = "Go-There", version = "v1" });
+});
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
 builder.Services.AddScoped<PlaceRepository>();
@@ -60,11 +64,10 @@ builder.Services.AddDbContext<AppDbContext>(x =>
 var app = builder.Build(); 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+
 app.UseAuthentication();
 
 

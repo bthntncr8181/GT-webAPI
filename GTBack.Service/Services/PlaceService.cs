@@ -8,10 +8,16 @@ using GTBack.Core.Services;
 using GTBack.Core.UnitOfWorks;
 using GTBack.Repository.Models;
 using GTBack.Repository.Repositories;
+using GTBack.Service.Utilities.Jwt;
+using GTBack.Service.Validation;
+using GTBack.Service.Validation.Tool;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,11 +31,13 @@ namespace GTBack.Service.Services
         private readonly IService<Attributes> _Attservice;
         private readonly AttributesRepository _attributesRepository;
         private readonly IService<Comments> _commmentsService;
+        private readonly ClaimsPrincipal? _loggedUser;
         private readonly IService<Customer> _customerService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IJwtTokenService _tokenService;
 
-        public PlaceService(IService<Attributes> attservice, IService<Place> service,IUnitOfWork unitOfWork,IMapper mapper, PlaceRepository placeRepository, AttributesRepository attributesRepository, IService<Comments> commmentsService, IService<Customer> customerService )
+        public PlaceService(IService<Attributes> attservice, IJwtTokenService tokenService, IService<Place> service,IUnitOfWork unitOfWork,IMapper mapper, IHttpContextAccessor httpContextAccessor, PlaceRepository placeRepository, AttributesRepository attributesRepository, IService<Comments> commmentsService, IService<Customer> customerService )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -39,6 +47,8 @@ namespace GTBack.Service.Services
             _customerService = customerService;
             _service= service;
             _Attservice = attservice;
+            _tokenService = tokenService;
+            _loggedUser = httpContextAccessor.HttpContext?.User;
         }
 
         public async Task<IResults> AddAttr(AttrDto attr)
@@ -99,23 +109,56 @@ namespace GTBack.Service.Services
 
             return new SuccessResult();
         }
-        public async Task<IDataResults<PlaceDto>> Register(PlaceDto place)
+
+        public int? GetLoggedUserId()
+        {
+            var userRoleString = _loggedUser.FindFirstValue("Id");
+            if (int.TryParse(userRoleString, out var userId))
+            {
+
+                return userId;
+            }
+            return null;
+        }
+        public async Task<IDataResults<Place>> Register(PlaceDto registerDto)
         {
 
-       
+
+            var valResult = FluentValidationTool.ValidateModelWithKeyResult<PlaceDto>(new PlaceRegisterValidator(), registerDto);
+            if (valResult.Success == false)
+            {
+
+                return new ErrorDataResults<Place>(HttpStatusCode.BadRequest, valResult.Errors);
+            }
+
+           
+           
+            var id=GetLoggedUserId();
+
+
+
+            var place = new Place()
+            {
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                Mail = registerDto.Mail,
+                cusutomerId = (int)id,
+                IsDeleted = false,
+                Name = registerDto.Name,
+                Address = registerDto.Address,
+                Phone=registerDto.Phone
+
+
+            };
+
+                    await _service.AddAsync(place);
+            await _unitOfWork.CommitAsync();
+
+            return new SuccessDataResult<Place>(place );
 
 
 
 
-            var user = await _service.AddAsync(_mapper.Map<Place>(place));
-
-
-            var userDto = _mapper.Map<PlaceDto>(user);
-
-
-
-         
-            return new SuccessDataResult<PlaceDto>(userDto);
         }
 
 
