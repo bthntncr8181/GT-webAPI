@@ -13,7 +13,7 @@ env:
   AZURE_APIM_APPSERVICEURL: https://gtbackwebapi20221101120713.azurewebsites.net
   SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 5.6.3
   SWASHBUCKLE_DOTNET_CORE_VERSION: 3.1.x
-  API_IMPORT_SPECIFICATION_PATH: GTBack.WebAPI\publish\swagger.json
+  API_IMPORT_SPECIFICATION_PATH: GTBack.WebAPI\bin\Release\net6.0\swagger.json
   API_IMPORT_DLL: GTBack.WebAPI\bin\Release\net6.0\GTBack.WebAPI.dll
   API_IMPORT_VERSION: v1
   CONFIGURATION: Release
@@ -43,7 +43,8 @@ jobs:
     - name: Install Swashbuckle CLI .NET Global Tool
       run: dotnet tool install --global Swashbuckle.AspNetCore.Cli --version ${{ env.SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION }}
       working-directory: ${{ env.WORKING_DIRECTORY }}
-
+    - name: Generate Open API Specification Document
+      run: swagger tofile --output "${{ env.API_IMPORT_SPECIFICATION_PATH }}" "${{ env.API_IMPORT_DLL }}" "${{ env.API_IMPORT_VERSION }}"
     - name: Publish Artifacts
       uses: actions/upload-artifact@v1.0.0
       with:
