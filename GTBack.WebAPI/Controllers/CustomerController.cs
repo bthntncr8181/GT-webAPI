@@ -25,10 +25,9 @@ namespace GTBack.WebAPI.Controllers
             _service = service;
             _mapper = mapper;
         }
+  
 
-      
 
-      
 
 
         [HttpGet]

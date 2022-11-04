@@ -30,22 +30,24 @@ namespace GTBack.Service.Services
         private readonly IService<Place> _service;
         private readonly IService<Attributes> _Attservice;
         private readonly AttributesRepository _attributesRepository;
-        private readonly IService<Comments> _commmentsService;
+        private readonly IService<ExtensionStrings> _extensionService;
+        private readonly IService<Comments> _commentservice;
         private readonly ClaimsPrincipal? _loggedUser;
         private readonly IService<Customer> _customerService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IJwtTokenService _tokenService;
 
-        public PlaceService(IService<Attributes> attservice, IJwtTokenService tokenService, IService<Place> service,IUnitOfWork unitOfWork,IMapper mapper, IHttpContextAccessor httpContextAccessor, PlaceRepository placeRepository, AttributesRepository attributesRepository, IService<Comments> commmentsService, IService<Customer> customerService )
+        public PlaceService(IService<Comments> commentservice,IService<Attributes> attservice, IJwtTokenService tokenService, IService<Place> service,IUnitOfWork unitOfWork,IMapper mapper, IHttpContextAccessor httpContextAccessor, PlaceRepository placeRepository, AttributesRepository attributesRepository, IService<ExtensionStrings> extensionService, IService<Customer> customerService )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _placeRepository = placeRepository;
             _attributesRepository = attributesRepository;
-            _commmentsService = commmentsService;
+            _extensionService = extensionService;
             _customerService = customerService;
             _service= service;
+            _commentservice= commentservice;
             _Attservice = attservice;
             _tokenService = tokenService;
             _loggedUser = httpContextAccessor.HttpContext?.User;
@@ -68,7 +70,7 @@ namespace GTBack.Service.Services
         }
         public async Task<IDataResults<ICollection<CommentResDto>>> GetPlaceComments(int placeId)
         {
-            var query = _commmentsService.Where(x => x.placeId == placeId&& !x.IsDeleted);
+            var query = _commentservice.Where(x => x.placeId == placeId&& !x.IsDeleted);
             var data = _mapper.Map<ICollection<CommentResDto>>(await query.ToListAsync());
             foreach (var comment in data)
             {
@@ -88,10 +90,10 @@ namespace GTBack.Service.Services
         }
         public async Task<IResults> Put(UpdatePlace entiti)
         {
-            
 
+            var id = GetLoggedUserId();
             var place = _mapper.Map<Place>(entiti);
-
+            place.cusutomerId = (int)id;
             await _service.UpdateAsync(place);
                 
 
@@ -160,7 +162,14 @@ namespace GTBack.Service.Services
 
 
         }
+        public async Task<IDataResults<ICollection<ExtensionDto>>> GetPlaceExtensions(int placeId)
+        {
+            var query = _extensionService.Where(x => x.placeId == placeId && !x.IsDeleted);
+            var data = _mapper.Map<ICollection<ExtensionDto>>(await query.ToListAsync());
 
+            var totalCount = await query.CountAsync();
+            return new SuccessDataResult<ICollection<ExtensionDto>>(data, totalCount);
+        }
 
         public async Task<IDataResults<ICollection<PlaceDto>>> List(PlaceListParameters parameters)
         {
@@ -184,8 +193,11 @@ namespace GTBack.Service.Services
                 query = query.Where(x => x.Id == parameters.placeId.Value);
             }
 
-            var totalCount = await query.CountAsync();
-
+         
+            if (parameters.Search != null)
+            {
+                query = query.Where(x => x.Name.Contains(parameters.Search));
+            }
             if (parameters.Skip.HasValue)
             {
                 query = query.Skip(parameters.Skip.Value);
@@ -196,9 +208,9 @@ namespace GTBack.Service.Services
                 query = query.Take(parameters.Take.Value);
             }
 
-            query = query.Where(x => x.Name == parameters.Search);
 
 
+            var totalCount = await query.CountAsync();
             var data = _mapper.Map<ICollection<PlaceDto>>(await query.ToListAsync());
             return new SuccessDataResult<ICollection<PlaceDto>>(data, totalCount);
         }

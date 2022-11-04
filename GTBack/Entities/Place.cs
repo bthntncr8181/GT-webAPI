@@ -8,13 +8,17 @@ namespace GTBack.Core.Entities
 {
     public class Place:BaseEntity
     {
+        public int placeId;
 
-       
         public string Name { get; set; }
         public string Mail { get; set; }
         public string Phone { get; set; }
         public string Address {get; set; }
-    
+        
+        public string? imgUrl { get; set; }
+
+        public long favCount { get; set; }
+        public ICollection<ExtensionStrings> ExtensionStrings { get; set; }
         public ICollection<Attributes> Attributes { get; set; }
         public int cusutomerId { get; set; }
 

@@ -38,7 +38,7 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
-
+        [Authorize]
         [HttpGet("")] 
         public async Task<IActionResult> List([FromQuery] PlaceListParameters place)
         {
@@ -46,7 +46,7 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -54,7 +54,7 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
-
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Put(UpdatePlace Entiti)
         {
@@ -62,7 +62,7 @@ namespace GTBack.WebAPI.Controllers
             return ApiResult(await _pService.Put(Entiti));
 
         }
-
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteById(int id)
         {
@@ -71,7 +71,16 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
+        [Authorize]
+        [HttpGet("Extensions")]
+        public async Task<IActionResult> GetExtensions(int id)
+        {
 
+            return ApiResult(await _pService.GetPlaceExtensions(id));
+
+
+        }
+        [Authorize]
         [HttpGet("Attr")]
         public async Task<IActionResult> Attr([FromQuery] int placeId)
         {
@@ -79,7 +88,7 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
-
+        [Authorize]
         [HttpPost("Attr")]
         public async Task<IActionResult> AddAttr(AttrDto attr)
         {

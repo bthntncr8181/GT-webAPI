@@ -12,6 +12,7 @@ namespace GTBack.Core.Services
 {
     public interface IPlaceService
     {
+        Task<IDataResults<ICollection<ExtensionDto>>> GetPlaceExtensions(int placeId);
         Task<IDataResults<ICollection<PlaceDto>>> List(PlaceListParameters parameters);
 
         Task<IDataResults<ICollection<AttrDto>>> GetAttr(int placeId);

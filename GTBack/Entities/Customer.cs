@@ -17,6 +17,10 @@ namespace GTBack.Core.Entities
         public Place? Place { get; set; }
         public int? placeId { get; set; }
 
+        public string? profileİmgUrl { get; set; }
+
+       
+
         public string PasswordHash { get; set; }
         
 

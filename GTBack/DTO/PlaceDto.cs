@@ -9,7 +9,6 @@ namespace GTBack.Core.DTO
     public  class PlaceDto
     {
 
-       
         public string Name { get; set; }
      
         public string Mail { get; set; }

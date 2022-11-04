@@ -137,7 +137,10 @@ namespace GTBack.Service.Services
                 query = query.Where(x => x.Id == parameters.customerId.Value);
             }
 
-            var totalCount = await query.CountAsync();
+            if (parameters.Search != null)
+            {
+                query = query.Where(x => x.Name.Contains(parameters.Search));
+            }
 
             if (parameters.Skip.HasValue)
             {
@@ -148,14 +151,13 @@ namespace GTBack.Service.Services
             {
                 query = query.Take(parameters.Take.Value);
             }
-            if (parameters.Search != null)
-            {
-                query = query.Where(x => x.Name == parameters.Search);
-            }
-           
+
+
+            var totalCount = await query.CountAsync();
             var data = _mapper.Map<ICollection<CustomerDto>>(await query.ToListAsync());
             return new SuccessDataResult<ICollection<CustomerDto>>(data, totalCount);
         }
+
         public int? GetLoggedUserId()
         {
             var userRoleString = _loggedUser.FindFirstValue("Id");

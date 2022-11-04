@@ -20,13 +20,15 @@ namespace GTBack.Service.Mapping
             CreateMap<Customer,CustomerDto>().ReverseMap();
             CreateMap<Customer, LoginDto>().ReverseMap();
             CreateMap<Place, PlaceDto>().ReverseMap();
+            CreateMap<Place, UpdatePlace>().ReverseMap();
             CreateMap<Attributes, AttrDto>().ReverseMap();
             CreateMap<Comments, CommentDto>().ReverseMap();
             CreateMap<CommentResDto, Comments>().ReverseMap();
             CreateMap<RefreshToken, RefreshTokenDto>().ReverseMap();
+            CreateMap<ExtensionStrings, ExtensionDto>().ReverseMap();
 
 
-       
+
 
 
         }

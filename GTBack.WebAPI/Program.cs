@@ -67,6 +67,7 @@ builder.Services.AddScoped<RefreshTokenRepository>();
 builder.Services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();
 builder.Services.AddScoped(typeof(IJwtTokenService), typeof(JwtTokenService));
 builder.Services.AddScoped(typeof(IPlaceService), typeof(PlaceService));
+builder.Services.AddScoped(typeof(IExtensionStringService), typeof(ExtensionStringService));
 builder.Services.AddScoped(typeof(IRefreshTokenService), typeof(RefreshTokenService));
 builder.Services.AddAppConfiguration(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
