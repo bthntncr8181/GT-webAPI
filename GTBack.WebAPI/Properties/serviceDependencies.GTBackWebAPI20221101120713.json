@@ -1,9 +1,5 @@
 {
   "dependencies": {
-    "apis1": {
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/GTBackWebAPIapi/apis/GTBackWebAPI-1",
-      "type": "apis.azure"
-    },
     "mssql1": {
       "secretStore": "AzureAppSettings",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/gtbackwebapidbserver/databases/GTBack.WebAPI_db",

@@ -129,17 +129,10 @@ namespace GTBack.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("placeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("profileİmgUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("placeId")
-                        .IsUnique()
-                        .HasFilter("[placeId] IS NOT NULL");
 
                     b.ToTable("Customers");
                 });
@@ -212,13 +205,22 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("customerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("cusutomerId")
                         .HasColumnType("int");
 
-                    b.Property<string>("imgUrl")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long>("favCount")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("customerId");
 
                     b.ToTable("Place");
                 });
@@ -273,15 +275,6 @@ namespace GTBack.Repository.Migrations
                     b.Navigation("Place");
                 });
 
-            modelBuilder.Entity("GTBack.Core.Entities.Customer", b =>
-                {
-                    b.HasOne("GTBack.Core.Entities.Place", "Place")
-                        .WithOne("customer")
-                        .HasForeignKey("GTBack.Core.Entities.Customer", "placeId");
-
-                    b.Navigation("Place");
-                });
-
             modelBuilder.Entity("GTBack.Core.Entities.ExtensionStrings", b =>
                 {
                     b.HasOne("GTBack.Core.Entities.Place", "Place")
@@ -291,6 +284,17 @@ namespace GTBack.Repository.Migrations
                         .IsRequired();
 
                     b.Navigation("Place");
+                });
+
+            modelBuilder.Entity("GTBack.Core.Entities.Place", b =>
+                {
+                    b.HasOne("GTBack.Core.Entities.Customer", "customer")
+                        .WithMany("Place")
+                        .HasForeignKey("customerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("customer");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.RefreshToken", b =>
@@ -304,6 +308,8 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Customer", b =>
                 {
+                    b.Navigation("Place");
+
                     b.Navigation("RefreshTokens");
                 });
 
@@ -312,9 +318,6 @@ namespace GTBack.Repository.Migrations
                     b.Navigation("Attributes");
 
                     b.Navigation("ExtensionStrings");
-
-                    b.Navigation("customer")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

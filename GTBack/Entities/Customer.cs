@@ -14,8 +14,7 @@ namespace GTBack.Core.Entities
         public string Surname { get; set; }
         public string Mail { get; set; }
 
-        public Place? Place { get; set; }
-        public int? placeId { get; set; }
+        public ICollection<Place> Place { get; set; }
 
         public string? profileİmgUrl { get; set; }
 

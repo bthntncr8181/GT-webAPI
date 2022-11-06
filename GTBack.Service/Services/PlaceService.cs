@@ -148,7 +148,8 @@ namespace GTBack.Service.Services
                 IsDeleted = false,
                 Name = registerDto.Name,
                 Address = registerDto.Address,
-                Phone=registerDto.Phone
+                Phone=registerDto.Phone,
+                Username = registerDto.Username
 
 
             };
@@ -196,7 +197,7 @@ namespace GTBack.Service.Services
          
             if (parameters.Search != null)
             {
-                query = query.Where(x => x.Name.Contains(parameters.Search));
+                query = query.Where(x => x.Name.ToLower().Contains(parameters.Search.ToLower()));
             }
             if (parameters.Skip.HasValue)
             {
