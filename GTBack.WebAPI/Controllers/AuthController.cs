@@ -33,16 +33,16 @@ namespace GTBack.WebAPI.Controllers
                 return ApiResult(await _CustomerService.Me());
             }
         [HttpGet("UsernameControl")]
-        public async Task<IActionResult> UsernameControl()
+        public async Task<IActionResult> UsernameControl([FromQuery]string username)
         {
 
-            return ApiResult(await _CustomerService.Me());
+            return ApiResult(await _CustomerService.UsernameSearch(username));
         }
         [HttpGet("EmailControl")]
-        public async Task<IActionResult> EmailControl()
+        public async Task<IActionResult> EmailControl([FromQuery] string mail)
         {
 
-            return ApiResult(await _CustomerService.Me());
+            return ApiResult(await _CustomerService.EmailSearch(mail));
         }
 
 
