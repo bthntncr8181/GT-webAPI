@@ -8,6 +8,7 @@ using GTBack.Core.Services;
 using GTBack.Core.UnitOfWorks;
 using GTBack.Repository.Models;
 using GTBack.Repository.Repositories;
+using GTBack.Service.Utilities;
 using GTBack.Service.Utilities.Jwt;
 using GTBack.Service.Validation;
 using GTBack.Service.Validation.Tool;
@@ -132,9 +133,18 @@ namespace GTBack.Service.Services
 
                 return new ErrorDataResults<Place>(HttpStatusCode.BadRequest, valResult.Errors);
             }
+            var username = registerDto.Username.ToLower().Trim();
+            var user = await _service.GetByIdAsync((x => x.Username.ToLower() == username && !x.IsDeleted));//get by mail eklenecek
 
-           
-           
+            if (user != null)
+            {
+                valResult.Errors.Add("", Messages.User_Username_Exist);
+                return new ErrorDataResults<Place>(HttpStatusCode.BadRequest, valResult.Errors);
+            }
+
+
+
+
             var id=GetLoggedUserId();
 
 
@@ -154,7 +164,7 @@ namespace GTBack.Service.Services
 
             };
 
-                    await _service.AddAsync(place);
+            await _service.AddAsync(place);
             await _unitOfWork.CommitAsync();
 
             return new SuccessDataResult<Place>(place );

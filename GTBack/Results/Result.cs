@@ -27,6 +27,7 @@ namespace GTBack.Core.Results
             ExceptionType = exceptionType;
         }
 
+
         public Result(bool succes, HttpStatusCode statusCode, IEnumerable<string> errors)
         {
             Success = succes;

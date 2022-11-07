@@ -19,6 +19,8 @@ namespace GTBack.Repository
         public DbSet<ExtensionStrings> ExtensionStrings { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+        public DbSet<Favorite> Favorite { get; set; }
+
 
 
 

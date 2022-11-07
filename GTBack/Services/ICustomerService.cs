@@ -17,6 +17,8 @@ namespace GTBack.Core.Services
   
 
         Task<IDataResults<CustomerDto>> GetById(int id);
+        Task<IResults> EmailSearch(string mail);
+        Task<IResults> UsernameSearch(string mail);
 
         Task<IResults> Put(UpdateCustomer place);
         Task<IDataResults<CustomerDto>> Me();

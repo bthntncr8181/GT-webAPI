@@ -68,6 +68,24 @@ namespace GTBack.Service.Services
             await _service.UpdateAsync(place);
             return new SuccessResult();
         }
+        public async Task<IResults> UsernameSearch(string username)
+        {
+            var parent = await _service.GetByIdAsync((x => x.Username.ToLower() == username && !x.IsDeleted));
+            if (parent != null)
+            {
+                return new ErrorResult();
+            }
+            return new SuccessResult();
+        }
+        public async Task<IResults> EmailSearch(string mail)
+        {
+            var parent = await _service.GetByIdAsync((x => x.Username.ToLower() == mail && !x.IsDeleted));
+            if (parent != null)
+            {
+                return new ErrorResult();
+            }
+            return new SuccessResult();
+        }
         public async Task<IDataResults<AuthenticatedUserResponseDto>>Register(CustomerDto registerDto)
         {
 
