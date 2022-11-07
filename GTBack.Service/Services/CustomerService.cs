@@ -79,7 +79,7 @@ namespace GTBack.Service.Services
         }
         public async Task<IResults> EmailSearch(string mail)
         {
-            var parent = await _service.GetByIdAsync((x => x.Username.ToLower() == mail && !x.IsDeleted));
+            var parent = await _service.GetByIdAsync((x => x.Mail.ToLower() == mail && !x.IsDeleted));
             if (parent != null)
             {
                 return new ErrorResult();
