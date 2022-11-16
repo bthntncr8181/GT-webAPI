@@ -20,7 +20,15 @@ namespace GTBack.Core.Entities
         public long favCount { get; set; }
         public ICollection<ExtensionStrings> ExtensionStrings { get; set; }
         public ICollection<Attributes> Attributes { get; set; }
-        public int cusutomerId { get; set; }
+        public ICollection<Widget> Widget { get; set; }
+        public ICollection<MenuWidget>? MenuWidget { get; set; }
+
+        public ICollection<GalleryWidget>? GalleryWidget { get; set; }
+        public int customerId { get; set; }
+
+
+       
+  
 
         public Customer customer { get; set; }
      

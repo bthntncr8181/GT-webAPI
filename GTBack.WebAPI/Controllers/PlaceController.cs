@@ -30,15 +30,15 @@ namespace GTBack.WebAPI.Controllers
             _Attservice = attservice;
             _comService = comments;
         }
-        [Authorize]
+ 
         [HttpPost("register")]
-        public async Task<IActionResult> List( PlaceDto place)
+        public async Task<IActionResult> Register( PlaceDto place)
         {
             return ApiResult(await _pService.Register(place));
 
 
         }
-        [Authorize]
+
         [HttpGet("")] 
         public async Task<IActionResult> List([FromQuery] PlaceListParameters place)
         {
@@ -46,7 +46,7 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
-        [Authorize]
+   
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {

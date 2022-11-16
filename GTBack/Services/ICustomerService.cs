@@ -1,4 +1,5 @@
 ﻿using GTBack.Core.DTO;
+using GTBack.Core.Entities;
 using GTBack.Core.Models;
 using GTBack.Core.Results;
 using GTBack.Repository.Models;
@@ -13,8 +14,10 @@ namespace GTBack.Core.Services
     public interface ICustomerService
     {
         Task<IDataResults<ICollection<CustomerDto>>> List(CustomerListParameters parameters);
+        Task<IDataResults<ICollection<iller>>> getsehir(string name);
+        Task<IDataResults<InteractionDto>> Interaction(InteractionDto inter);
 
-  
+        Task<IDataResults<ICollection<ilceler>>> getilce(string name, int sehirid);
 
         Task<IDataResults<CustomerDto>> GetById(int id);
         Task<IResults> EmailSearch(string mail);

@@ -6,17 +6,12 @@ using System.Threading.Tasks;
 
 namespace GTBack.Core.Entities
 {
-    public class ExtensionStrings : BaseEntity
+    public class WidgetPlaceRelation :BaseEntity
     {
-
-
         public int placeId { get; set; }
-
+        public int widgetId { get; set; }
         public Place Place { get; set; }
+        public Widget Widget { get; set; }
 
-        public string Type { get; set; }
-        public string Content { get; set; }
-
-     
     }
 }

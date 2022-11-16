@@ -55,6 +55,15 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
+        [HttpPost("Interaction")]
+        public async Task<IActionResult> Interaction(InteractionDto inter)
+        {
+
+            return ApiResult(await _CustomerService.Interaction(inter));
+
+
+
+        }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteById(int id)

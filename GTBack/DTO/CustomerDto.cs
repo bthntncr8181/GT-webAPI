@@ -14,6 +14,8 @@ namespace GTBack.Core.DTO
         public string Surname { get; set; }
         public string Mail { get; set; }
         public string password { get; set; }
+        public string il { get; set; }
+        public string ilce { get; set; }
 
         public bool isDeleted { get; set; }
      

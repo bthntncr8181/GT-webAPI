@@ -94,7 +94,7 @@ namespace GTBack.Service.Services
 
             var id = GetLoggedUserId();
             var place = _mapper.Map<Place>(entiti);
-            place.cusutomerId = (int)id;
+            place.customerId = (int)id;
             await _service.UpdateAsync(place);
                 
 
@@ -154,7 +154,7 @@ namespace GTBack.Service.Services
                 CreatedDate = DateTime.UtcNow,
                 UpdatedDate = DateTime.UtcNow,
                 Mail = registerDto.Mail,
-                cusutomerId = (int)id,
+                customerId = (int)id,
                 IsDeleted = false,
                 Name = registerDto.Name,
                 Address = registerDto.Address,

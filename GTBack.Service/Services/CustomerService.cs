@@ -24,6 +24,10 @@ namespace GTBack.Service.Services
 
 
         private readonly IService<Customer> _service;
+
+        private readonly IService<PlaceCustomerInteraction> _ıntService;
+        private readonly IService<iller> _ilservice;
+        private readonly IService<ilceler> _ilceservice;
         private readonly IRefreshTokenService _refreshTokenService;
         private readonly ClaimsPrincipal? _loggedUser;
         private readonly IUnitOfWork _unitOfWork;
@@ -31,7 +35,7 @@ namespace GTBack.Service.Services
         private readonly IValidatorFactory _validatorFactory;
         private readonly IJwtTokenService _tokenService;
 
-        public CustomerService(IRefreshTokenService refreshTokenService,IJwtTokenService tokenService, IValidatorFactory validatorFactory,IHttpContextAccessor httpContextAccessor, IService<Customer> service, IUnitOfWork unitOfWork, IMapper mapper)
+        public CustomerService(IService<ilceler> ilceservice,IService<iller> ilservice, IService<PlaceCustomerInteraction> ıntService, IRefreshTokenService refreshTokenService,IJwtTokenService tokenService, IValidatorFactory validatorFactory,IHttpContextAccessor httpContextAccessor, IService<Customer> service, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -40,6 +44,9 @@ namespace GTBack.Service.Services
             _validatorFactory = validatorFactory;
             _refreshTokenService= refreshTokenService;
             _tokenService= tokenService;
+            _ıntService = ıntService;
+            _ilservice = ilservice;
+            _ilceservice = ilceservice;
         }
 
      
@@ -86,6 +93,69 @@ namespace GTBack.Service.Services
             }
             return new SuccessResult();
         }
+        public async Task<IDataResults<ICollection<iller>>>getsehir(string name)
+        {
+            var query =   _ilservice.Where(x=>x.Id>0);
+
+            if (name != null)
+            {
+                query = query.Where(x => x.sehiradi.ToLower().Contains(name.ToLower()));
+            }
+
+            var data = _mapper.Map<ICollection<iller>>(await query.ToListAsync());
+
+            return new SuccessDataResult<ICollection<iller>>(data);
+        }
+        public async Task<IDataResults<ICollection<ilceler>>> getilce(string name,int sehirid)
+        {
+            var query = _ilceservice.Where(x => x.sehirId==sehirid);
+
+            if (name != null)
+            {
+                query = query.Where(x => x.ilceadi.ToLower().Contains(name.ToLower()));
+            }
+
+            var data = _mapper.Map<ICollection<ilceler>>(await query.ToListAsync());
+
+            return new SuccessDataResult<ICollection<ilceler>>(data);
+        }
+
+        public async Task<IDataResults<InteractionDto>> Interaction(InteractionDto inter)
+        {
+            var response = new InteractionDto();
+           var user =await _ıntService.GetByIdAsync(x => x.placeId == inter.placeId && x.customerId == inter.customerId&&x.Type.ToLower()==inter.Type.ToLower());
+
+            if (user!=null)
+            {
+
+                
+                user.Count = user.Count + 1;
+
+            }
+            else
+            {
+
+                user = new PlaceCustomerInteraction()
+                {
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow,
+                    customerId=inter.customerId,
+                    placeId=inter.placeId,
+                    IsDeleted = false,
+                    Type = inter.Type,
+                    Count=1
+                };
+                await _ıntService.AddAsync(user);
+
+                await _unitOfWork.CommitAsync();
+                 response = _mapper.Map<InteractionDto>(user);
+                return new SuccessDataResult<InteractionDto>(response, HttpStatusCode.OK);
+            }
+
+             await _ıntService.UpdateAsync(user);
+            response = _mapper.Map<InteractionDto>(user);
+            return new SuccessDataResult<InteractionDto>(response, HttpStatusCode.OK);
+        }
         public async Task<IDataResults<AuthenticatedUserResponseDto>>Register(CustomerDto registerDto)
         {
 
@@ -120,6 +190,8 @@ namespace GTBack.Service.Services
                 Mail = registerDto.Mail,
                 Username=registerDto.UserName,
                 Surname = registerDto.Surname,
+                il=registerDto.il,
+                ilce=registerDto.ilce,
                 IsDeleted = false,
                 Name = registerDto.Name,
                 PasswordHash = SHA1.Generate(registerDto.password)

@@ -18,8 +18,12 @@ namespace GTBack.Repository
         public DbSet<Attributes> Attributes { get; set; }
         public DbSet<ExtensionStrings> ExtensionStrings { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-
+        public DbSet<PlaceCustomerInteraction> PlaceCustomerInteractions { get; set; }
         public DbSet<Favorite> Favorite { get; set; }
+        public DbSet<iller> iller { get; set; }
+
+        public DbSet<ilceler> ilceler { get; set; }
+
 
 
 

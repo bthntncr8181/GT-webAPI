@@ -26,6 +26,7 @@ namespace GTBack.Service.Mapping
             CreateMap<CommentResDto, Comments>().ReverseMap();
             CreateMap<RefreshToken, RefreshTokenDto>().ReverseMap();
             CreateMap<ExtensionStrings, ExtensionDto>().ReverseMap();
+            CreateMap<PlaceCustomerInteraction, InteractionDto>().ReverseMap();
 
 
 

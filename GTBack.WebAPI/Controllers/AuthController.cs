@@ -44,7 +44,19 @@ namespace GTBack.WebAPI.Controllers
 
             return ApiResult(await _CustomerService.EmailSearch(mail));
         }
+        [HttpGet("İl")]
+        public async Task<IActionResult> Sehir( string ?sehiradı)
+        {
 
+            return ApiResult(await _CustomerService.getsehir(sehiradı));
+        }
+        [HttpGet("İlce")]
+        public async Task<IActionResult> ilce( string ?ilceadı,int sehirid)
+        {
+
+
+            return ApiResult(await _CustomerService.getilce(ilceadı,sehirid));
+        }
 
         [HttpPost("Login")]
             public async Task<IActionResult> Login(LoginDto log)
