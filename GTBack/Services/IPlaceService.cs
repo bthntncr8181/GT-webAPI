@@ -17,6 +17,8 @@ namespace GTBack.Core.Services
 
 
         Task<IDataResults<string>> GetProfilImage(int id);
+        Task<IDataResults<string>> GetCoverImage(int id);
+
 
         Task<IDataResults<ICollection<AttrDto>>> GetAttr(int placeId);
         Task<IResults> AddAttr(AttrDto attr);

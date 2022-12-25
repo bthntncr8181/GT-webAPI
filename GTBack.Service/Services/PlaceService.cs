@@ -261,5 +261,17 @@ namespace GTBack.Service.Services
 
 
         }
+        async Task<IDataResults<string>> IPlaceService.GetCoverImage(int id)
+        {
+
+            var data = await _cover.GetByIdAsync(x => x.Id == id);
+
+
+
+
+            return new SuccessDataResult<string>(data.img);
+
+
+        }
     }
 }

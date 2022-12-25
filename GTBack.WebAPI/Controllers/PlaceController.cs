@@ -63,6 +63,13 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
+        [HttpGet("coverImage")]
+        public async Task<IActionResult> GetCoverImage(int id)
+        {
+            return ApiResult(await _pService.GetCoverImage(id));
+
+
+        }
         [Authorize]
         [HttpPut]
         public async Task<IActionResult> Put(UpdatePlace Entiti)
