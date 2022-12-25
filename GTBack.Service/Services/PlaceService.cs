@@ -33,13 +33,16 @@ namespace GTBack.Service.Services
         private readonly AttributesRepository _attributesRepository;
         private readonly IService<ExtensionStrings> _extensionService;
         private readonly IService<Comments> _commentservice;
+        private readonly IService<ProfilImages> _profil;
+        private readonly IService<CoverImages> _cover;
         private readonly ClaimsPrincipal? _loggedUser;
         private readonly IService<Customer> _customerService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IJwtTokenService _tokenService;
 
-        public PlaceService(IService<Comments> commentservice,IService<Attributes> attservice, IJwtTokenService tokenService, IService<Place> service,IUnitOfWork unitOfWork,IMapper mapper, IHttpContextAccessor httpContextAccessor, PlaceRepository placeRepository, AttributesRepository attributesRepository, IService<ExtensionStrings> extensionService, IService<Customer> customerService )
+        public PlaceService( IService<ProfilImages> profil,
+       IService<CoverImages> cover,IService<Comments> commentservice,IService<Attributes> attservice, IJwtTokenService tokenService, IService<Place> service,IUnitOfWork unitOfWork,IMapper mapper, IHttpContextAccessor httpContextAccessor, PlaceRepository placeRepository, AttributesRepository attributesRepository, IService<ExtensionStrings> extensionService, IService<Customer> customerService )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -52,6 +55,8 @@ namespace GTBack.Service.Services
             _Attservice = attservice;
             _tokenService = tokenService;
             _loggedUser = httpContextAccessor.HttpContext?.User;
+            _profil= profil;
+            _cover= cover;
         }
 
         public async Task<IResults> AddAttr(AttrDto attr)
@@ -123,6 +128,9 @@ namespace GTBack.Service.Services
             }
             return null;
         }
+
+     
+
         public async Task<IDataResults<Place>> Register(PlaceDto registerDto)
         {
 
@@ -163,7 +171,22 @@ namespace GTBack.Service.Services
 
 
             };
+            var profilImage = new ProfilImages()
+            {
+               placeid=registerDto.Id,
+               img=registerDto.ProfilImage
 
+
+            };
+            var coverImages = new CoverImages()
+            {
+
+                placeid = registerDto.Id,
+                img = registerDto.CoverImage
+
+            };
+            await _profil.AddAsync(profilImage);
+            await _cover.AddAsync(coverImages);
             await _service.AddAsync(place);
             await _unitOfWork.CommitAsync();
 
@@ -226,5 +249,17 @@ namespace GTBack.Service.Services
             return new SuccessDataResult<ICollection<PlaceDto>>(data, totalCount);
         }
 
+        async Task<IDataResults<string>> IPlaceService.GetProfilImage(int id)
+        {
+
+            var data = await _profil.GetByIdAsync(x => x.Id == id);
+
+
+
+
+            return new SuccessDataResult<string>(data.img);
+
+
+        }
     }
 }

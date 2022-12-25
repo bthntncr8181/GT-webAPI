@@ -22,9 +22,9 @@ namespace GTBack.Repository
         public DbSet<PlaceCustomerInteraction> PlaceCustomerInteractions { get; set; }
         public DbSet<Favorite> Favorite { get; set; }
         public DbSet<iller> iller { get; set; }
-
         public DbSet<ilceler> ilceler { get; set; }
-
+        public DbSet<CoverImages> CoverImages { get; set; }
+        public DbSet<ProfilImages> ProfilImages { get; set; }
 
 
 

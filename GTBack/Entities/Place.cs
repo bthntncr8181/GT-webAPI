@@ -16,7 +16,7 @@ namespace GTBack.Core.Entities
         public string Phone { get; set; }
         public string Address {get; set; }
         
-        
+      
 
         public long favCount { get; set; }
         public ICollection<ExtensionStrings> ExtensionStrings { get; set; }

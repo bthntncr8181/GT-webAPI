@@ -39,6 +39,8 @@ namespace GTBack.WebAPI.Controllers
 
         }
 
+        
+
         [HttpGet("")] 
         public async Task<IActionResult> List([FromQuery] PlaceListParameters place)
         {
@@ -51,6 +53,13 @@ namespace GTBack.WebAPI.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             return ApiResult(await _pService.GetById(id));
+
+
+        }
+        [HttpGet("profilImage")]
+        public async Task<IActionResult> GetProfilImage(int id)
+        {
+            return ApiResult(await _pService.GetProfilImage(id));
 
 
         }
