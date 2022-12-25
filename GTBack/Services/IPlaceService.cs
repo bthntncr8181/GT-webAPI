@@ -32,6 +32,6 @@ namespace GTBack.Core.Services
 
         Task<IResults> Delete(int id);
 
-        Task<IDataResults<Place>> Register(PlaceDto registerDto);
+        Task<IDataResults<PlaceResponseDto>> Register(PlaceDto registerDto);
     }
 }

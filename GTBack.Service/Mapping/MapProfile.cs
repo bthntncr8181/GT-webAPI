@@ -28,6 +28,8 @@ namespace GTBack.Service.Mapping
             CreateMap<RefreshToken, RefreshTokenDto>().ReverseMap();
             CreateMap<ExtensionStrings, ExtensionDto>().ReverseMap();
             CreateMap<PlaceCustomerInteraction, InteractionDto>().ReverseMap();
+            CreateMap<PlaceResponseDto, Place>().ReverseMap();
+
 
 
 

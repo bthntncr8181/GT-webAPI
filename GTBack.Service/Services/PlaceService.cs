@@ -21,6 +21,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace GTBack.Service.Services
 {
@@ -131,7 +132,7 @@ namespace GTBack.Service.Services
 
      
 
-        public async Task<IDataResults<Place>> Register(PlaceDto registerDto)
+        public async Task<IDataResults<PlaceResponseDto>> Register(PlaceDto registerDto)
         {
 
 
@@ -139,7 +140,7 @@ namespace GTBack.Service.Services
             if (valResult.Success == false)
             {
 
-                return new ErrorDataResults<Place>(HttpStatusCode.BadRequest, valResult.Errors);
+                return new ErrorDataResults<PlaceResponseDto>(HttpStatusCode.BadRequest, valResult.Errors);
             }
             var username = registerDto.Username.ToLower().Trim();
             var user = await _service.GetByIdAsync((x => x.Username.ToLower() == username && !x.IsDeleted));//get by mail eklenecek
@@ -147,7 +148,7 @@ namespace GTBack.Service.Services
             if (user != null)
             {
                 valResult.Errors.Add("", Messages.User_Username_Exist);
-                return new ErrorDataResults<Place>(HttpStatusCode.BadRequest, valResult.Errors);
+                return new ErrorDataResults<PlaceResponseDto>(HttpStatusCode.BadRequest, valResult.Errors);
             }
 
 
@@ -188,9 +189,10 @@ namespace GTBack.Service.Services
             await _profil.AddAsync(profilImage);
             await _cover.AddAsync(coverImages);
             await _service.AddAsync(place);
+       var data = _mapper.Map<PlaceResponseDto>(place);
             await _unitOfWork.CommitAsync();
 
-            return new SuccessDataResult<Place>(place );
+            return new SuccessDataResult<PlaceResponseDto>(data);
 
 
 
