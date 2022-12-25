@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GTBack.Core.Entities
+namespace GTBack.Core.Entities.Constants
 {
     public class RefreshToken
     {
@@ -12,6 +12,6 @@ namespace GTBack.Core.Entities
         public string Token { get; set; }
         public Customer? Customer { get; set; }
         public int? customerId { get; set; }
-      
+
     }
 }

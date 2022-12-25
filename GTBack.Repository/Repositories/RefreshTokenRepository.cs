@@ -1,4 +1,4 @@
-﻿using GTBack.Core.Entities;
+﻿using GTBack.Core.Entities.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;

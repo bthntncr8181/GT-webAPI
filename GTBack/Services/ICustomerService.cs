@@ -1,5 +1,5 @@
 ﻿using GTBack.Core.DTO;
-using GTBack.Core.Entities;
+using GTBack.Core.Entities.Constants;
 using GTBack.Core.Models;
 using GTBack.Core.Results;
 using GTBack.Repository.Models;

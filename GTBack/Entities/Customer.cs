@@ -1,8 +1,9 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GTBack.Core.Entities.Constants;
 
 namespace GTBack.Core.Entities
 {
@@ -22,12 +23,9 @@ namespace GTBack.Core.Entities
 
         public string ilce { get; set; }
 
-
         public int birthYear { get; set; }
 
         public string PasswordHash { get; set; }
-        
-
 
         public ICollection<RefreshToken> RefreshTokens { get; set; }
 

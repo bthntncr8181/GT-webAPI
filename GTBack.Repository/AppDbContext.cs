@@ -1,4 +1,5 @@
 ﻿using GTBack.Core.Entities;
+using GTBack.Core.Entities.Constants;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
