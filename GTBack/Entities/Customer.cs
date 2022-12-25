@@ -19,9 +19,9 @@ namespace GTBack.Core.Entities
 
         public string? profileİmgUrl { get; set; }
 
-        public string il { get; set; }
+        public string? il { get; set; }
 
-        public string ilce { get; set; }
+        public string? ilce { get; set; }
 
         public int birthYear { get; set; }
 

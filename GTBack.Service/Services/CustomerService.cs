@@ -191,8 +191,7 @@ namespace GTBack.Service.Services
                 Mail = registerDto.Mail,
                 Username=registerDto.UserName,
                 Surname = registerDto.Surname,
-                il=registerDto.il,
-                ilce=registerDto.ilce,
+             
                 IsDeleted = false,
                 Name = registerDto.Name,
                 PasswordHash = SHA1.Generate(registerDto.password)
