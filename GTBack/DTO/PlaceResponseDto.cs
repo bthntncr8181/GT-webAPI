@@ -19,6 +19,7 @@ namespace GTBack.Core.DTO
         public string Address { get; set; }
 
         public long favCount { get; set; }
+        public int CustomerId { get; set; }
 
     }
 }

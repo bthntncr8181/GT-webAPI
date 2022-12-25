@@ -16,11 +16,10 @@ namespace GTBack.Core.DTO
 
         public string Phone { get; set; }
         public string Address { get; set; }
-
+        
         public string ProfilImage { get; set; }
         public string CoverImage { get; set; }
-        public int CustomerId { get; set; }
 
-
+      
     }
 }
