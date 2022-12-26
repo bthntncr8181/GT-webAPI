@@ -21,5 +21,9 @@ namespace GTBack.Core.DTO
         public long favCount { get; set; }
         public int CustomerId { get; set; }
 
+        public string ShortDescription { get; set; }
+
+        public string Biography { get; set; }
+
     }
 }

@@ -16,7 +16,10 @@ namespace GTBack.Core.DTO
 
         public string Phone { get; set; }
         public string Address { get; set; }
-        
+
+        public string ShortDescription { get; set; }
+
+        public string Biography { get; set; }
         public string ProfilImage { get; set; }
         public string CoverImage { get; set; }
 

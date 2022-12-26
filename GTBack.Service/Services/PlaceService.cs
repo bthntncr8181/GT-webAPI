@@ -170,7 +170,10 @@ namespace GTBack.Service.Services
                 Name = registerDto.Name,
                 Address = registerDto.Address,
                 Phone=registerDto.Phone,
-                Username = registerDto.Username
+                Username = registerDto.Username,
+                Biography=registerDto.Biography,
+                ShortDescription=registerDto.ShortDescription,
+                
 
 
             };
