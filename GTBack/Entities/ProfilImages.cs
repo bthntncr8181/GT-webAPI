@@ -10,7 +10,7 @@ namespace GTBack.Core.Entities
     public class ProfilImages : BaseEntity
     {
 
-        public long placeid { get; set; }
+        public long placeId { get; set; }
         public string img { get; set; }
 
 

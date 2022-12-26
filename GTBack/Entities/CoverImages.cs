@@ -8,7 +8,7 @@ namespace GTBack.Core.Entities
 {
     public class CoverImages:BaseEntity
     {
-        public long placeid { get; set; }
+        public long placeId { get; set; }
         public string img { get; set; }
     }
 }

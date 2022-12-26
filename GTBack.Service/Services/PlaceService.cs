@@ -179,7 +179,7 @@ namespace GTBack.Service.Services
             };
             var profilImage = new ProfilImages()
             {
-               placeid=registerDto.Id,
+               placeId=registerDto.Id,
                img=registerDto.ProfilImage
 
 
@@ -187,7 +187,7 @@ namespace GTBack.Service.Services
             var coverImages = new CoverImages()
             {
 
-                placeid = registerDto.Id,
+                placeId = registerDto.Id,
                 img = registerDto.CoverImage
 
             };
