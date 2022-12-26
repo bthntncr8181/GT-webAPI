@@ -13,7 +13,7 @@ namespace GTBack.Core.Services
     public interface IPlaceService
     {
         Task<IDataResults<ICollection<ExtensionDto>>> GetPlaceExtensions(int placeId);
-        Task<IDataResults<ICollection<PlaceDto>>> List(PlaceListParameters parameters);
+        Task<IDataResults<ICollection<PlaceResponseDto>>> List(PlaceListParameters parameters);
 
 
         Task<IDataResults<string>> GetProfilImage(int id);
@@ -24,7 +24,7 @@ namespace GTBack.Core.Services
         Task<IResults> AddAttr(AttrDto attr);
         Task<IDataResults<ICollection<CommentResDto>>> GetPlaceComments(int placeId);
 
-        Task<IDataResults<PlaceDto>> GetById (int id); 
+        Task<IDataResults<PlaceResponseDto>> GetById (int id); 
         
 
         Task<IResults> Put(UpdatePlace place);

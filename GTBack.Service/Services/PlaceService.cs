@@ -87,13 +87,15 @@ namespace GTBack.Service.Services
             var totalCount = await query.CountAsync();
             return new SuccessDataResult<ICollection<CommentResDto>>(data, totalCount);
         }
-        public async Task<IDataResults<PlaceDto>> GetById(int id)
+
+
+        public async Task<IDataResults<PlaceResponseDto>> GetById(int id)
         {
             var place = await  _placeRepository.GetByIdAsync(x => x.Id == id);
 
            
-            var data = _mapper.Map<PlaceDto>( place);
-            return new SuccessDataResult<PlaceDto>(data);
+            var data = _mapper.Map<PlaceResponseDto>( place);
+            return new SuccessDataResult<PlaceResponseDto>(data);
         }
         public async Task<IResults> Put(UpdatePlace entiti)
         {
@@ -207,7 +209,7 @@ namespace GTBack.Service.Services
             return new SuccessDataResult<ICollection<ExtensionDto>>(data, totalCount);
         }
 
-        public async Task<IDataResults<ICollection<PlaceDto>>> List(PlaceListParameters parameters)
+        public async Task<IDataResults<ICollection<PlaceResponseDto>>> List(PlaceListParameters parameters)
         {
             var query = _placeRepository
                 .Where(x => !x.IsDeleted)
@@ -247,8 +249,8 @@ namespace GTBack.Service.Services
 
 
             var totalCount = await query.CountAsync();
-            var data = _mapper.Map<ICollection<PlaceDto>>(await query.ToListAsync());
-            return new SuccessDataResult<ICollection<PlaceDto>>(data, totalCount);
+            var data = _mapper.Map<ICollection<PlaceResponseDto>>(await query.ToListAsync());
+            return new SuccessDataResult<ICollection<PlaceResponseDto>>(data, totalCount);
         }
 
         async Task<IDataResults<string>> IPlaceService.GetProfilImage(int id)
