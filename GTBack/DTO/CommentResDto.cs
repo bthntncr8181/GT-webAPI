@@ -10,11 +10,11 @@ namespace GTBack.Core.DTO
     public class CommentResDto:BaseDTO_
     {
 
-        public int placeId { get; set; }
+        public long placeId { get; set; }
 
 
 
-        public int CustomerId { get; set; }
+        public long CustomerId { get; set; }
 
 
         public string Content { get; set; }

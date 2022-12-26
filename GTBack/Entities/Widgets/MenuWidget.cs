@@ -8,7 +8,7 @@ namespace GTBack.Core.Entities.Widgets
 {
     public class MenuWidget : BaseEntity
     {
-        public int placeId { get; set; }
+        public long placeId { get; set; }
 
         public Place place { get; set; }
         public string Name { get; set; }

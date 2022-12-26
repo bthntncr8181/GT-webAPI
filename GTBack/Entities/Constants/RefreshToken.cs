@@ -11,7 +11,7 @@ namespace GTBack.Core.Entities.Constants
         public Guid Id { get; set; }
         public string Token { get; set; }
         public Customer? Customer { get; set; }
-        public int? customerId { get; set; }
+        public long? customerId { get; set; }
 
     }
 }

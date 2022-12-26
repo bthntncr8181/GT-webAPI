@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GTBack.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221225123128_images")]
-    partial class images
+    [Migration("20221226165432_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,11 +26,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Attributes", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -48,8 +48,8 @@ namespace GTBack.Repository.Migrations
                     b.Property<bool>("isExist")
                         .HasColumnType("bit");
 
-                    b.Property<int>("placeId")
-                        .HasColumnType("int");
+                    b.Property<long>("placeId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -60,11 +60,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Comments", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -73,8 +73,8 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -82,8 +82,8 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("placeId")
-                        .HasColumnType("int");
+                    b.Property<long>("placeId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -96,18 +96,18 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Constants.ilceler", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<string>("ilceadi")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("sehirId")
-                        .HasColumnType("int");
+                    b.Property<long>("sehirId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -116,11 +116,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Constants.iller", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<string>("sehiradi")
                         .IsRequired()
@@ -141,8 +141,8 @@ namespace GTBack.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("customerId")
-                        .HasColumnType("int");
+                    b.Property<long?>("customerId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -153,11 +153,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.CoverImages", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -172,9 +172,8 @@ namespace GTBack.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("placeid")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long>("placeid")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -183,11 +182,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Customer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -237,11 +236,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.ExtensionStrings", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -260,8 +259,8 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("placeId")
-                        .HasColumnType("int");
+                    b.Property<long>("placeId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -272,17 +271,17 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Favorite", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -290,8 +289,8 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("placeId")
-                        .HasColumnType("int");
+                    b.Property<long>("placeId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -304,11 +303,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Place", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -339,8 +338,8 @@ namespace GTBack.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("customerId")
-                        .HasColumnType("int");
+                    b.Property<long>("customerId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("favCount")
                         .HasColumnType("bigint");
@@ -354,14 +353,14 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.PlaceCustomerInteraction", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
+                    b.Property<long>("Count")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -376,11 +375,11 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("customerId")
-                        .HasColumnType("int");
+                    b.Property<long>("customerId")
+                        .HasColumnType("bigint");
 
-                    b.Property<int>("placeId")
-                        .HasColumnType("int");
+                    b.Property<long>("placeId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -393,11 +392,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.ProfilImages", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -412,9 +411,8 @@ namespace GTBack.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("placeid")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long>("placeid")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -423,11 +421,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Widget", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -448,11 +446,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Widgets.GalleryWidget", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -471,8 +469,8 @@ namespace GTBack.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("placeId")
-                        .HasColumnType("int");
+                    b.Property<long>("placeId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -483,11 +481,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Widgets.MenuWidget", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -506,8 +504,8 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("placeId")
-                        .HasColumnType("int");
+                    b.Property<long>("placeId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -518,11 +516,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("PlaceWidget", b =>
                 {
-                    b.Property<int>("PlaceId")
-                        .HasColumnType("int");
+                    b.Property<long>("PlaceId")
+                        .HasColumnType("bigint");
 
-                    b.Property<int>("WidgetId")
-                        .HasColumnType("int");
+                    b.Property<long>("WidgetId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("PlaceId", "WidgetId");
 

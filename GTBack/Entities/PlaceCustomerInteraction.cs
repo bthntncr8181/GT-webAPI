@@ -16,16 +16,16 @@ namespace GTBack.Core.Entities
            Count = 0;
         }
 
-        public int placeId { get; set; }
+        public long placeId { get; set; }
 
         public Place Place { get; set; }
 
 
-        public int customerId { get; set; }
+        public long customerId { get; set; }
 
         public Customer Customer { get; set; }
 
-        public int Count { get; set; }
+        public long Count { get; set; }
         public string Type { get; set; }
     }
 }

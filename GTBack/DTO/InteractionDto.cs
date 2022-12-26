@@ -8,12 +8,12 @@ namespace GTBack.Core.DTO
 {
     public class InteractionDto
     {
-        public int placeId { get; set; }
+        public long placeId { get; set; }
 
 
 
 
-        public int customerId { get; set; }
+        public long customerId { get; set; }
 
        
 

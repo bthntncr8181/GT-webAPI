@@ -15,7 +15,7 @@ namespace GTBack.Core
             IsDeleted = false;
         }
 
-        public int Id { get; set; }
+        public long Id { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }

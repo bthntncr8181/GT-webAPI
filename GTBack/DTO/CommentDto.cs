@@ -8,12 +8,12 @@ namespace GTBack.Core.DTO
 {
     public class CommentDto
     {   
-        public int Id { get; set; }
-        public int placeId { get; set; }
+        public long Id { get; set; }
+        public long placeId { get; set; }
 
 
 
-        public int CustomerId { get; set; }
+        public long CustomerId { get; set; }
 
 
         public string Content { get; set; }

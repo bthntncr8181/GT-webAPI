@@ -8,7 +8,7 @@ namespace GTBack.Core.Entities
 {
     public class Attributes : BaseEntity
     {
-        public int placeId { get; set; }
+        public long placeId { get; set; }
 
         public Place Place { get; set; }
 

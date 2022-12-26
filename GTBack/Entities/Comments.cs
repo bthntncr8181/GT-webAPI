@@ -8,12 +8,12 @@ namespace GTBack.Core.Entities
 {
     public class Comments:BaseEntity
     {
-        public int placeId { get; set; }
+        public long placeId { get; set; }
 
         public Place Place { get; set; }
 
 
-        public int  CustomerId { get; set; }
+        public long CustomerId { get; set; }
 
         public Customer Customer { get; set; }
 

@@ -25,7 +25,7 @@ namespace GTBack.Core.Entities
         public ICollection<MenuWidget>? MenuWidget { get; set; }
 
         public ICollection<GalleryWidget>? GalleryWidget { get; set; }
-        public int customerId { get; set; }
+        public long customerId { get; set; }
 
 
        

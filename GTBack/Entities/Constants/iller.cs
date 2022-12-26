@@ -8,7 +8,7 @@ namespace GTBack.Core.Entities.Constants
 {
     public class iller
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string sehiradi { get; set; }
 
     }

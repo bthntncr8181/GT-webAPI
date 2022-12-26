@@ -8,7 +8,7 @@ namespace GTBack.Core.DTO
 {
     public  class PlaceDto
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Username { get; set; }
         public string Name { get; set; }
      

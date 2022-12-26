@@ -9,7 +9,7 @@ namespace GTBack.Core.DTO
     public class ExtensionDto:BaseDTO_
     {
 
-        public int placeId { get; set; }
+        public long placeId { get; set; }
         public string Type { get; set; }
         public string Content { get; set; }
     }
