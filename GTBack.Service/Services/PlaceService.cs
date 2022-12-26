@@ -177,9 +177,11 @@ namespace GTBack.Service.Services
 
 
             };
+            await _service.AddAsync(place);
+
             var profilImage = new ProfilImages()
             {
-               placeId=registerDto.Id,
+               placeId=place.Id,
                img=registerDto.ProfilImage
 
 
@@ -187,13 +189,13 @@ namespace GTBack.Service.Services
             var coverImages = new CoverImages()
             {
 
-                placeId = registerDto.Id,
+                placeId = place.Id,
                 img = registerDto.CoverImage
 
             };
             await _profil.AddAsync(profilImage);
             await _cover.AddAsync(coverImages);
-            await _service.AddAsync(place);
+          
        var data = _mapper.Map<PlaceResponseDto>(place);
             await _unitOfWork.CommitAsync();
 
