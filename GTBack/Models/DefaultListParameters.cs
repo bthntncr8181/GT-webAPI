@@ -10,7 +10,11 @@ namespace GTBack.Repository.Models
     {
        public string? Search { get; set; }
 
-        public bool? Rand { get; set; }
+        public bool? Rand{ get; set; }
+        public DefaultListParameters()
+        {
 
+            Rand = false;
+        }
     }
 }

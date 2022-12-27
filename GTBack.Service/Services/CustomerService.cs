@@ -280,7 +280,7 @@ namespace GTBack.Service.Services
             var valResult = FluentValidationTool.ValidateModelWithKeyResult(_validatorFactory.GetValidator<LoginDto>(), loginDto);
             if (valResult.Success == false)
             {
-                return new ErrorDataResults<AuthenticatedUserResponseDto>( HttpStatusCode.BadRequest,valResult.Errors);
+                return new ErrorDataResults<AuthenticatedUserResponseDto>( HttpStatusCode.OK,valResult.Errors);
             }
            var  username = loginDto.UserName.ToLower().Trim();
             var parent = await _service.GetByIdAsync((x => x.Username.ToLower() == username && !x.IsDeleted));//get by mail eklenecek
@@ -289,12 +289,12 @@ namespace GTBack.Service.Services
             if (parent?.PasswordHash == null)
             {
                 valResult.Errors.Add("", Messages.User_NotFound_Message);
-                return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.User_NotFound_Message, HttpStatusCode.BadRequest);
+                return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.User_NotFound_Message, HttpStatusCode.OK);
             }
             if (!Utilities.SHA1.Verify(loginDto.password, parent.PasswordHash))
             {
                 valResult.Errors.Add("", Messages.User_Login_Message_Notvalid);
-                return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.Password_Wrong, HttpStatusCode.BadRequest);
+                return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.Password_Wrong, HttpStatusCode.OK);
             }
             parent.UpdatedDate = DateTime.UtcNow;
             await _unitOfWork.CommitAsync();

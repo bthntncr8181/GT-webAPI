@@ -245,7 +245,7 @@ namespace GTBack.Service.Services
          
             if (parameters.Search != null)
             {
-                query = query.Where(x =>x.Name.ToLowerInvariant().Contains(parameters.Search.ToLowerInvariant()));
+                query = query.Where(x =>x.Name.ToLower().Contains(parameters.Search.ToLower()));
             }
             if (parameters.Skip.HasValue)
             {
@@ -278,7 +278,7 @@ namespace GTBack.Service.Services
         async Task<IDataResults<string>> IPlaceService.GetProfilImage(int id)
         {
 
-            var data = await _profil.GetByIdAsync(x => x.Id == id);
+            var data = await _profil.GetByIdAsync(x => x.placeId == id);
 
 
 
@@ -290,7 +290,7 @@ namespace GTBack.Service.Services
         async Task<IDataResults<string>> IPlaceService.GetCoverImage(int id)
         {
 
-            var data = await _cover.GetByIdAsync(x => x.Id == id);
+            var data = await _cover.GetByIdAsync(x => x.placeId == id);
 
 
 
