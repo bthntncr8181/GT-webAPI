@@ -248,7 +248,18 @@ namespace GTBack.Service.Services
 
             if (parameters.Take.HasValue)
             {
-                query = query.Take(parameters.Take.Value);
+
+                if (parameters.Rand.Value == true)
+                {
+                    query = query.OrderBy(r => Guid.NewGuid()).Take(parameters.Take.Value);
+
+                }
+                else
+                {
+                    query = query.Take(parameters.Take.Value);
+
+                }
+
             }
 
 

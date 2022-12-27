@@ -9,5 +9,8 @@ namespace GTBack.Repository.Models
     public class DefaultListParameters:PaginationParameters
     {
        public string? Search { get; set; }
+
+        public bool? Rand { get; set; }
+
     }
 }
