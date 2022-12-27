@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Security.Claims;
+using XAct.Messages;
 
 namespace GTBack.Service.Services
 {
@@ -25,6 +26,7 @@ namespace GTBack.Service.Services
 
 
         private readonly IService<Customer> _service;
+        private readonly IService<Place> _placeService;
 
         private readonly IService<PlaceCustomerInteraction> _ıntService;
         private readonly IService<iller> _ilservice;
@@ -36,7 +38,7 @@ namespace GTBack.Service.Services
         private readonly IValidatorFactory _validatorFactory;
         private readonly IJwtTokenService _tokenService;
 
-        public CustomerService(IService<ilceler> ilceservice,IService<iller> ilservice, IService<PlaceCustomerInteraction> ıntService, IRefreshTokenService refreshTokenService,IJwtTokenService tokenService, IValidatorFactory validatorFactory,IHttpContextAccessor httpContextAccessor, IService<Customer> service, IUnitOfWork unitOfWork, IMapper mapper)
+        public CustomerService(IService<Place> placeService,IService<ilceler> ilceservice,IService<iller> ilservice, IService<PlaceCustomerInteraction> ıntService, IRefreshTokenService refreshTokenService,IJwtTokenService tokenService, IValidatorFactory validatorFactory,IHttpContextAccessor httpContextAccessor, IService<Customer> service, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -47,6 +49,7 @@ namespace GTBack.Service.Services
             _tokenService= tokenService;
             _ıntService = ıntService;
             _ilservice = ilservice;
+            _placeService = placeService;
             _ilceservice = ilceservice;
         }
 
@@ -322,6 +325,32 @@ namespace GTBack.Service.Services
             };
         }
 
-      
+        public async  Task<IDataResults<List<PlaceResponseDto>>> CustomerHasPlace(int id)
+        {
+
+            var place =  _placeService.Where(x => x.customerId == id);
+
+            if(place == null)
+            {
+
+                return new ErrorDataResults<List<PlaceResponseDto>>(Messages.User_Have_Not_Place_Message, HttpStatusCode.OK);
+
+
+            }
+
+
+            var data =  _mapper.Map<List<PlaceResponseDto>>(await place.ToListAsync());
+
+
+            return new SuccessDataResult<List<PlaceResponseDto>>(data);
+
+
+
+
+
+
+
+        }
+
     }
 }
