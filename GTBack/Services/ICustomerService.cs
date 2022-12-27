@@ -1,4 +1,5 @@
-﻿using GTBack.Core.DTO;
+﻿using GTBack.Core.DTO.Request;
+using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities.Constants;
 using GTBack.Core.Models;
 using GTBack.Core.Results;
@@ -20,7 +21,7 @@ namespace GTBack.Core.Services
         Task<IDataResults<ICollection<ilceler>>> getilce(string name, int sehirid);
 
 
-        Task<IDataResults<List<PlaceResponseDto>>> CustomerHasPlace();
+        Task<IDataResults<List<PlaceResponseDto>>> CustomerHasPlace(PlaceListParameters parameters);
 
         Task<IDataResults<CustomerDto>> GetById(int id);
         Task<IResults> EmailSearch(string mail);

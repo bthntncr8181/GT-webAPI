@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GTBack.Core.DTO
+namespace GTBack.Core.DTO.Request
 {
     public class UpdateCustomer
     {
@@ -15,7 +15,7 @@ namespace GTBack.Core.DTO
 
         public string Surname { get; set; }
 
-  
+
         public string Phone { get; set; }
         public string Mail { get; set; }
     }

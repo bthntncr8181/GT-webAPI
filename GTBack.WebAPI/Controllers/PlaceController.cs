@@ -1,5 +1,6 @@
 using AutoMapper;
-using GTBack.Core.DTO;
+using GTBack.Core.DTO.Request;
+using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities;
 using GTBack.Core.Services;
 using GTBack.Repository.Models;
@@ -72,7 +73,7 @@ namespace GTBack.WebAPI.Controllers
         }
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> Put(UpdatePlace Entiti)
+        public async Task<IActionResult> Put(PlaceResponseDto Entiti)
         {
 
             return ApiResult(await _pService.Put(Entiti));

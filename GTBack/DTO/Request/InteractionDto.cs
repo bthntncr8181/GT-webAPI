@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GTBack.Core.DTO
+namespace GTBack.Core.DTO.Request
 {
     public class InteractionDto
     {
@@ -15,9 +15,9 @@ namespace GTBack.Core.DTO
 
         public long customerId { get; set; }
 
-       
 
-      
+
+
         public string Type { get; set; }
     }
 }

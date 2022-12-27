@@ -1,4 +1,5 @@
-﻿using GTBack.Core.DTO;
+﻿using GTBack.Core.DTO.Request;
+using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities;
 using GTBack.Core.Results;
 using GTBack.Repository.Models;
@@ -27,7 +28,7 @@ namespace GTBack.Core.Services
         Task<IDataResults<PlaceResponseDto>> GetById (int id); 
         
 
-        Task<IResults> Put(UpdatePlace place);
+        Task<IResults> Put(PlaceResponseDto place);
        
 
         Task<IResults> Delete(int id);

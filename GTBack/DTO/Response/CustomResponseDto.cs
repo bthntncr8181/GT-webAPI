@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace GTBack.Core.DTO
+namespace GTBack.Core.DTO.Response
 {
     public class CustomResponseDto<T>
     {
@@ -14,15 +14,15 @@ namespace GTBack.Core.DTO
         [JsonIgnore]
         public int StatusCode { get; set; }
 
-        public static CustomResponseDto<T> Success(int statusCode,T data)
+        public static CustomResponseDto<T> Success(int statusCode, T data)
         {
 
-            return new CustomResponseDto<T> { StatusCode = statusCode, Data = data ,Errors=null};
+            return new CustomResponseDto<T> { StatusCode = statusCode, Data = data, Errors = null };
         }
         public static CustomResponseDto<T> Error(int statusCode, List<string> errors)
         {
 
-            return new CustomResponseDto<T> { StatusCode = statusCode,Errors=errors};
+            return new CustomResponseDto<T> { StatusCode = statusCode, Errors = errors };
         }
         public static CustomResponseDto<T> Success(int statusCode)
         {

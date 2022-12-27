@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using GTBack.Core.DTO;
+using GTBack.Core.DTO.Request;
+using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities;
 using GTBack.Core.Entities.Constants;
 using GTBack.Core.Results;
@@ -21,7 +22,6 @@ namespace GTBack.Service.Mapping
             CreateMap<Customer,CustomerDto>().ReverseMap();
             CreateMap<Customer, LoginDto>().ReverseMap();
             CreateMap<Place, PlaceDto>().ReverseMap();
-            CreateMap<Place, UpdatePlace>().ReverseMap();
             CreateMap<Attributes, AttrDto>().ReverseMap();
             CreateMap<Comments, CommentDto>().ReverseMap();
             CreateMap<CommentResDto, Comments>().ReverseMap();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using GTBack.Core.DTO;
+using GTBack.Core.DTO.Request;
+using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities;
 using GTBack.Core.Services;
 using GTBack.Repository.Models;

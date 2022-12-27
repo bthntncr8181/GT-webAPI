@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using GTBack.Core.DTO;
+using GTBack.Core.DTO.Request;
 using GTBack.Core.Services;
 using GTBack.Core.UnitOfWorks;
 using GTBack.Repository;

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GTBack.Core.DTO
+namespace GTBack.Core.DTO.Response
 {
-    public class CommentResDto:BaseDTO_
+    public class CommentResDto : BaseDTO_
     {
 
         public long placeId { get; set; }
@@ -19,6 +19,6 @@ namespace GTBack.Core.DTO
 
         public string Content { get; set; }
 
-        public string CustomerName{ get; set; }
+        public string CustomerName { get; set; }
     }
 }

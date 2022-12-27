@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using GTBack.Core.DTO;
+using GTBack.Core.DTO.Request;
 using GTBack.Core.Entities;
 using GTBack.Core.Models;
 using GTBack.Core.Services;
+using GTBack.Repository.Models;
 using GTBack.Service.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GTBack.WebAPI.Controllers
 {
-    
+
     public class CustomerController : CustomBaseController
     {
 
@@ -39,9 +40,9 @@ namespace GTBack.WebAPI.Controllers
         }
         [Authorize]
         [HttpGet("Place")]
-        public async Task<IActionResult> GetPlace()
+        public async Task<IActionResult> GetPlace([FromQuery] PlaceListParameters param)
         {
-            return ApiResult(await _CustomerService.CustomerHasPlace());
+            return ApiResult(await _CustomerService.CustomerHasPlace(param));
 
 
         }

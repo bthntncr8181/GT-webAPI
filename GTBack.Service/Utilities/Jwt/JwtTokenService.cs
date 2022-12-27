@@ -1,4 +1,5 @@
-﻿using GTBack.Core.DTO;
+﻿using GTBack.Core.DTO.Request;
+using GTBack.Core.DTO.Response;
 using GTBack.Core.Services;
 using GTBack.Service.Configurations;
 using Microsoft.IdentityModel.Tokens;

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using GTBack.Core.DTO;
+using GTBack.Core.DTO.Request;
 using GTBack.Core.Entities;
 using GTBack.Core.Enums;
 using GTBack.Core.Repositories;

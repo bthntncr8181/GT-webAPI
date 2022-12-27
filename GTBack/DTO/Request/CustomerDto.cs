@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GTBack.Core.DTO
+namespace GTBack.Core.DTO.Request
 {
     public class CustomerDto
     {
-        public long Id { get; set; } 
+        public long Id { get; set; }
         public string UserName { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
@@ -19,7 +19,7 @@ namespace GTBack.Core.DTO
         public string? ilce { get; set; }
 
         public bool isDeleted { get; set; }
-     
+
 
     }
 }

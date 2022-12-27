@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using GTBack.Core.DTO;
+using GTBack.Core.DTO.Request;
+using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities;
 using GTBack.Core.Entities.Constants;
 using GTBack.Core.Enums;
@@ -8,6 +10,7 @@ using GTBack.Core.Models;
 using GTBack.Core.Results;
 using GTBack.Core.Services;
 using GTBack.Core.UnitOfWorks;
+using GTBack.Repository.Models;
 using GTBack.Service.Utilities;
 using GTBack.Service.Utilities.Jwt;
 using GTBack.Service.Validation;
@@ -17,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Security.Claims;
 using XAct.Messages;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace GTBack.Service.Services
 {
@@ -325,14 +329,17 @@ namespace GTBack.Service.Services
             };
         }
 
-        public async  Task<IDataResults<List<PlaceResponseDto>>> CustomerHasPlace()
+        public async  Task<IDataResults<List<PlaceResponseDto>>> CustomerHasPlace(PlaceListParameters parameters)
         {
 
            
 
-            var place =  _placeService.Where(x => x.customerId == GetLoggedUserId());
+            var query =  _placeService.Where(x => x.customerId == GetLoggedUserId()).AsNoTracking();
 
-            if(place == null)
+
+
+
+            if (query == null)
             {
 
                 return new ErrorDataResults<List<PlaceResponseDto>>(Messages.User_Have_Not_Place_Message, HttpStatusCode.OK);
@@ -341,7 +348,44 @@ namespace GTBack.Service.Services
             }
 
 
-            var data =  _mapper.Map<List<PlaceResponseDto>>(await place.ToListAsync());
+
+
+            switch (parameters.Order)
+            {
+                case ListOrderType.Ascending:
+                    query = query.OrderBy(o => o.Id);
+                    break;
+                case ListOrderType.Descending:
+                    query = query.OrderByDescending(o => o.Id);
+                    break;
+            }
+            if (parameters.placeId.HasValue)
+            {
+                query = query.Where(x => x.Id == parameters.placeId.Value);
+            }
+            if (parameters.Search != null)
+            {
+                query = query.Where(x => x.Name.ToLower().Contains(parameters.Search.ToLower()));
+            }
+
+            if (parameters.Skip.HasValue)
+            {
+                query = query.Skip(parameters.Skip.Value);
+            }
+
+            if (parameters.Take.HasValue)
+            {
+                query = query.Take(parameters.Take.Value);
+            }
+
+
+
+
+
+
+
+
+            var data =  _mapper.Map<List<PlaceResponseDto>>(await query.ToListAsync());
 
 
             return new SuccessDataResult<List<PlaceResponseDto>>(data);

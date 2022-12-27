@@ -1,10 +1,10 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using GTBack.Core.DTO;
 using AutoMapper;
 using GTBack.Core.Services;
 using GTBack.Core.Results;
 using System.Net;
+using GTBack.Core.DTO.Response;
 
 namespace GTBack.WebAPI.Controllers
 {

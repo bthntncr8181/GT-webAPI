@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using GTBack.Core.DTO;
+using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities.Constants;
 using GTBack.Core.Services;
 using GTBack.Core.UnitOfWorks;

@@ -1,4 +1,4 @@
-﻿using GTBack.Core.DTO;
+﻿using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities.Constants;
 using System;
 using System.Collections.Generic;

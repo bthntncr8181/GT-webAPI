@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using GTBack.Core.DTO;
+using GTBack.Core.DTO.Request;
 using GTBack.Service.Utilities.Consts;
 using System;
 using System.Collections.Generic;

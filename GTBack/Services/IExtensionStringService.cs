@@ -1,4 +1,4 @@
-﻿using GTBack.Core.DTO;
+﻿using GTBack.Core.DTO.Request;
 using GTBack.Core.Entities;
 using GTBack.Core.Results;
 using GTBack.Repository.Models;

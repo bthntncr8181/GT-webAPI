@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using GTBack.Core.DTO;
+using GTBack.Core.DTO.Request;
+using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities;
 using GTBack.Core.Enums;
 using GTBack.Core.Repositories;
@@ -98,12 +99,12 @@ namespace GTBack.Service.Services
             var data = _mapper.Map<PlaceResponseDto>( place);
             return new SuccessDataResult<PlaceResponseDto>(data);
         }
-        public async Task<IResults> Put(UpdatePlace entiti)
+        public async Task<IResults> Put(PlaceResponseDto entiti)
         {
 
-            var id = GetLoggedUserId();
             var place = _mapper.Map<Place>(entiti);
-            place.customerId = (int)id;
+            place.customerId = (int)GetLoggedUserId();
+
             await _service.UpdateAsync(place);
                 
 
