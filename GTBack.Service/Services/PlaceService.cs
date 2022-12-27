@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
@@ -214,8 +215,13 @@ namespace GTBack.Service.Services
             return new SuccessDataResult<ICollection<ExtensionDto>>(data, totalCount);
         }
 
+    
+
         public async Task<IDataResults<ICollection<PlaceResponseDto>>> List(PlaceListParameters parameters)
         {
+
+  
+
             var query = _placeRepository
                 .Where(x => !x.IsDeleted)
                 .AsNoTracking();
@@ -239,7 +245,7 @@ namespace GTBack.Service.Services
          
             if (parameters.Search != null)
             {
-                query = query.Where(x => x.Name.ToLower().Contains(parameters.Search.ToLower()));
+                query = query.Where(x =>x.Name.ToLowerInvariant().Contains(parameters.Search.ToLowerInvariant()));
             }
             if (parameters.Skip.HasValue)
             {
