@@ -37,10 +37,11 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
+        [Authorize]
         [HttpGet("Place")]
-        public async Task<IActionResult> GetPlace([FromQuery] int id)
+        public async Task<IActionResult> GetPlace()
         {
-            return ApiResult(await _CustomerService.CustomerHasPlace(id));
+            return ApiResult(await _CustomerService.CustomerHasPlace());
 
 
         }

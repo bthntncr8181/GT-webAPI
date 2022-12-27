@@ -20,7 +20,7 @@ namespace GTBack.Core.Services
         Task<IDataResults<ICollection<ilceler>>> getilce(string name, int sehirid);
 
 
-        Task<IDataResults<List<PlaceResponseDto>>> CustomerHasPlace(int id);
+        Task<IDataResults<List<PlaceResponseDto>>> CustomerHasPlace();
 
         Task<IDataResults<CustomerDto>> GetById(int id);
         Task<IResults> EmailSearch(string mail);

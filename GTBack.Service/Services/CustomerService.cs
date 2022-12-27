@@ -325,10 +325,12 @@ namespace GTBack.Service.Services
             };
         }
 
-        public async  Task<IDataResults<List<PlaceResponseDto>>> CustomerHasPlace(int id)
+        public async  Task<IDataResults<List<PlaceResponseDto>>> CustomerHasPlace()
         {
 
-            var place =  _placeService.Where(x => x.customerId == id);
+           
+
+            var place =  _placeService.Where(x => x.customerId == GetLoggedUserId());
 
             if(place == null)
             {
