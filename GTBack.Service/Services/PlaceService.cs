@@ -278,7 +278,7 @@ namespace GTBack.Service.Services
         async Task<IDataResults<string>> IPlaceService.GetProfilImage(int id)
         {
 
-            var data = await _profil.GetByIdAsync(x => x.Id == id);
+            var data = await _profil.GetByIdAsync(x => x.placeId == id);
 
 
 
@@ -290,7 +290,7 @@ namespace GTBack.Service.Services
         async Task<IDataResults<string>> IPlaceService.GetCoverImage(int id)
         {
 
-            var data = await _cover.GetByIdAsync(x => x.Id == id);
+            var data = await _cover.GetByIdAsync(x => x.placeId == id);
 
 
 
