@@ -334,7 +334,7 @@ namespace GTBack.Service.Services
 
            
 
-            var query =  _placeService.Where(x => x.customerId == GetLoggedUserId()).AsNoTracking();
+            var query =  _placeService.Where(x => x.customerId == GetLoggedUserId()&&!x.IsDeleted).AsNoTracking();
 
 
 

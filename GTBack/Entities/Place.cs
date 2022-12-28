@@ -17,7 +17,7 @@ namespace GTBack.Core.Entities
         public string Address {get; set; }
         
       
-        public string ShortDescription { get; set; }
+         public string ShortDescription { get; set; }
 
         public string Biography { get; set; }
         public long favCount { get; set; }
