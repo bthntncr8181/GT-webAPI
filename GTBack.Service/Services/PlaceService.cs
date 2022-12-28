@@ -127,14 +127,31 @@ namespace GTBack.Service.Services
         }
 
 
-        public async Task<IResults> Put(PlaceResponseDto entiti)
+        public async Task<IResults> Put(PlaceDto entiti)
         {
 
             var place = _mapper.Map<Place>(entiti);
             place.customerId = (int)GetLoggedUserId();
 
             await _service.UpdateAsync(place);
-                
+
+            var profilImage = new ProfilImages()
+            {
+                placeId = place.Id,
+                img = entiti.ProfilImage
+
+
+            };
+            var coverImages = new CoverImages()
+            {
+
+                placeId = place.Id,
+                img = entiti.CoverImage
+
+            };
+            await _profil.AddAsync(profilImage);
+            await _cover.AddAsync(coverImages);
+
 
             return new SuccessResult();
         }

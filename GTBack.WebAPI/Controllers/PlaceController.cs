@@ -85,7 +85,7 @@ namespace GTBack.WebAPI.Controllers
         }
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> Put(PlaceResponseDto Entiti)
+        public async Task<IActionResult> Put(PlaceDto Entiti)
         {
 
             return ApiResult(await _pService.Put(Entiti));

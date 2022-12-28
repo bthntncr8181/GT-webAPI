@@ -33,7 +33,7 @@ namespace GTBack.Core.Services
         Task<IResults> AddAttr(AttrDto attr);
         Task<IDataResults<ICollection<CommentResDto>>> GetPlaceComments(int placeId);
         Task<IDataResults<PlaceResponseDto>> GetById (int id); 
-        Task<IResults> Put(PlaceResponseDto place);
+        Task<IResults> Put(PlaceDto place);
         Task<IResults> Delete(int id);
         Task<IDataResults<PlaceResponseDto>> Register(PlaceDto registerDto);
     }
