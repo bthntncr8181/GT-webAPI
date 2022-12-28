@@ -1,5 +1,6 @@
 ﻿using GTBack.Core.Entities;
 using GTBack.Core.Entities.Constants;
+using GTBack.Core.Entities.Widgets;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -18,6 +19,8 @@ namespace GTBack.Repository
         public DbSet<Comments> Comments { get; set; }
         public DbSet<Attributes> Attributes { get; set; }
         public DbSet<ExtensionStrings> ExtensionStrings { get; set; }
+        public DbSet<PlaceInWidget> PlaceInWidget { get; set; }
+
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<PlaceCustomerInteraction> PlaceCustomerInteractions { get; set; }
         public DbSet<Favorite> Favorite { get; set; }

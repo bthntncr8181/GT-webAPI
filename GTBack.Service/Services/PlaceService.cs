@@ -2,6 +2,7 @@
 using GTBack.Core.DTO.Request;
 using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities;
+using GTBack.Core.Entities.Widgets;
 using GTBack.Core.Enums;
 using GTBack.Core.Repositories;
 using GTBack.Core.Results;
@@ -38,13 +39,17 @@ namespace GTBack.Service.Services
         private readonly IService<Comments> _commentservice;
         private readonly IService<ProfilImages> _profil;
         private readonly IService<CoverImages> _cover;
+        private readonly IService<MenuWidget> _menu;
+
+        private readonly IService<PlaceInWidget> _placeWidgetRelation;
+
         private readonly ClaimsPrincipal? _loggedUser;
         private readonly IService<Customer> _customerService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IJwtTokenService _tokenService;
 
-        public PlaceService( IService<ProfilImages> profil,
+        public PlaceService(IService<MenuWidget> menu, IService<PlaceInWidget> placeWidgetRelation, IService<ProfilImages> profil,
        IService<CoverImages> cover,IService<Comments> commentservice,IService<Attributes> attservice, IJwtTokenService tokenService, IService<Place> service,IUnitOfWork unitOfWork,IMapper mapper, IHttpContextAccessor httpContextAccessor, PlaceRepository placeRepository, AttributesRepository attributesRepository, IService<ExtensionStrings> extensionService, IService<Customer> customerService )
         {
             _unitOfWork = unitOfWork;
@@ -60,8 +65,13 @@ namespace GTBack.Service.Services
             _loggedUser = httpContextAccessor.HttpContext?.User;
             _profil= profil;
             _cover= cover;
+            _placeWidgetRelation= placeWidgetRelation;
+            _menu = menu;
         }
 
+
+
+        #region Attribute and Comment
         public async Task<IResults> AddAttr(AttrDto attr)
         {
             var realAttr = _mapper.Map<Attributes>(attr);
@@ -89,7 +99,12 @@ namespace GTBack.Service.Services
             var totalCount = await query.CountAsync();
             return new SuccessDataResult<ICollection<CommentResDto>>(data, totalCount);
         }
+        #endregion
 
+
+
+
+        #region Place
 
         public async Task<IDataResults<PlaceResponseDto>> GetById(int id)
         {
@@ -207,6 +222,7 @@ namespace GTBack.Service.Services
 
 
         }
+        
         public async Task<IDataResults<ICollection<ExtensionDto>>> GetPlaceExtensions(int placeId)
         {
             var query = _extensionService.Where(x => x.placeId == placeId && !x.IsDeleted);
@@ -275,7 +291,11 @@ namespace GTBack.Service.Services
             var data = _mapper.Map<ICollection<PlaceResponseDto>>(await query.ToListAsync());
             return new SuccessDataResult<ICollection<PlaceResponseDto>>(data, totalCount);
         }
+        #endregion
 
+
+
+        #region Image
         async Task<IDataResults<string>> IPlaceService.GetProfilImage(int id)
         {
 
@@ -300,5 +320,94 @@ namespace GTBack.Service.Services
 
 
         }
+
+        #endregion
+
+
+
+        
+
+        public async Task<IDataResults<string>> AddWidgetOnPlace(int id,int placeId)
+        {
+
+
+            var placeWidget = new PlaceInWidget
+            {
+
+                placeId = placeId,
+                widgetId = id
+            };
+
+          await  _placeWidgetRelation.AddAsync(placeWidget);
+
+
+            return new SuccessDataResult<string>("Widget add to"+id+"Place");
+
+
+
+
+        }
+        #region MenuWidget
+
+        public async Task<IDataResults<MenuWidgetUpdateDto>> AddMenu(MenuWidgetRequestDto menu)
+        {
+
+            var user = await _menu.AddAsync(_mapper.Map<MenuWidget>(menu));
+
+
+            var userDto = _mapper.Map<MenuWidgetUpdateDto>(user);
+
+
+
+
+
+            return new SuccessDataResult<MenuWidgetUpdateDto>(userDto);
+
+        }
+        public async Task<IResults> UpdateMenu(MenuWidgetUpdateDto menu)
+        {
+           
+            var cafe = await _menu.GetByIdAsync(x => x.Id == menu.Id);
+
+            var cafe2 = _mapper.Map<MenuWidget>(menu);
+
+            await _menu.UpdateAsync(cafe2);
+
+
+            return new SuccessResult();
+
+        }
+        public async Task<IDataResults<ICollection<MenuWidgetUpdateDto>>> GetPlaceMenu(int placeId)
+        {
+            var query = _menu.Where(x => x.placeId == placeId && !x.IsDeleted);
+
+            var data = _mapper.Map<ICollection<MenuWidgetUpdateDto>>(await query.ToListAsync());
+           
+            var totalCount = await query.CountAsync();
+
+            return new SuccessDataResult<ICollection<MenuWidgetUpdateDto>>(data, totalCount);
+        }
+        public async Task<IResults> DeleteMenuItem(int id)
+        {
+
+            var menuItem = await _menu.GetByIdAsync(x => x.Id == id);
+
+            menuItem.IsDeleted = true;
+
+            await _menu.UpdateAsync(menuItem);
+
+
+            return new SuccessResult();
+        }
+
+
+
+
+        #endregion
+
+
+
+
     }
 }
+

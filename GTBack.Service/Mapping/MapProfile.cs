@@ -3,6 +3,7 @@ using GTBack.Core.DTO.Request;
 using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities;
 using GTBack.Core.Entities.Constants;
+using GTBack.Core.Entities.Widgets;
 using GTBack.Core.Results;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,10 @@ namespace GTBack.Service.Mapping
             CreateMap<ExtensionStrings, ExtensionDto>().ReverseMap();
             CreateMap<PlaceCustomerInteraction, InteractionDto>().ReverseMap();
             CreateMap<PlaceResponseDto, Place>().ReverseMap();
+            CreateMap<MenuWidget, MenuWidgetRequestDto>().ReverseMap();
+            CreateMap<MenuWidgetUpdateDto, MenuWidgetUpdateDto>().ReverseMap();
+            CreateMap<MenuWidget, MenuWidgetUpdateDto>().ReverseMap();
+
 
 
 

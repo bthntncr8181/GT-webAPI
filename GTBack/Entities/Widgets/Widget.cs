@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GTBack.Core.Entities
+namespace GTBack.Core.Entities.Widgets
 {
-    public class Widget:BaseEntity
+    public class Widget : BaseEntity
     {
-        public int type { get; set; }
+        public string type { get; set; }
 
-       
+
         public ICollection<Place> Place { get; set; }
 
 

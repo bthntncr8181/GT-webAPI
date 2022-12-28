@@ -4,6 +4,7 @@ using GTBack.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GTBack.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221228112130_string")]
+    partial class @string
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,38 +398,6 @@ namespace GTBack.Repository.Migrations
                     b.ToTable("PlaceCustomerInteractions");
                 });
 
-            modelBuilder.Entity("GTBack.Core.Entities.PlaceInWidget", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("placeId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("widgetId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("placeId");
-
-                    b.HasIndex("widgetId");
-
-                    b.ToTable("PlaceInWidget");
-                });
-
             modelBuilder.Entity("GTBack.Core.Entities.ProfilImages", b =>
                 {
                     b.Property<long>("Id")
@@ -665,25 +635,6 @@ namespace GTBack.Repository.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Place");
-                });
-
-            modelBuilder.Entity("GTBack.Core.Entities.PlaceInWidget", b =>
-                {
-                    b.HasOne("GTBack.Core.Entities.Place", "place")
-                        .WithMany()
-                        .HasForeignKey("placeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GTBack.Core.Entities.Widget", "widget")
-                        .WithMany()
-                        .HasForeignKey("widgetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("place");
-
-                    b.Navigation("widget");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.Widgets.GalleryWidget", b =>

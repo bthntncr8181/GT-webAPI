@@ -2,6 +2,7 @@ using AutoMapper;
 using GTBack.Core.DTO.Request;
 using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities;
+using GTBack.Core.Entities.Widgets;
 using GTBack.Core.Services;
 using GTBack.Repository.Models;
 using GTBack.Service.Services;
@@ -19,16 +20,19 @@ namespace GTBack.WebAPI.Controllers
         private readonly IService<Place> _service;
         private readonly IService<Attributes> _Attservice;
         private readonly IService<Comments> _comService;
+        private readonly IService<Widget> _widget;
+
         private readonly CustomService _cService = new CustomService();
         private readonly IPlaceService _pService;
 
 
-        public PlaceController(IService<Place> service,IService<Attributes> attservice, IMapper mapper, IPlaceService pService, IService<Comments> comments)
+        public PlaceController(IService<Widget> widget, IService<Place> service,IService<Attributes> attservice, IMapper mapper, IPlaceService pService, IService<Comments> comments)
         {
             _service = service;
             _mapper = mapper;
             _pService = pService;
             _Attservice = attservice;
+            _widget= widget;
             _comService = comments;
         }
  
@@ -112,6 +116,39 @@ namespace GTBack.WebAPI.Controllers
 
 
             return ApiResult(await _pService.AddAttr(attr));
+
+        }
+
+        [HttpPost("WidgetAdd")]
+        public async Task<IActionResult> AddWidgetType(string type )
+        {
+
+
+            var widget = new Widget()
+            {
+               type= type,
+               IsDeleted= false,
+               CreatedDate= DateTime.Now,
+               UpdatedDate= DateTime.Now,
+
+
+
+            };
+
+
+            await _widget.AddAsync(widget);
+
+            return Ok();
+
+        }
+
+
+        [HttpPost("WidgetAddOnPlace")]
+        public async Task<IActionResult> AddWidgetOnPlace(int id,int placeId)
+        {
+
+
+            return ApiResult(await _pService.AddWidgetOnPlace(id,placeId));
 
         }
 

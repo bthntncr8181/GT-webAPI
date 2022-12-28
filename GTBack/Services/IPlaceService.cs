@@ -13,26 +13,22 @@ namespace GTBack.Core.Services
 {
     public interface IPlaceService
     {
+
+        Task<IDataResults<string>> AddWidgetOnPlace(int id, int placeId);
         Task<IDataResults<ICollection<ExtensionDto>>> GetPlaceExtensions(int placeId);
         Task<IDataResults<ICollection<PlaceResponseDto>>> List(PlaceListParameters parameters);
-
-
+        Task<IResults> DeleteMenuItem(int id);
+        Task<IDataResults<ICollection<MenuWidgetUpdateDto>>> GetPlaceMenu(int placeId);
+        Task<IResults> UpdateMenu(MenuWidgetUpdateDto menu);
+        Task<IDataResults<MenuWidgetUpdateDto>> AddMenu(MenuWidgetRequestDto menu);
         Task<IDataResults<string>> GetProfilImage(int id);
         Task<IDataResults<string>> GetCoverImage(int id);
-
-
         Task<IDataResults<ICollection<AttrDto>>> GetAttr(int placeId);
         Task<IResults> AddAttr(AttrDto attr);
         Task<IDataResults<ICollection<CommentResDto>>> GetPlaceComments(int placeId);
-
         Task<IDataResults<PlaceResponseDto>> GetById (int id); 
-        
-
         Task<IResults> Put(PlaceResponseDto place);
-       
-
         Task<IResults> Delete(int id);
-
         Task<IDataResults<PlaceResponseDto>> Register(PlaceDto registerDto);
     }
 }
