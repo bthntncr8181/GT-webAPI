@@ -1,6 +1,7 @@
 ﻿using GTBack.Core.DTO.Request;
 using GTBack.Core.DTO.Response;
 using GTBack.Core.Entities;
+using GTBack.Core.Entities.Widgets;
 using GTBack.Core.Results;
 using GTBack.Repository.Models;
 using System;
@@ -13,6 +14,11 @@ namespace GTBack.Core.Services
 {
     public interface IPlaceService
     {
+
+        Task<IDataResults<GalleryWidgetRequestDto>> AddGallery(GalleryWidgetRequestDto menu);
+        Task<IResults> UpdateGallery(GalleryWidgetRequestDto menu);
+        Task<IDataResults<ICollection<GalleryWidgetRequestDto>>> GetPlaceGallery(int placeId);
+        Task<IResults> DeleteGalleryItem(int id);
         Task<IResults> UsernameCheck(string username);
         Task<IDataResults<string>> AddWidgetOnPlace(int id, int placeId);
         Task<IDataResults<ICollection<ExtensionDto>>> GetPlaceExtensions(int placeId);

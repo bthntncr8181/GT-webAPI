@@ -33,6 +33,9 @@ namespace GTBack.Service.Mapping
             CreateMap<MenuWidget, MenuWidgetRequestDto>().ReverseMap();
             CreateMap<MenuWidgetUpdateDto, MenuWidgetUpdateDto>().ReverseMap();
             CreateMap<MenuWidget, MenuWidgetUpdateDto>().ReverseMap();
+            CreateMap<GalleryWidget, GalleryWidgetRequestDto>().ReverseMap();
+
+
 
 
 

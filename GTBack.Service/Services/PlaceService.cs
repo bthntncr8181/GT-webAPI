@@ -37,19 +37,18 @@ namespace GTBack.Service.Services
         private readonly AttributesRepository _attributesRepository;
         private readonly IService<ExtensionStrings> _extensionService;
         private readonly IService<Comments> _commentservice;
+        private readonly IService<GalleryWidget> _gallery;
         private readonly IService<ProfilImages> _profil;
         private readonly IService<CoverImages> _cover;
         private readonly IService<MenuWidget> _menu;
-
         private readonly IService<PlaceInWidget> _placeWidgetRelation;
-
         private readonly ClaimsPrincipal? _loggedUser;
         private readonly IService<Customer> _customerService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IJwtTokenService _tokenService;
 
-        public PlaceService(IService<MenuWidget> menu, IService<PlaceInWidget> placeWidgetRelation, IService<ProfilImages> profil,
+        public PlaceService(IService<GalleryWidget> gallery,IService<MenuWidget> menu, IService<PlaceInWidget> placeWidgetRelation, IService<ProfilImages> profil,
        IService<CoverImages> cover,IService<Comments> commentservice,IService<Attributes> attservice, IJwtTokenService tokenService, IService<Place> service,IUnitOfWork unitOfWork,IMapper mapper, IHttpContextAccessor httpContextAccessor, PlaceRepository placeRepository, AttributesRepository attributesRepository, IService<ExtensionStrings> extensionService, IService<Customer> customerService )
         {
             _unitOfWork = unitOfWork;
@@ -67,6 +66,7 @@ namespace GTBack.Service.Services
             _cover= cover;
             _placeWidgetRelation= placeWidgetRelation;
             _menu = menu;
+            _gallery = gallery;
         }
 
 
@@ -425,6 +425,60 @@ namespace GTBack.Service.Services
 
 
 
+        #region GalleryWidget
+        public async Task<IDataResults<GalleryWidgetRequestDto>> AddGallery(GalleryWidgetRequestDto menu)
+        {
+
+            var user = await _gallery.AddAsync(_mapper.Map<GalleryWidget>(menu));
+
+
+            var userDto = _mapper.Map<GalleryWidgetRequestDto>(user);
+
+
+
+
+
+            return new SuccessDataResult<GalleryWidgetRequestDto>(userDto);
+
+        }
+        public async Task<IResults> UpdateGallery(GalleryWidgetRequestDto menu)
+        {
+
+            var cafe = await _gallery.GetByIdAsync(x => x.Id == menu.Id);
+
+            var cafe2 = _mapper.Map<GalleryWidget>(menu);
+
+            await _gallery.UpdateAsync(cafe2);
+
+
+            return new SuccessResult();
+
+        }
+        public async Task<IDataResults<ICollection<GalleryWidgetRequestDto>>> GetPlaceGallery(int placeId)
+        {
+            var query = _gallery.Where(x => x.placeId == placeId && !x.IsDeleted);
+
+            var data = _mapper.Map<ICollection<GalleryWidgetRequestDto>>(await query.ToListAsync());
+
+            var totalCount = await query.CountAsync();
+
+            return new SuccessDataResult<ICollection<GalleryWidgetRequestDto>>(data, totalCount);
+        }
+        public async Task<IResults> DeleteGalleryItem(int id)
+        {
+
+            var galleryItem = await _gallery.GetByIdAsync(x => x.Id == id);
+
+            galleryItem.IsDeleted = true;
+
+            await _gallery.UpdateAsync(galleryItem);
+
+
+            return new SuccessResult();
+        }
+
+
+        #endregion
 
     }
 }
