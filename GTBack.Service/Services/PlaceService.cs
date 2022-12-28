@@ -103,7 +103,6 @@ namespace GTBack.Service.Services
 
 
 
-
         #region Place
 
         public async Task<IDataResults<PlaceResponseDto>> GetById(int id)
@@ -114,6 +113,20 @@ namespace GTBack.Service.Services
             var data = _mapper.Map<PlaceResponseDto>( place);
             return new SuccessDataResult<PlaceResponseDto>(data);
         }
+        public async Task<IResults> UsernameCheck(string username)
+        {
+
+            var user = await _service.GetByIdAsync((x => x.Username.ToLower() == username && !x.IsDeleted));
+
+            if (user != null)
+            {
+                return new ErrorResult();
+            }
+
+            return new SuccessResult();
+        }
+
+
         public async Task<IResults> Put(PlaceResponseDto entiti)
         {
 
@@ -325,7 +338,8 @@ namespace GTBack.Service.Services
 
 
 
-        
+        #region Static Widget
+
 
         public async Task<IDataResults<string>> AddWidgetOnPlace(int id,int placeId)
         {
@@ -347,6 +361,10 @@ namespace GTBack.Service.Services
 
 
         }
+        #endregion
+
+
+
         #region MenuWidget
 
         public async Task<IDataResults<MenuWidgetUpdateDto>> AddMenu(MenuWidgetRequestDto menu)
