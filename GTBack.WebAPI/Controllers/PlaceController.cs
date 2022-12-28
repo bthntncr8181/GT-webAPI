@@ -61,6 +61,14 @@ namespace GTBack.WebAPI.Controllers
 
 
         }
+
+        [HttpGet("UsernameCheck")]
+        public async Task<IActionResult> UsernameCheck(string username)
+        {
+            return ApiResult(await _pService.UsernameCheck(username));
+
+
+        }
         [HttpGet("profilImage")]
         public async Task<IActionResult> GetProfilImage(int id)
         {

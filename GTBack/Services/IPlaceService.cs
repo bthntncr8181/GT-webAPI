@@ -13,7 +13,7 @@ namespace GTBack.Core.Services
 {
     public interface IPlaceService
     {
-
+        Task<IResults> UsernameCheck(string username);
         Task<IDataResults<string>> AddWidgetOnPlace(int id, int placeId);
         Task<IDataResults<ICollection<ExtensionDto>>> GetPlaceExtensions(int placeId);
         Task<IDataResults<ICollection<PlaceResponseDto>>> List(PlaceListParameters parameters);
