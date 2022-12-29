@@ -134,9 +134,13 @@ namespace GTBack.Service.Services
             place.customerId = (int)GetLoggedUserId();
 
             await _service.UpdateAsync(place);
+           var profilId  =  _profil.Where(x => x.placeId == entiti.Id).Select(x => x.Id).FirstOrDefault();
+            var coverId = _cover.Where(x => x.placeId == entiti.Id).Select(x => x.Id).FirstOrDefault();
+
 
             var profilImage = new ProfilImages()
             {
+                Id=profilId,
                 placeId = place.Id,
                 img = entiti.ProfilImage
 
@@ -144,13 +148,13 @@ namespace GTBack.Service.Services
             };
             var coverImages = new CoverImages()
             {
-
+                Id=coverId,
                 placeId = place.Id,
                 img = entiti.CoverImage
 
             };
-            await _profil.AddAsync(profilImage);
-            await _cover.AddAsync(coverImages);
+            await _profil.UpdateAsync(profilImage);
+            await _cover.UpdateAsync(coverImages);
 
 
             return new SuccessResult();
