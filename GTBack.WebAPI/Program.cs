@@ -14,8 +14,10 @@ using GTBack.Service.Utilities.Jwt;
 using GTBack.WebAPI.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using System.Reflection;
+#if DEBUG
+using Microsoft.OpenApi.Models;
+#endif
 
 var builder = WebApplication.CreateBuilder(args);
 
