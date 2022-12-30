@@ -99,12 +99,15 @@ var app = builder.Build();
 
 
 
+#if DEBUG
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoThere API v1");
     c.ConfigObject.AdditionalItems.Add("persistAuthorization", "true");
 });
+#endif
+
 app.UseAuthentication();
 
 
