@@ -35,11 +35,11 @@ namespace GTBack.WebAPI.Controllers
 
 
             [HttpPost("Login")]
-            public async Task<IActionResult> Login()
+            public async Task<IActionResult> Login(LoginDto log)
             {
 
 
-                return ApiResult(await _CustomerService.Login());
+                return ApiResult(await _CustomerService.Login(log));
 
 
             }
