@@ -21,7 +21,7 @@ namespace GTBack.Core.Services
         Task<IResults> Put(UpdateCustomer place);
         Task<IDataResults<CustomerDto>> Me();
         int? GetLoggedUserId();
-        Task<IResults> Login(LoginDto loginDto);
+        Task<IResults> Login();
         Task<IResults> Delete(int id);
 
         Task<IDataResults<AuthenticatedUserResponseDto>> Register(CustomerDto registerDto);

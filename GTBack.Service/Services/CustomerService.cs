@@ -183,7 +183,7 @@ namespace GTBack.Service.Services
 
             return new SuccessDataResult<CustomerDto>(user);
         }
-        public async Task<IResults> Login(LoginDto loginDto)
+        public async Task<IResults> Login()
         {
            //  var valResult = FluentValidationTool.ValidateModelWithKeyResult(_validatorFactory.GetValidator<LoginDto>(), loginDto);
            //  if (valResult.Success == false)
