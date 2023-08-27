@@ -16,7 +16,6 @@ namespace GTBack.Repository
         public DbSet<Place> Place { get; set; }
         public DbSet<Comments> Comments { get; set; }
         public DbSet<Attributes> Attributes { get; set; }
-
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 

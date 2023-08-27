@@ -183,31 +183,31 @@ namespace GTBack.Service.Services
 
             return new SuccessDataResult<CustomerDto>(user);
         }
-        public async Task<IDataResults<AuthenticatedUserResponseDto>> Login(LoginDto loginDto)
+        public async Task<IResults> Login(LoginDto loginDto)
         {
-            var valResult = FluentValidationTool.ValidateModelWithKeyResult(_validatorFactory.GetValidator<LoginDto>(), loginDto);
-            if (valResult.Success == false)
-            {
-                return new ErrorDataResults<AuthenticatedUserResponseDto>( HttpStatusCode.BadRequest,valResult.Errors);
-            }
-           var  username = loginDto.UserName.ToLower().Trim();
-            var parent = await _service.GetByIdAsync((x => x.Username.ToLower() == username && !x.IsDeleted));//get by mail eklenecek
-          
-           
-            if (parent?.PasswordHash == null)
-            {
-                valResult.Errors.Add("", Messages.User_NotFound_Message);
-                return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.User_NotFound_Message, HttpStatusCode.BadRequest);
-            }
-            if (!Utilities.SHA1.Verify(loginDto.password, parent.PasswordHash))
-            {
-                valResult.Errors.Add("", Messages.User_Login_Message_Notvalid);
-                return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.Password_Wrong, HttpStatusCode.BadRequest);
-            }
-            parent.UpdatedDate = DateTime.UtcNow;
-            await _unitOfWork.CommitAsync();
-            var response = await Authenticate(_mapper.Map<CustomerDto>(parent));
-            return new SuccessDataResult<AuthenticatedUserResponseDto>( response);
+           //  var valResult = FluentValidationTool.ValidateModelWithKeyResult(_validatorFactory.GetValidator<LoginDto>(), loginDto);
+           //  if (valResult.Success == false)
+           //  {
+           //      return new ErrorDataResults<AuthenticatedUserResponseDto>( HttpStatusCode.BadRequest,valResult.Errors);
+           //  }
+           // var  username = loginDto.UserName.ToLower().Trim();
+           //  var parent = await _service.GetByIdAsync((x => x.Username.ToLower() == username && !x.IsDeleted));//get by mail eklenecek
+           //
+           //
+           //  if (parent?.PasswordHash == null)
+           //  {
+           //      valResult.Errors.Add("", Messages.User_NotFound_Message);
+           //      return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.User_NotFound_Message, HttpStatusCode.BadRequest);
+           //  }
+           //  if (!Utilities.SHA1.Verify(loginDto.password, parent.PasswordHash))
+           //  {
+           //      valResult.Errors.Add("", Messages.User_Login_Message_Notvalid);
+           //      return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.Password_Wrong, HttpStatusCode.BadRequest);
+           //  }
+           //  parent.UpdatedDate = DateTime.UtcNow;
+           //  await _unitOfWork.CommitAsync();
+           //  var response = await Authenticate(_mapper.Map<CustomerDto>(parent));
+            return new SuccessResult();
         }
 
         private async Task<AuthenticatedUserResponseDto> Authenticate(CustomerDto userDto)

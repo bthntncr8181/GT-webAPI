@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GTBack.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221030203431_third-week-1")]
-    partial class thirdweek1
+    [Migration("20230825140817_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -117,10 +117,6 @@ namespace GTBack.Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

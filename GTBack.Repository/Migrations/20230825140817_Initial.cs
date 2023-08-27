@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GTBack.Repository.Migrations
 {
-    public partial class İNİTİAL : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -64,8 +64,7 @@ namespace GTBack.Repository.Migrations
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     placeId = table.Column<int>(type: "int", nullable: true),
-                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -110,6 +109,24 @@ namespace GTBack.Repository.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    customerId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_Customers_customerId",
+                        column: x => x.customerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Attributes_placeId",
                 table: "Attributes",
@@ -131,6 +148,11 @@ namespace GTBack.Repository.Migrations
                 column: "placeId",
                 unique: true,
                 filter: "[placeId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_customerId",
+                table: "RefreshTokens",
+                column: "customerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -140,6 +162,9 @@ namespace GTBack.Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "Customers");

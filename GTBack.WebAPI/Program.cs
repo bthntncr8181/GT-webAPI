@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,10 +80,16 @@ builder.Services.LoadValidators();
 var appConfig = builder.Configuration.Get<GoThereAppConfig>();
 
 
+SqlConnectionStringBuilder mySql = new SqlConnectionStringBuilder();
+mySql.DataSource = "database-1.c8fdlf1gvqc2.us-east-1.rds.amazonaws.com"; 
+mySql.UserID = "admin";            
+mySql.Password = "Bthntncr81.";     
+mySql.InitialCatalog = "database-1";
+
 
 builder.Services.AddDbContext<AppDbContext>(x =>
 {
-    x.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection"), option =>
+    x.UseSqlServer(mySql.ConnectionString, option =>
     {
         option.MigrationsAssembly(Assembly.GetAssembly(typeof(AppDbContext)).GetName().Name);
     });
