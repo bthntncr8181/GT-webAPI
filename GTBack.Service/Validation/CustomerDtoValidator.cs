@@ -9,29 +9,23 @@ using System.Threading.Tasks;
 
 namespace GTBack.Service.Validation
 {
-    public class CustomerDtoValidator : AbstractValidator<CustomerDto>
+    public class CustomerDtoValidator : AbstractValidator<UserRegisterDTO>
     {
         public CustomerDtoValidator()
         {
-
             RuleFor(x => x.Mail)
                 .NotEmpty().WithMessage(ValidationMessages.Email_Not_Empty)
                 .EmailAddress().WithMessage(ValidationMessages.Email_Invalid)
                 .MaximumLength(128).WithMessage(ValidationMessages.Max_Length);
-            RuleFor(x => x.UserName)
-       .NotEmpty().WithMessage(ValidationMessages.Username_Not_Empty)
-    
-       .MaximumLength(128).WithMessage(ValidationMessages.Max_Length);
+            RuleFor(x => x.Name)
+                .NotEmpty().WithMessage(ValidationMessages.Username_Not_Empty)
+                .MaximumLength(128).WithMessage(ValidationMessages.Max_Length);
 
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage(ValidationMessages.Name_Not_Empty);
-
-            RuleFor(x => x.password)
-                .NotEmpty().WithMessage(ValidationMessages.Password_Not_Empty)
-                .MaximumLength(128).WithMessage(ValidationMessages.Max_Length)
-                .MinimumLength(3).WithMessage(ValidationMessages.Min_Length);
-
-        
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage(ValidationMessages.Name_Not_Empty)
+                .MinimumLength(10).WithMessage(ValidationMessages.Min_Length);
         }
     }
 }

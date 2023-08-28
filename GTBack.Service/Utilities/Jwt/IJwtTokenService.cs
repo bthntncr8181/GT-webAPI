@@ -9,7 +9,7 @@ namespace GTBack.Service.Utilities.Jwt
 {
     public interface IJwtTokenService
     {
-        public AccessTokenDto GenerateAccessToken(CustomerDto userDto);
+        public AccessTokenDto GenerateAccessToken(UserRegisterDTO userDto);
         public string GenerateRefreshToken();
         public bool Validate(string refreshToken);
     }

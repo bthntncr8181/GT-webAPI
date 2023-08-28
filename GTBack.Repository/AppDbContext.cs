@@ -12,11 +12,11 @@ namespace GTBack.Repository
 
         }
    
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Place> Place { get; set; }
-        public DbSet<Comments> Comments { get; set; }
-        public DbSet<Attributes> Attributes { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<EventType> EventTypes { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<RefreshToken> RefreshToken { get; set; }
 
 
 
@@ -31,7 +31,17 @@ namespace GTBack.Repository
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
          
             base.OnModelCreating(modelBuilder);
-    
+
+            modelBuilder.Entity<Event>()
+                .HasOne(m => m.AdminUser)
+                .WithMany(t => t.AdminEvent)
+                .HasForeignKey(m => m.AdminUserId);
+
+
+            modelBuilder.Entity<Event>()
+                .HasOne(m => m.ClientUser)
+                .WithMany(t => t.ClientEvent)
+                .HasForeignKey(m => m.ClientUserId);
 
         }
     }

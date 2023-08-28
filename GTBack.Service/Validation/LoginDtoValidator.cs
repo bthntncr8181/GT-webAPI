@@ -9,18 +9,17 @@ using System.Threading.Tasks;
 
 namespace GTBack.Service.Validation
 {
-
     public class LoginDtoValidator : AbstractValidator<LoginDto>
     {
         public LoginDtoValidator()
         {
-                RuleFor(x => x.UserName)
-                    .NotEmpty().WithMessage(ValidationMessages.Username_Not_Empty)
-                   
-                    .MaximumLength(128).WithMessage(ValidationMessages.Max_Length);
-
-         
-
+            RuleFor(x => x.Mail)
+                .NotEmpty().WithMessage(ValidationMessages.Email_Not_Empty)
+                .EmailAddress().WithMessage(ValidationMessages.Email_Invalid)
+                .MaximumLength(128).WithMessage(ValidationMessages.Max_Length);
+            RuleFor(x => x.Mail)
+                .NotEmpty().WithMessage(ValidationMessages.Username_Not_Empty)
+                .MaximumLength(128).WithMessage(ValidationMessages.Max_Length);
             RuleFor(x => x.password)
                 .NotEmpty().WithMessage(ValidationMessages.Password_Not_Empty)
                 .MaximumLength(128).WithMessage(ValidationMessages.Max_Length)

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace GTBack.Core.DTO
 {
-    public class AttrDto
+    public class RefreshTokenDto
     {
-        public int placeId { get; set; }
-        public string Name { get; set; }
-        public bool isExist { get; set; }
+        public Guid Id { get; set; }
+        public string Token { get; set; }
+
+
     }
 }

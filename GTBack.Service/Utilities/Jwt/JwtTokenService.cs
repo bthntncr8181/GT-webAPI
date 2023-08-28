@@ -20,19 +20,16 @@ namespace GTBack.Service.Utilities.Jwt
         {
             _configuration = configuration.JwtConfiguration;
         }
-        public AccessTokenDto GenerateAccessToken(CustomerDto userDto)
+
+        public AccessTokenDto GenerateAccessToken(UserRegisterDTO userDto)
         {
             var claims = new List<Claim>
-        {
-            new("Id", userDto.Id.ToString()),
-            new(ClaimTypes.Name, userDto.Name),
-           
-        };
-            
-                claims.Add(new Claim("Username", userDto.UserName));
-          
-             
-         
+            {
+                new("Id", userDto.Id.ToString()),
+                new(ClaimTypes.Name, userDto.Name),
+            };
+
+            claims.Add(new Claim("Name", userDto.Name));
 
 
             var expirationTime = DateTime.UtcNow.AddMinutes(_configuration.AccessTokenExpirationMinutes);
@@ -49,6 +46,7 @@ namespace GTBack.Service.Utilities.Jwt
                 ExpirationTime = expirationTime
             };
         }
+
         public string GenerateRefreshToken()
         {
             var expirationTime = DateTime.UtcNow.AddMinutes(_configuration.RefreshTokenExpirationMinutes);
@@ -59,6 +57,7 @@ namespace GTBack.Service.Utilities.Jwt
                 _configuration.Audience,
                 expirationTime);
         }
+
         public bool Validate(string refreshToken)
         {
             var validationParameters = new TokenValidationParameters()
@@ -84,7 +83,9 @@ namespace GTBack.Service.Utilities.Jwt
                 return false;
             }
         }
-        private static string GenerateToken(string secretKey, string issuer, string audience, DateTime utcExpirationTime,
+
+        private static string GenerateToken(string secretKey, string issuer, string audience,
+            DateTime utcExpirationTime,
             IEnumerable<Claim> claims = null)
         {
             SecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));

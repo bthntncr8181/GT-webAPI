@@ -28,7 +28,7 @@ namespace GTBack.Service.Services
 
         public Task<RefreshToken?> GetByToken(string token)
         {
-            return _refreshTokenRepository.Where(x => x.Token == token).Include(x => x.Customer).FirstOrDefaultAsync();
+            return _refreshTokenRepository.Where(x => x.Token == token).Include(x => x.User).FirstOrDefaultAsync();
 
 
 

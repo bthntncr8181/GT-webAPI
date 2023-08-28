@@ -14,12 +14,11 @@ using System.Threading.Tasks;
 namespace GTBack.Service.Services
 {
     public class CustomService
-        
+
 
     {
-        
-
         private readonly IConfiguration _config;
+
         public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512())
@@ -30,49 +29,39 @@ namespace GTBack.Service.Services
         }
 
 
-            public string CreateToken( Customer data)
+        public string CreateToken(User data)
         {
-
-
             List<Claim> claims = new List<Claim>
             {
-
-                new Claim(ClaimTypes.Name,data.Name)
+                new Claim(ClaimTypes.Name, data.Name)
             };
 
-            var key =new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
                 _config.GetSection("AppSettings:Token").Value
-                
-                ));
+            ));
 
 
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-               
 
-            var token =  new JwtSecurityToken(
-                claims:claims,
-                expires:DateTime.Now.AddDays(1),
-                signingCredentials:cred
 
-                
-                );
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: cred
+            );
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-           
+
             return jwt;
         }
 
-        public bool VerifyPass(byte[] passwordSalt,byte[] passwordHash, string password)
+        public bool VerifyPass(byte[] passwordSalt, byte[] passwordHash, string password)
         {
-
             using (var hmac = new HMACSHA512(passwordSalt))
             {
-
-
                 var computeHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 return computeHash.SequenceEqual(passwordHash);
             }
-
         }
     }
 }

@@ -16,14 +16,10 @@ namespace GTBack.Service.Mapping
         public MapProfile()
         {
             
-            CreateMap<Customer, UpdateCustomer>().ReverseMap();
-            CreateMap<Customer,CustomerDto>().ReverseMap();
-            CreateMap<Customer, LoginDto>().ReverseMap();
-            CreateMap<Place, PlaceDto>().ReverseMap();
-            CreateMap<Attributes, AttrDto>().ReverseMap();
-            CreateMap<Comments, CommentDto>().ReverseMap();
-            CreateMap<CommentResDto, Comments>().ReverseMap();
+          
             CreateMap<RefreshToken, RefreshTokenDto>().ReverseMap();
+            CreateMap<UserRegisterDTO, User>().ReverseMap();
+            CreateMap<UserDTO, User>().ReverseMap();
 
 
        

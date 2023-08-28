@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using GTBack.Core.DTO;
 using GTBack.Core.Entities;
-using GTBack.Core.Models;
 using GTBack.Core.Services;
 using GTBack.Service.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -15,12 +14,12 @@ namespace GTBack.WebAPI.Controllers
       
 
             private readonly IMapper _mapper;
-            private readonly IService<Customer> _service;
-            private readonly ICustomerService _CustomerService;
+            private readonly IService<User> _service;
+            private readonly IUserService _userService;
 
-            public AuthController(IService<Customer> service, IMapper mapper, ICustomerService customerservice)
+            public AuthController(IService<User> service, IMapper mapper,IUserService userService)
             {
-                _CustomerService = customerservice;
+                _userService = userService;
                 _service = service;
                 _mapper = mapper;
             }
@@ -29,27 +28,27 @@ namespace GTBack.WebAPI.Controllers
             [HttpGet("me")]
             public async Task<IActionResult> Me()
             {
-
-                return ApiResult(await _CustomerService.Me());
+            
+                return ApiResult(await _userService.Me());
             }
-
-
+            
+            
             [HttpPost("Login")]
             public async Task<IActionResult> Login(LoginDto log)
             {
-
-
-                return ApiResult(await _CustomerService.Login(log));
-
-
+            
+            
+                return ApiResult(await _userService.Login(log));
+            
+            
             }
-
+            
             [HttpPost("Register")]
-            public async Task<IActionResult> Register(CustomerDto request)
+            public async Task<IActionResult> Register(UserRegisterDTO request)
             {
-
-
-                return ApiResult(await _CustomerService.Register(request));
+            
+            
+                return ApiResult(await _userService.Register(request));
             }
 
 
