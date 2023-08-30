@@ -71,6 +71,7 @@ builder.Services.AddAppConfiguration(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
+builder.Services.AddScoped(typeof(IEventService), typeof(EventService));
 builder.Services.AddScoped(typeof(IService<>),typeof(Service<>));
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.LoadValidators();

@@ -3,6 +3,7 @@ using GTBack.Core.Entities;
 using GTBack.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using GTBack.Core.UnitOfWorks;
 
 namespace GTBack.Repository.Repositories
 {
@@ -12,14 +13,17 @@ namespace GTBack.Repository.Repositories
         protected readonly AppDbContext _context;
         private readonly DbSet<T> _dbSet;
 
+
         public GenericRepository(AppDbContext context)
         {
             _context = context;
+
             _dbSet = context.Set<T>();
         }
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
+            
         }
 
         public async Task AddRangeAsync(IEnumerable<T> entities)

@@ -20,6 +20,10 @@ namespace GTBack.Service.Mapping
             CreateMap<RefreshToken, RefreshTokenDto>().ReverseMap();
             CreateMap<UserRegisterDTO, User>().ReverseMap();
             CreateMap<UserDTO, User>().ReverseMap();
+            CreateMap<Event, EventAddRequestDTO>().ReverseMap();
+            CreateMap<ICollection<EventListClientResponseDto>, Event>().ReverseMap();
+            CreateMap<EventListClientResponseDto, Event>().ReverseMap();
+            CreateMap<ICollection<EventListClientResponseDto>, IQueryable<Event>>().ReverseMap();
 
 
        
