@@ -20,7 +20,7 @@ namespace GTBack.WebAPI.Controllers;
             _mapper = mapper;
         }
         
-            
+        [Authorize]
         [HttpPost("Create")]
         public async Task<IActionResult> CreateEvent(EventAddRequestDTO model)
         {
@@ -28,7 +28,7 @@ namespace GTBack.WebAPI.Controllers;
             return ApiResult(await _eventService.createEvent(model));
             
         }
-        
+        [Authorize]
         [HttpGet("ListByClientId")]
         public async Task<IActionResult> CreateEvent()
         {
