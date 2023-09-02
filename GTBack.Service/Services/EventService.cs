@@ -17,7 +17,7 @@ using User = Auth0.ManagementApi.Models.User;
 
 namespace GTBack.Service.Services;
 
-public class EventService :IEventService
+public class EventService : IEventService
 {
     private readonly IGenericRepository<Event> _eventRepository;
     private readonly IGenericRepository<EventTypeCompanyRelation> _eventTypeCompanyRelationRepository;
@@ -30,7 +30,8 @@ public class EventService :IEventService
     private readonly IJwtTokenService _tokenService;
 
     public EventService(IGenericRepository<Event> eventRepository,
-        IGenericRepository<EventTypeCompanyRelation> eventTypeCompanyRelationRepository, IGenericRepository<Company> companyRepository,
+        IGenericRepository<EventTypeCompanyRelation> eventTypeCompanyRelationRepository,
+        IGenericRepository<Company> companyRepository,
         IRefreshTokenService refreshTokenService, IJwtTokenService tokenService,
         IValidatorFactory validatorFactory, IHttpContextAccessor httpContextAccessor, IService<Event> service,
         IUnitOfWork unitOfWork, IMapper mapper)
@@ -48,32 +49,32 @@ public class EventService :IEventService
 
 
     public async Task<IResults> createEvent(EventAddRequestDTO model)
-    { 
-        
-        var valResult = FluentValidationTool.ValidateModelWithKeyResult<EventAddRequestDTO>(new EventCreateValidator(), model);
+    {
+        var valResult =
+            FluentValidationTool.ValidateModelWithKeyResult<EventAddRequestDTO>(new EventCreateValidator(), model);
         if (valResult.Success == false)
         {
             return new ErrorDataResults<AuthenticatedUserResponseDto>(HttpStatusCode.BadRequest, valResult.Errors);
         }
+
         var eventModel = _mapper.Map<Event>(model);
-        
+
         await _eventRepository.AddAsync(eventModel);
 
-       await _unitOfWork.CommitAsync();
-        
-        return new SuccessResult();
+        await _unitOfWork.CommitAsync();
 
+        return new SuccessResult();
     }
+
     public async Task<IDataResults<ICollection<EventListClientResponseDto>>> GetListByClientId()
     {
-        var clientId = GetLoggedUserId();
-        
-        var query = _eventRepository.Where(x => !x.IsDeleted&&x.ClientUserId==clientId);
-        
-        var data = _mapper.Map<ICollection<EventListClientResponseDto>>(await query.ToListAsync());
-        
-        return new SuccessDataResult<ICollection<EventListClientResponseDto>>(data,data.Count);
+        var userId = GetLoggedUserId();
 
+        var query = _eventRepository.Where(x => !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId);
+
+        var data = _mapper.Map<ICollection<EventListClientResponseDto>>(await query.ToListAsync());
+
+        return new SuccessDataResult<ICollection<EventListClientResponseDto>>(data, data.Count);
     }
 
     private int? GetLoggedUserId()
@@ -84,5 +85,6 @@ public class EventService :IEventService
             return userId;
         }
 
-        return null;    }
+        return null;
+    }
 }

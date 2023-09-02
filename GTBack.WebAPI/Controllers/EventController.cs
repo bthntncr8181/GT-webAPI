@@ -24,9 +24,8 @@ namespace GTBack.WebAPI.Controllers;
         [HttpPost("Create")]
         public async Task<IActionResult> CreateEvent(EventAddRequestDTO model)
         {
-            
+
             return ApiResult(await _eventService.createEvent(model));
-            
         }
         [Authorize]
         [HttpGet("ListByClientId")]
