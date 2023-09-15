@@ -22,6 +22,7 @@ namespace GTBack.WebAPI.Controllers;
         
         [Authorize]
         [HttpPost("Create")]
+        
         public async Task<IActionResult> CreateEvent(EventAddRequestDTO model)
         {
 
@@ -29,10 +30,15 @@ namespace GTBack.WebAPI.Controllers;
         }
         [Authorize]
         [HttpGet("ListByClientId")]
-        public async Task<IActionResult> CreateEvent()
+        public async Task<IActionResult> GetListByClientId([FromQuery]DateTime date)
         {
-            return ApiResult(await _eventService.GetListByClientId());
+            return ApiResult(await _eventService.GetListByClientId(date));
         }
         
-
+        [Authorize]
+        [HttpGet("ListByDayClientId")]
+        public async Task<IActionResult> GetListDayByClientId([FromQuery]DateTime date)
+        {
+            return ApiResult(await _eventService.GetListDayByClientId(date));
+        }
     }

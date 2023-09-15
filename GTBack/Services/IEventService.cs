@@ -8,7 +8,8 @@ public interface IEventService
     // id tokendan dönecek
     // Task<IDataResults<EventListAdminResponseDto>> GetListByAdminId();
     // id tokendan dönecek
-    Task<IDataResults<ICollection<EventListClientResponseDto>>> GetListByClientId();
+    Task<IDataResults<ICollection<EventListClientResponseDto>>> GetListByClientId(DateTime date);
+    Task<IDataResults<ICollection<EventToMonthDTO>>> GetListDayByClientId(DateTime date);
     //
     // Task<IDataResults<EventDetailResponseDto>> GetEventDetailById(int eventId);
     

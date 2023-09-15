@@ -20,6 +20,7 @@ namespace GTBack.Service.Services;
 public class EventService : IEventService
 {
     private readonly IGenericRepository<Event> _eventRepository;
+    private readonly IGenericRepository<EventType> _eventTypeRepository;
     private readonly IGenericRepository<EventTypeCompanyRelation> _eventTypeCompanyRelationRepository;
     private readonly IGenericRepository<Company> _companyRepository;
     private readonly IRefreshTokenService _refreshTokenService;
@@ -30,6 +31,7 @@ public class EventService : IEventService
     private readonly IJwtTokenService _tokenService;
 
     public EventService(IGenericRepository<Event> eventRepository,
+        IGenericRepository<EventType> eventTypeRepository,
         IGenericRepository<EventTypeCompanyRelation> eventTypeCompanyRelationRepository,
         IGenericRepository<Company> companyRepository,
         IRefreshTokenService refreshTokenService, IJwtTokenService tokenService,
@@ -39,6 +41,7 @@ public class EventService : IEventService
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _eventRepository = eventRepository;
+        _eventTypeRepository = eventTypeRepository;
         _companyRepository = companyRepository;
         _eventTypeCompanyRelationRepository = eventTypeCompanyRelationRepository;
         _loggedUser = httpContextAccessor.HttpContext?.User;
@@ -66,14 +69,53 @@ public class EventService : IEventService
         return new SuccessResult();
     }
 
-    public async Task<IDataResults<ICollection<EventListClientResponseDto>>> GetListByClientId()
+    public async Task<IDataResults<ICollection<EventToMonthDTO>>> GetListDayByClientId(DateTime date)
     {
         var userId = GetLoggedUserId();
 
-        var query = _eventRepository.Where(x => !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId);
+        var query = _eventRepository.Where(x =>
+            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.Date.Month == date.Month);
+
+
+        var data = _mapper.Map<ICollection<EventToMonthDTO>>(await query.ToListAsync());
+        return new SuccessDataResult<ICollection<EventToMonthDTO>>(data, data.Count);
+    }
+    
+    
+    
+    public async Task<IDataResults<ICollection<EventListClientResponseDto>>> GetListByClientId(DateTime date)
+    {
+        var userId = GetLoggedUserId();
+
+        var eventRepo = _eventRepository.Where(x =>
+            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.Date == date);
+        var eventTypeRepo = _eventTypeRepository.Where(x => !x.IsDeleted);
+
+        var query = from mal in eventRepo
+            join eventType in eventTypeRepo on mal.EventTypeId equals eventType.Id into eventTypeUserLeft
+            from eventType in eventTypeUserLeft.DefaultIfEmpty()
+            select new EventListClientResponseDto
+            {
+                Mail = mal.Mail,
+                Date = mal.Date,
+                StartDateTime = mal.StartDateTime,
+                EndDateTime = mal.EndDateTime,
+                Description = mal.Description,
+                AdminUserId = mal.AdminUserId,
+                ClientUserId = mal.ClientUserId,
+                eventTypeDto = new EventTypeDTO()
+                {
+                    Duration = eventType.Duration,
+                    EventName = eventType.Name,
+                    Description = eventType.Description,
+                    EventTypeId = eventType.Id,
+                },
+                StatusId = mal.StatusId,
+                Price = mal.Price,
+                Id = mal.Id
+            };
 
         var data = _mapper.Map<ICollection<EventListClientResponseDto>>(await query.ToListAsync());
-
         return new SuccessDataResult<ICollection<EventListClientResponseDto>>(data, data.Count);
     }
 

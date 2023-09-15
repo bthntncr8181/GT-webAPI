@@ -10,11 +10,20 @@ public class User  : BaseEntity
     public String Address { get; set; }
     public string PasswordHash { get; set; }
     public int UserTypeId { get; set; }
+    
     public int? CompanyId { get; set; }
     // public Company Company { get; set; }
     public virtual ICollection<RefreshToken>? RefreshTokens { get; set; }
     public virtual ICollection<Event>? AdminEvent { get; set; }
     public virtual ICollection<Event>? ClientEvent { get; set; }
+    public virtual ICollection<SpecialAttributeRelation>? BlackListUserRelationsAdmin { get; set; }
+    public virtual ICollection<SpecialAttributeRelation>? BlackListUserRelationsClient { get; set; }
+    
+    
+    
+    
+    
+    
      
 
 }

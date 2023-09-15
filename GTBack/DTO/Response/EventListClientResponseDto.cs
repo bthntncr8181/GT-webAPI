@@ -9,5 +9,8 @@ public class EventListClientResponseDto
     public String Description { get; set; }
     public int AdminUserId { get; set; }
     public int ClientUserId { get; set; }
-    public int eventTypeId { get; set; }
+    public EventTypeDTO eventTypeDto { get; set; }
+    public int StatusId { get; set; }
+    public int Price { get; set; }
+    public int Id { get; set; }
 }

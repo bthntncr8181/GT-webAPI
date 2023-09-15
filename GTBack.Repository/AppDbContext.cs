@@ -43,6 +43,20 @@ namespace GTBack.Repository
                 .WithMany(t => t.ClientEvent)
                 .HasForeignKey(m => m.ClientUserId);
 
+            
+            modelBuilder.Entity<SpecialAttributeRelation>()
+                .HasKey(e => new { e.AdminUserId, e.ClientUserId });
+
+            modelBuilder.Entity<SpecialAttributeRelation>()
+                .HasOne(e => e.AdminUser)
+                .WithMany(e => e.BlackListUserRelationsClient)
+                .HasForeignKey(e => e.AdminUserId);
+
+            modelBuilder.Entity<SpecialAttributeRelation>()
+                .HasOne(e => e.ClientUser)
+                .WithMany(e => e.BlackListUserRelationsAdmin)
+                .HasForeignKey(e => e.ClientUserId);
+            
         }
     }
 }
