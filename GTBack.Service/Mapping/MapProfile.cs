@@ -23,9 +23,11 @@ namespace GTBack.Service.Mapping
             CreateMap<Event, EventAddRequestDTO>().ReverseMap();
             CreateMap<ICollection<EventListClientResponseDto>, Event>().ReverseMap();
             CreateMap<EventListClientResponseDto, Event>().ReverseMap();
+            CreateMap<EventToMonthDTO, Event>().ReverseMap();
             CreateMap<ICollection<EventListClientResponseDto>, IQueryable<Event>>().ReverseMap();
             CreateMap<ICollection<EventListClientResponseDto>, IQueryable<EventListClientResponseDto>>().ReverseMap();
             CreateMap<ICollection<EventToMonthDTO>, IQueryable<Event>>().ReverseMap();
+            CreateMap<ICollection<Event>, IQueryable<EventToMonthDTO>>().ReverseMap();
             
 
         }

@@ -32,13 +32,13 @@ namespace GTBack.WebAPI.Controllers;
         [HttpGet("ListByClientId")]
         public async Task<IActionResult> GetListByClientId([FromQuery]DateTime date)
         {
-            return ApiResult(await _eventService.GetListByClientId(date));
+            return ApiResult(await _eventService.GetListDayByClientId(date));
         }
         
         [Authorize]
-        [HttpGet("ListByDayClientId")]
-        public async Task<IActionResult> GetListDayByClientId([FromQuery]DateTime date)
+        [HttpGet("ListEventsByUserId")]
+        public async Task<IActionResult> ListEventsByUserId([FromQuery]DateTime date)
         {
-            return ApiResult(await _eventService.GetListDayByClientId(date));
+            return ApiResult(await _eventService.ListEventsByUserId(date));
         }
     }

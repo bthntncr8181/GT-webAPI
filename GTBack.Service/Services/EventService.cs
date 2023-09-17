@@ -13,7 +13,6 @@ using GTBack.Service.Validation;
 using GTBack.Service.Validation.Tool;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using User = Auth0.ManagementApi.Models.User;
 
 namespace GTBack.Service.Services;
 
@@ -21,6 +20,7 @@ public class EventService : IEventService
 {
     private readonly IGenericRepository<Event> _eventRepository;
     private readonly IGenericRepository<EventType> _eventTypeRepository;
+    private readonly IGenericRepository<User> _userRepository;
     private readonly IGenericRepository<EventTypeCompanyRelation> _eventTypeCompanyRelationRepository;
     private readonly IGenericRepository<Company> _companyRepository;
     private readonly IRefreshTokenService _refreshTokenService;
@@ -32,6 +32,7 @@ public class EventService : IEventService
 
     public EventService(IGenericRepository<Event> eventRepository,
         IGenericRepository<EventType> eventTypeRepository,
+        IGenericRepository<User> userRepository,
         IGenericRepository<EventTypeCompanyRelation> eventTypeCompanyRelationRepository,
         IGenericRepository<Company> companyRepository,
         IRefreshTokenService refreshTokenService, IJwtTokenService tokenService,
@@ -41,6 +42,7 @@ public class EventService : IEventService
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _eventRepository = eventRepository;
+        _userRepository = userRepository;
         _eventTypeRepository = eventTypeRepository;
         _companyRepository = companyRepository;
         _eventTypeCompanyRelationRepository = eventTypeCompanyRelationRepository;
@@ -73,8 +75,7 @@ public class EventService : IEventService
     {
         var userId = GetLoggedUserId();
 
-        var query = _eventRepository.Where(x =>
-            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.Date.Month == date.Month);
+        var query = _eventRepository.Where(x =>x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.Date.Month == date.Month);
 
 
         var data = _mapper.Map<ICollection<EventToMonthDTO>>(await query.ToListAsync());
@@ -83,17 +84,24 @@ public class EventService : IEventService
     
     
     
-    public async Task<IDataResults<ICollection<EventListClientResponseDto>>> GetListByClientId(DateTime date)
+    public async Task<IDataResults<ICollection<EventListClientResponseDto>>> ListEventsByUserId(DateTime date)
     {
         var userId = GetLoggedUserId();
-
+            // && ( x.Date>=date.AddHours(3)&&x.Date<=date.AddDays(1).AddHours(3))
         var eventRepo = _eventRepository.Where(x =>
-            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.Date == date);
+            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId&& x.Date.Month == date.Month);
         var eventTypeRepo = _eventTypeRepository.Where(x => !x.IsDeleted);
+        var adminRepo = _userRepository.Where(x => !x.IsDeleted);
+        var clientRepo = _userRepository.Where(x => !x.IsDeleted);
 
         var query = from mal in eventRepo
             join eventType in eventTypeRepo on mal.EventTypeId equals eventType.Id into eventTypeUserLeft
             from eventType in eventTypeUserLeft.DefaultIfEmpty()
+            join admin in adminRepo on mal.AdminUserId equals admin.Id into adminTypeUserLeft
+            from admin in adminTypeUserLeft.DefaultIfEmpty()
+            join client in clientRepo on mal.ClientUserId equals client.Id into clientTypeUserLeft
+            from client in clientTypeUserLeft.DefaultIfEmpty()
+     
             select new EventListClientResponseDto
             {
                 Mail = mal.Mail,
@@ -103,13 +111,32 @@ public class EventService : IEventService
                 Description = mal.Description,
                 AdminUserId = mal.AdminUserId,
                 ClientUserId = mal.ClientUserId,
-                eventTypeDto = new EventTypeDTO()
+                EventTypeDto = new EventTypeDTO()
                 {
                     Duration = eventType.Duration,
                     EventName = eventType.Name,
                     Description = eventType.Description,
                     EventTypeId = eventType.Id,
                 },
+               Admin = new UserDTO()
+               {
+                   Name = admin.Name,
+                   Surname = admin.Surname,
+                   Phone = admin.Phone,
+                   Id = admin.Id,
+                   Address = admin.Address,
+                   Mail = admin.Mail
+                   
+               },
+               Client = new UserDTO()
+               {
+                   Name = client.Name,
+                   Surname = client.Surname,
+                   Phone = client.Phone,
+                   Id = client.Id,
+                   Address = client.Address,
+                   Mail = client.Mail
+               },
                 StatusId = mal.StatusId,
                 Price = mal.Price,
                 Id = mal.Id
