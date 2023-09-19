@@ -95,6 +95,7 @@ public class UserService : IUserService
             Phone = registerDto.Phone,
             IsDeleted = false,
             Name = registerDto.Name,
+            CompanyId = registerDto.CompanyId,
             PasswordHash = SHA1.Generate(registerDto.Password)
         };
 

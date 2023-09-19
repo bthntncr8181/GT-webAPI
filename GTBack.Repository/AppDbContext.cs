@@ -17,6 +17,8 @@ namespace GTBack.Repository
         public DbSet<EventType> EventTypes { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
+        public DbSet<SpecialAttributeRelation> SpecialAttributeRelations { get; set; }
+        public DbSet<EventTypeCompanyRelation> EventTypeCompanyRelations { get; set; }
 
 
 
@@ -56,7 +58,13 @@ namespace GTBack.Repository
                 .HasOne(e => e.ClientUser)
                 .WithMany(e => e.BlackListUserRelationsAdmin)
                 .HasForeignKey(e => e.ClientUserId);
-            
+
+            modelBuilder.Entity<Company>()
+                .HasMany(c => c.User)
+                .WithOne(e => e.Company)
+                .HasForeignKey(e => e.CompanyId);
+
+
         }
     }
 }

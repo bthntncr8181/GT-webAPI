@@ -8,10 +8,9 @@ public class EventAddRequestDTO
     public String StartTimeString { get; set; }
     public String EndTimeString { get; set; }
     public String Description { get; set; }
-    public int Price { get; set; }
     public int CurrencyId { get; set; }
     public int StatusId { get; set; }
     public int AdminUserId { get; set; }
     public int ClientUserId { get; set; }
-    public int eventTypeId { get; set; }
+    public int EventTypeId { get; set; }
 }

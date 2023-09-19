@@ -12,7 +12,9 @@ public class User  : BaseEntity
     public int UserTypeId { get; set; }
     
     public int? CompanyId { get; set; }
-    // public Company Company { get; set; }
+    
+    public   Company Company { get; set; }
+     
     public virtual ICollection<RefreshToken>? RefreshTokens { get; set; }
     public virtual ICollection<Event>? AdminEvent { get; set; }
     public virtual ICollection<Event>? ClientEvent { get; set; }

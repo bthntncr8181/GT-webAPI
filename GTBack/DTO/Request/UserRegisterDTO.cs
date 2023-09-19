@@ -9,6 +9,7 @@ public class UserRegisterDTO
     public string Phone { get; set; }
     public int UserTypeId { get; set; }
     public string Mail { get; set; }
+    public int CompanyId { get; set; }
     public bool isDeleted { get; set; }
     public string Password { get; set; }
 }

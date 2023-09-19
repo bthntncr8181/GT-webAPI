@@ -7,8 +7,8 @@ public class Company:BaseEntity
     public int CompanyTypeId { get; set; }
     public String Mail { get; set; }
     public String Phone { get; set; }
-    public int Latitude { get; set; }
-    public int Longtitude { get; set; }
+    public float Latitude { get; set; }
+    public float Longtitude { get; set; }
     public  virtual  ICollection<User> User { get; set; }
     public  virtual  ICollection<EventTypeCompanyRelation> EventTypeCompanyRelation { get; set; }
     

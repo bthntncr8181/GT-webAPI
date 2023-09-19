@@ -17,8 +17,6 @@ public class Event :BaseEntity
     public int  StatusId { get; set; }
     public int AdminUserId { get; set; }
     
-    public int Price { get; set; }
-    
     public int? CurrencyId { get; set; }
     public int ClientUserId { get; set; }
     
