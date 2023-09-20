@@ -53,7 +53,7 @@ public class EventService : IEventService
     }
 
 
-    public async Task<IResults> createEvent(EventAddRequestDTO model)
+    public async Task<IResults> CreateEvent(EventAddRequestDTO model)
     {
         var valResult =
             FluentValidationTool.ValidateModelWithKeyResult<EventAddRequestDTO>(new EventCreateValidator(), model);
@@ -75,7 +75,7 @@ public class EventService : IEventService
     {
         var userId = GetLoggedUserId();
 
-        var query = _eventRepository.Where(x =>x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.Date.Month == date.Month);
+        var query = _eventRepository.Where(x =>x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.StartDateTime.Month == date.Month);
 
 
         var data = _mapper.Map<ICollection<EventToMonthDTO>>(await query.ToListAsync());
@@ -89,7 +89,7 @@ public class EventService : IEventService
         var userId = GetLoggedUserId();
             // && ( x.Date>=date.AddHours(3)&&x.Date<=date.AddDays(1).AddHours(3))
         var eventRepo = _eventRepository.Where(x =>
-            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId&& x.Date.Month == date.Month);
+            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId&& x.StartDateTime.Month == date.Month);
         var eventTypeRepo = _eventTypeRepository.Where(x => !x.IsDeleted);
         var adminRepo = _userRepository.Where(x => !x.IsDeleted);
         var clientRepo = _userRepository.Where(x => !x.IsDeleted);
@@ -104,8 +104,7 @@ public class EventService : IEventService
      
             select new EventListClientResponseDto
             {
-                Mail = mal.Mail,
-                Date = mal.Date,
+               
                 StartDateTime = mal.StartDateTime,
                 EndDateTime = mal.EndDateTime,
                 Description = mal.Description,
@@ -152,7 +151,7 @@ public class EventService : IEventService
         var userId = GetLoggedUserId();
             // && ( x.Date>=date.AddHours(3)&&x.Date<=date.AddDays(1).AddHours(3))
         var eventRepo = _eventRepository.Where(x =>
-            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId&& ( x.Date>=date.AddHours(3)&&x.Date<=date.AddDays(30).AddHours(3)));
+            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId&& ( x.StartDateTime>=date.AddHours(3)&&x.StartDateTime<=date.AddDays(30).AddHours(3)));
         var eventTypeRepo = _eventTypeRepository.Where(x => !x.IsDeleted);
         var adminRepo = _userRepository.Where(x => !x.IsDeleted);
         var clientRepo = _userRepository.Where(x => !x.IsDeleted);
@@ -167,8 +166,7 @@ public class EventService : IEventService
      
             select new EventListClientResponseDto
             {
-                Mail = mal.Mail,
-                Date = mal.Date,
+               
                 StartDateTime = mal.StartDateTime,
                 EndDateTime = mal.EndDateTime,
                 Description = mal.Description,

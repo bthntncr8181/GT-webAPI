@@ -73,6 +73,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
 builder.Services.AddScoped(typeof(IEventService), typeof(EventService));
 builder.Services.AddScoped(typeof(IService<>),typeof(Service<>));
+builder.Services.AddScoped(typeof(IEventTypeService),typeof(EventTypeService));
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.LoadValidators();
 

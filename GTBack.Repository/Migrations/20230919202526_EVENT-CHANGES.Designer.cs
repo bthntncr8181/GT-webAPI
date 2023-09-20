@@ -4,6 +4,7 @@ using GTBack.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GTBack.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230919202526_EVENT-CHANGES")]
+    partial class EVENTCHANGES
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,6 +91,9 @@ namespace GTBack.Repository.Migrations
                     b.Property<int?>("CurrencyId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -101,6 +106,10 @@ namespace GTBack.Repository.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Mail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime2");
@@ -172,7 +181,10 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EventTypeId")
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EventTypeId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -184,6 +196,8 @@ namespace GTBack.Repository.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("EventId");
 
                     b.HasIndex("EventTypeId");
 
@@ -332,15 +346,19 @@ namespace GTBack.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GTBack.Core.Entities.EventType", "EventType")
-                        .WithMany("EventTypeCompanyRelation")
-                        .HasForeignKey("EventTypeId")
+                    b.HasOne("GTBack.Core.Entities.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("GTBack.Core.Entities.EventType", null)
+                        .WithMany("EventTypeCompanyRelation")
+                        .HasForeignKey("EventTypeId");
+
                     b.Navigation("Company");
 
-                    b.Navigation("EventType");
+                    b.Navigation("Event");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.RefreshToken", b =>

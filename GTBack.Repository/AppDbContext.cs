@@ -62,7 +62,8 @@ namespace GTBack.Repository
             modelBuilder.Entity<Company>()
                 .HasMany(c => c.User)
                 .WithOne(e => e.Company)
-                .HasForeignKey(e => e.CompanyId);
+                .HasForeignKey(e => e.CompanyId)
+                .IsRequired(false);
 
 
         }

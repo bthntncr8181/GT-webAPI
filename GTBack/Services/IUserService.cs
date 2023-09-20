@@ -14,6 +14,7 @@ public interface IUserService
   
 
     Task<IDataResults<UserDTO>> GetById(int id);
+    Task<IDataResults<ICollection<UserForDropdownDTO>>> AdminListByCompanyId(int companyId);
     Task<IDataResults<UserDTO>> Me();
     int? GetLoggedUserId();
     Task<IDataResults<AuthenticatedUserResponseDto>> Login(LoginDto loginDto);

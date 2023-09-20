@@ -20,6 +20,7 @@ namespace GTBack.Service.Mapping
             CreateMap<RefreshToken, RefreshTokenDto>().ReverseMap();
             CreateMap<UserRegisterDTO, User>().ReverseMap();
             CreateMap<UserDTO, User>().ReverseMap();
+            CreateMap<UserForDropdownDTO, User>().ReverseMap();
             CreateMap<Event, EventAddRequestDTO>().ReverseMap();
             CreateMap<ICollection<EventListClientResponseDto>, Event>().ReverseMap();
             CreateMap<EventListClientResponseDto, Event>().ReverseMap();
@@ -28,6 +29,12 @@ namespace GTBack.Service.Mapping
             CreateMap<ICollection<EventListClientResponseDto>, IQueryable<EventListClientResponseDto>>().ReverseMap();
             CreateMap<ICollection<EventToMonthDTO>, IQueryable<Event>>().ReverseMap();
             CreateMap<ICollection<Event>, IQueryable<EventToMonthDTO>>().ReverseMap();
+            CreateMap<ICollection<UserForDropdownDTO>, IQueryable<User>>().ReverseMap();
+            CreateMap<ICollection<UserForDropdownDTO>, User>().ReverseMap();
+            CreateMap<ICollection<User>, IQueryable<User>>().ReverseMap();
+            CreateMap<ICollection<EventTypeForDropdown>, IQueryable<EventType>>().ReverseMap();
+            CreateMap<ICollection<EventTypeForDropdown>, EventType>().ReverseMap();
+            CreateMap<EventTypeForDropdown, EventType>().ReverseMap();
             
 
         }

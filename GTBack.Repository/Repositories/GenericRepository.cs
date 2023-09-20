@@ -20,10 +20,13 @@ namespace GTBack.Repository.Repositories
 
             _dbSet = context.Set<T>();
         }
-        public async Task AddAsync(T entity)
+        public async Task<T>AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
-            
+           await _context.SaveChangesAsync();
+
+            return entity;
+
         }
 
         public async Task AddRangeAsync(IEnumerable<T> entities)
@@ -87,4 +90,6 @@ namespace GTBack.Repository.Repositories
             _context.Set<T>().RemoveRange(_context.Set<T>().Where(expression));
         }
     }
+
+ 
 }

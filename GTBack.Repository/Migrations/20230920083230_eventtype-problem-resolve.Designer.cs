@@ -4,6 +4,7 @@ using GTBack.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GTBack.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230920083230_eventtype-problem-resolve")]
+    partial class eventtypeproblemresolve
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,6 +174,9 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
                     b.Property<int>("EventTypeId")
                         .HasColumnType("int");
 
@@ -184,6 +189,8 @@ namespace GTBack.Repository.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("EventId");
 
                     b.HasIndex("EventTypeId");
 
@@ -332,7 +339,13 @@ namespace GTBack.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GTBack.Core.Entities.EventType", "EventType")
+                    b.HasOne("GTBack.Core.Entities.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GTBack.Core.Entities.EventType", null)
                         .WithMany("EventTypeCompanyRelation")
                         .HasForeignKey("EventTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -340,7 +353,7 @@ namespace GTBack.Repository.Migrations
 
                     b.Navigation("Company");
 
-                    b.Navigation("EventType");
+                    b.Navigation("Event");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.RefreshToken", b =>

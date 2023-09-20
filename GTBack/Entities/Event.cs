@@ -4,10 +4,6 @@ namespace GTBack.Core.Entities;
 
 public class Event :BaseEntity
 {
-    public String Mail { get; set; }
-    
-    public DateTime Date { get; set; }
-    
     public DateTime StartDateTime { get; set; }
     
     public DateTime EndDateTime { get; set; }

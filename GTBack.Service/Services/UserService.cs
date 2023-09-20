@@ -13,6 +13,7 @@ using GTBack.Service.Utilities.Jwt;
 using GTBack.Service.Validation;
 using GTBack.Service.Validation.Tool;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace GTBack.Service.Services;
 
@@ -95,7 +96,7 @@ public class UserService : IUserService
             Phone = registerDto.Phone,
             IsDeleted = false,
             Name = registerDto.Name,
-            CompanyId = registerDto.CompanyId,
+            CompanyId = registerDto.CompanyId!=0 ? registerDto.CompanyId : null,
             PasswordHash = SHA1.Generate(registerDto.Password)
         };
 
@@ -177,6 +178,19 @@ public class UserService : IUserService
         }
 
         return new SuccessDataResult<UserDTO>(user);
+    }
+    
+    public  async Task<IDataResults<ICollection<UserForDropdownDTO>>> AdminListByCompanyId(int companyId)
+    {
+
+    
+
+
+        var userModel =  _service.Where(x => !x.IsDeleted && x.CompanyId == companyId);
+        var  user = _mapper.Map<ICollection<UserForDropdownDTO>>(await userModel.ToListAsync());
+        
+        return new SuccessDataResult<ICollection<UserForDropdownDTO>>(user, user.Count);
+
     }
 
     public async Task<IDataResults<AuthenticatedUserResponseDto>> Login(LoginDto loginDto)
