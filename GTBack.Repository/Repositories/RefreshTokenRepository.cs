@@ -11,6 +11,7 @@ namespace GTBack.Repository.Repositories
     public class RefreshTokenRepository : GenericRepository<RefreshToken>
     {
         private readonly AppDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RefreshTokenRepository(AppDbContext context) : base(context)
         {

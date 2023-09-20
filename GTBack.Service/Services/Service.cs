@@ -30,8 +30,8 @@ namespace GTBack.Service.Services
         }
 
         public async Task<T> AddAsync(T entity)
-        {
-       await  _repository.AddAsync(entity);
+        { 
+            await  _repository.AddAsync(entity);
             await _unitOfWork.CommitAsync();
             return entity;
            

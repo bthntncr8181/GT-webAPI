@@ -101,7 +101,6 @@ public class UserService : IUserService
         };
 
         await _service.AddAsync(user);
-        await _unitOfWork.CommitAsync();
 
         var response = await Authenticate(_mapper.Map<UserRegisterDTO>(user));
         return new SuccessDataResult<AuthenticatedUserResponseDto>(response, HttpStatusCode.OK);
@@ -221,8 +220,7 @@ public class UserService : IUserService
                 HttpStatusCode.BadRequest);
         }
 
-        parent.UpdatedDate = DateTime.UtcNow;
-        await _unitOfWork.CommitAsync();
+       
         var response = await Authenticate(_mapper.Map<UserRegisterDTO>(parent));
         return new SuccessDataResult<AuthenticatedUserResponseDto>(response);
     }

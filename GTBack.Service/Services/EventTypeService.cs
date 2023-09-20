@@ -76,11 +76,8 @@ public class EventTypeService : IEventTypeService
            Id=0
        };
        
-       
-
        await _eventTypeCompanyRelationRepository.AddAsync(eventTypeRel);
 
-       await _unitOfWork.CommitAsync();
 
         return new SuccessResult();
     }
@@ -99,7 +96,9 @@ public class EventTypeService : IEventTypeService
             select new EventTypeForDropdown()
             {
                 Id = eventType.Id,
-                Name = eventType.Name
+                Name = eventType.Name,
+                Price = eventType.Price,
+                Duration =eventType.Duration
             };
         
         var  eventTypeModel = _mapper.Map<ICollection<EventTypeForDropdown>>(await query.ToListAsync());

@@ -37,8 +37,7 @@ namespace GTBack.Service.Services
         public async Task Create(RefreshTokenDto refreshTokenDto)
         {
             var refreshToken = _mapper.Map<RefreshToken>(refreshTokenDto);
-            _refreshTokenRepository.AddAsync(refreshToken);
-            await _unitOfWork.CommitAsync();
+           await  _refreshTokenRepository.AddAsync(refreshToken);
         }
 
         public async Task Delete(Guid id)

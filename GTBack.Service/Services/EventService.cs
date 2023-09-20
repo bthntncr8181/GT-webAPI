@@ -13,6 +13,7 @@ using GTBack.Service.Validation;
 using GTBack.Service.Validation.Tool;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GTBack.Service.Services;
 
@@ -66,7 +67,6 @@ public class EventService : IEventService
         model.StatusId = 0;
         await _eventRepository.AddAsync(eventModel);
 
-        await _unitOfWork.CommitAsync();
 
         return new SuccessResult();
     }
@@ -145,13 +145,20 @@ public class EventService : IEventService
         return new SuccessDataResult<ICollection<EventListClientResponseDto>>(data, data.Count);
     }
 
-    
-       public async Task<IDataResults<ICollection<EventListClientResponseDto>>> ListEventsByUserIdByWeek(DateTime date)
+    public async Task<IResults> ChangeEventTime(ChageEventTimeDto eventTime)
     {
+        var myEvent = _eventRepository.Where(x => x.Id == eventTime.Id).FirstOrDefault();
+        myEvent.StartDateTime = eventTime.StartDateTime;
+        myEvent.EndDateTime = eventTime.EndDateTime;
+        _eventRepository.Update(myEvent);
+        return new SuccessResult();
+    }
+       public async Task<IDataResults<ICollection<EventListClientResponseDto>>> ListEventsByUserIdByDay(DateTime date)
+    {
+        
         var userId = GetLoggedUserId();
-            // && ( x.Date>=date.AddHours(3)&&x.Date<=date.AddDays(1).AddHours(3))
         var eventRepo = _eventRepository.Where(x =>
-            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId&& ( x.StartDateTime>=date.AddHours(3)&&x.StartDateTime<=date.AddDays(30).AddHours(3)));
+            !x.IsDeleted &&( x.ClientUserId == userId || x.AdminUserId == userId) &&  x.StartDateTime>=date.AddHours(3)&&x.EndDateTime<=date.AddDays(1).AddHours(3));
         var eventTypeRepo = _eventTypeRepository.Where(x => !x.IsDeleted);
         var adminRepo = _userRepository.Where(x => !x.IsDeleted);
         var clientRepo = _userRepository.Where(x => !x.IsDeleted);

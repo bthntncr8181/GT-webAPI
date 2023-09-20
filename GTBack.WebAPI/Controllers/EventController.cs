@@ -43,9 +43,16 @@ namespace GTBack.WebAPI.Controllers;
         }
         
         [Authorize]
-        [HttpGet("ListEventsByUserIdByWeek")]
-        public async Task<IActionResult> ListEventsByUserIdByWeek([FromQuery]DateTime date)
+        [HttpGet("ListEventsByUserIdByDay")]
+        public async Task<IActionResult> ListEventsByUserIdByDay([FromQuery]DateTime date)
         {
-            return ApiResult(await _eventService.ListEventsByUserId(date));
+            return ApiResult(await _eventService.ListEventsByUserIdByDay(date));
+        }
+        
+        [Authorize]
+        [HttpPost("ChangeEventTime")]
+        public async Task<IActionResult> ChangeEventTime(ChageEventTimeDto eventTime)
+        {
+            return ApiResult(await _eventService.ChangeEventTime(eventTime));
         }
     }
