@@ -75,21 +75,21 @@ public class EventService : IEventService
     {
         var userId = GetLoggedUserId();
 
-        var query = _eventRepository.Where(x =>x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.StartDateTime.Month == date.Month);
+        var query = _eventRepository.Where(x =>
+            x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.StartDateTime.Month == date.Month);
 
 
         var data = _mapper.Map<ICollection<EventToMonthDTO>>(await query.ToListAsync());
         return new SuccessDataResult<ICollection<EventToMonthDTO>>(data, data.Count);
     }
-    
-    
-    
+
+
     public async Task<IDataResults<ICollection<EventListClientResponseDto>>> ListEventsByUserId(DateTime date)
     {
         var userId = GetLoggedUserId();
-            // && ( x.Date>=date.AddHours(3)&&x.Date<=date.AddDays(1).AddHours(3))
+        // && ( x.Date>=date.AddHours(3)&&x.Date<=date.AddDays(1).AddHours(3))
         var eventRepo = _eventRepository.Where(x =>
-            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId&& x.StartDateTime.Month == date.Month);
+            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.StartDateTime.Month == date.Month);
         var eventTypeRepo = _eventTypeRepository.Where(x => !x.IsDeleted);
         var adminRepo = _userRepository.Where(x => !x.IsDeleted);
         var clientRepo = _userRepository.Where(x => !x.IsDeleted);
@@ -101,10 +101,8 @@ public class EventService : IEventService
             from admin in adminTypeUserLeft.DefaultIfEmpty()
             join client in clientRepo on mal.ClientUserId equals client.Id into clientTypeUserLeft
             from client in clientTypeUserLeft.DefaultIfEmpty()
-     
             select new EventListClientResponseDto
             {
-               
                 StartDateTime = mal.StartDateTime,
                 EndDateTime = mal.EndDateTime,
                 Description = mal.Description,
@@ -114,29 +112,28 @@ public class EventService : IEventService
                 {
                     Duration = eventType.Duration,
                     EventName = eventType.Name,
-                    Description = eventType.Description,    
+                    Description = eventType.Description,
                     EventTypeId = eventType.Id,
-                    Price= eventType.Price
+                    Price = eventType.Price
                 },
-               Admin = new UserDTO()
-               {
-                   Name = admin.Name,
-                   Surname = admin.Surname,
-                   Phone = admin.Phone,
-                   Id = admin.Id,
-                   Address = admin.Address,
-                   Mail = admin.Mail
-                   
-               },
-               Client = new UserDTO()
-               {
-                   Name = client.Name,
-                   Surname = client.Surname,
-                   Phone = client.Phone,
-                   Id = client.Id,
-                   Address = client.Address,
-                   Mail = client.Mail
-               },
+                Admin = new UserDTO()
+                {
+                    Name = admin.Name,
+                    Surname = admin.Surname,
+                    Phone = admin.Phone,
+                    Id = admin.Id,
+                    Address = admin.Address,
+                    Mail = admin.Mail
+                },
+                Client = new UserDTO()
+                {
+                    Name = client.Name,
+                    Surname = client.Surname,
+                    Phone = client.Phone,
+                    Id = client.Id,
+                    Address = client.Address,
+                    Mail = client.Mail
+                },
                 StatusId = mal.StatusId,
                 Id = mal.Id
             };
@@ -153,12 +150,13 @@ public class EventService : IEventService
         _eventRepository.Update(myEvent);
         return new SuccessResult();
     }
-       public async Task<IDataResults<ICollection<EventListClientResponseDto>>> ListEventsByUserIdByDay(DateTime date)
+
+    public async Task<IDataResults<ICollection<EventListClientResponseDto>>> ListEventsByUserIdByDay(DateTime date)
     {
-        
         var userId = GetLoggedUserId();
         var eventRepo = _eventRepository.Where(x =>
-            !x.IsDeleted &&( x.ClientUserId == userId || x.AdminUserId == userId) &&  x.StartDateTime>=date.AddHours(3)&&x.EndDateTime<=date.AddDays(1).AddHours(3));
+            !x.IsDeleted && (x.ClientUserId == userId || x.AdminUserId == userId) &&
+            x.StartDateTime >= date.AddHours(3) && x.EndDateTime <= date.AddDays(1).AddHours(3));
         var eventTypeRepo = _eventTypeRepository.Where(x => !x.IsDeleted);
         var adminRepo = _userRepository.Where(x => !x.IsDeleted);
         var clientRepo = _userRepository.Where(x => !x.IsDeleted);
@@ -170,10 +168,8 @@ public class EventService : IEventService
             from admin in adminTypeUserLeft.DefaultIfEmpty()
             join client in clientRepo on mal.ClientUserId equals client.Id into clientTypeUserLeft
             from client in clientTypeUserLeft.DefaultIfEmpty()
-     
             select new EventListClientResponseDto
             {
-               
                 StartDateTime = mal.StartDateTime,
                 EndDateTime = mal.EndDateTime,
                 Description = mal.Description,
@@ -185,33 +181,73 @@ public class EventService : IEventService
                     EventName = eventType.Name,
                     Description = eventType.Description,
                     EventTypeId = eventType.Id,
-                    Price= eventType.Price
+                    Price = eventType.Price
                 },
-               Admin = new UserDTO()
-               {
-                   Name = admin.Name,
-                   Surname = admin.Surname,
-                   Phone = admin.Phone,
-                   Id = admin.Id,
-                   Address = admin.Address,
-                   Mail = admin.Mail
-                   
-               },
-               Client = new UserDTO()
-               {
-                   Name = client.Name,
-                   Surname = client.Surname,
-                   Phone = client.Phone,
-                   Id = client.Id,
-                   Address = client.Address,
-                   Mail = client.Mail
-               },
+                Admin = new UserDTO()
+                {
+                    Name = admin.Name,
+                    Surname = admin.Surname,
+                    Phone = admin.Phone,
+                    Id = admin.Id,
+                    Address = admin.Address,
+                    Mail = admin.Mail
+                },
+                Client = new UserDTO()
+                {
+                    Name = client.Name,
+                    Surname = client.Surname,
+                    Phone = client.Phone,
+                    Id = client.Id,
+                    Address = client.Address,
+                    Mail = client.Mail
+                },
                 StatusId = mal.StatusId,
                 Id = mal.Id
             };
 
         var data = _mapper.Map<ICollection<EventListClientResponseDto>>(await query.ToListAsync());
         return new SuccessDataResult<ICollection<EventListClientResponseDto>>(data, data.Count);
+    }
+
+
+    public async Task<IDataResults<EventByEventId>> EventDetailByEventId(int eventId)
+    {
+        var eventRepo = _eventRepository.Where(x => x.Id == eventId).FirstOrDefault();
+        var eventType = _eventTypeRepository.Where(x => !x.IsDeleted&&x.Id==eventRepo.EventTypeId).FirstOrDefault();
+        var client = _userRepository.Where(x => !x.IsDeleted&&eventRepo.ClientUserId==x.Id).FirstOrDefault();
+
+  
+      var item    = new EventByEventId
+            {
+                StartDateTime = eventRepo.StartDateTime,
+                EndDateTime = eventRepo.EndDateTime,
+                Description = eventRepo.Description,
+                AdminUserId = eventRepo.AdminUserId,
+                ClientUserId = eventRepo.ClientUserId,
+                EventTypeDto = new EventTypeDTO()
+                {
+                    Duration = eventType.Duration,
+                    EventName = eventType.Name,
+                    Description = eventType.Description,
+                    EventTypeId = eventType.Id,
+                    Price = eventType.Price
+                },
+
+                Client = new UserDTO()
+                {
+                    Name = client.Name,
+                    Surname = client.Surname,
+                    Phone = client.Phone,
+                    Id = client.Id,
+                    Address = client.Address,
+                    Mail = client.Mail
+                },
+                StatusId = eventRepo.StatusId,
+                Id = eventRepo.Id
+            };
+
+  
+        return new SuccessDataResult<EventByEventId>(item);
     }
 
     private int? GetLoggedUserId()

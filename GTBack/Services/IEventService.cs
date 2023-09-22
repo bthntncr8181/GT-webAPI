@@ -11,6 +11,7 @@ public interface IEventService
     Task<IDataResults<ICollection<EventToMonthDTO>>> GetListDayByClientId(DateTime date);
     Task<IResults> ChangeEventTime(ChageEventTimeDto eventTime);
     Task<IResults>  CreateEvent(EventAddRequestDTO eventId);
-    
-    
+    Task<IDataResults<EventByEventId>> EventDetailByEventId(int eventId);
+
+
 }

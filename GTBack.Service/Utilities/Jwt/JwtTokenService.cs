@@ -23,23 +23,28 @@ namespace GTBack.Service.Utilities.Jwt
 
         public AccessTokenDto GenerateAccessToken(UserRegisterDTO userDto)
         {
+         
+      
+
+
+            var expirationTime = DateTime.UtcNow.AddHours(_configuration.AccessTokenExpirationMinutes);
+         
+            
             var claims = new List<Claim>
             {
                 new("Id", userDto.Id.ToString()),
                 new(ClaimTypes.Name, userDto.Name),
+                new(ClaimTypes.Expiration, expirationTime.ToString()),
             };
-
             claims.Add(new Claim("Name", userDto.Name));
 
-
-            var expirationTime = DateTime.UtcNow.AddMinutes(_configuration.AccessTokenExpirationMinutes);
+            claims.Add(new Claim("ExpTime", expirationTime.ToString()));
             var value = GenerateToken(
                 _configuration.AccessTokenSecret,
                 _configuration.Issuer,
                 _configuration.Audience,
                 expirationTime,
                 claims);
-
             return new AccessTokenDto()
             {
                 Value = value,
@@ -49,7 +54,7 @@ namespace GTBack.Service.Utilities.Jwt
 
         public string GenerateRefreshToken()
         {
-            var expirationTime = DateTime.UtcNow.AddMinutes(_configuration.RefreshTokenExpirationMinutes);
+            var expirationTime = DateTime.UtcNow.AddHours(_configuration.RefreshTokenExpirationMinutes);
 
             return GenerateToken(
                 _configuration.RefreshTokenSecret,

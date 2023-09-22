@@ -55,4 +55,11 @@ namespace GTBack.WebAPI.Controllers;
         {
             return ApiResult(await _eventService.ChangeEventTime(eventTime));
         }
+        
+        [Authorize]
+        [HttpGet("EventDetailByEventId")]
+        public async Task<IActionResult> EventDetailByEventId([FromQuery]int eventId)
+        {
+            return ApiResult(await _eventService.EventDetailByEventId(eventId));
+        }
     }

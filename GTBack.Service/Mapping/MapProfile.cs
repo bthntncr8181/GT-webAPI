@@ -35,6 +35,11 @@ namespace GTBack.Service.Mapping
             CreateMap<ICollection<EventTypeForDropdown>, IQueryable<EventType>>().ReverseMap();
             CreateMap<ICollection<EventTypeForDropdown>, EventType>().ReverseMap();
             CreateMap<EventTypeForDropdown, EventType>().ReverseMap();
+            CreateMap<ICollection<EventByEventId>, IQueryable<Event>>().ReverseMap();
+            CreateMap<ICollection<EventByEventId>, Event>().ReverseMap();
+            CreateMap<EventByEventId, Event>().ReverseMap();
+            CreateMap<EventByEventId, IQueryable<Event>>().ReverseMap();
+
             
 
         }
