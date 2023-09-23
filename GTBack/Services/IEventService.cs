@@ -7,6 +7,7 @@ public interface IEventService
 { 
   
     Task<IDataResults<ICollection<EventListClientResponseDto>>> ListEventsByUserId(DateTime date);
+    Task<IDataResults<ICollection<EventListClientResponseDto>>> ListAllEventsByUserId();
     Task<IDataResults<ICollection<EventListClientResponseDto>>> ListEventsByUserIdByDay(DateTime date);
     Task<IDataResults<ICollection<EventToMonthDTO>>> GetListDayByClientId(DateTime date);
     Task<IResults> ChangeEventTime(ChageEventTimeDto eventTime);
