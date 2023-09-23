@@ -2,6 +2,7 @@ using System.Net;
 using System.Security.Claims;
 using AutoMapper;
 using FluentValidation;
+using Google.Apis.Auth;
 using GTBack.Core.DTO;
 using GTBack.Core.Entities;
 using GTBack.Core.Enums;
@@ -13,6 +14,7 @@ using GTBack.Service.Utilities.Jwt;
 using GTBack.Service.Validation;
 using GTBack.Service.Validation.Tool;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GTBack.Service.Services;
@@ -96,7 +98,7 @@ public class UserService : IUserService
             Phone = registerDto.Phone,
             IsDeleted = false,
             Name = registerDto.Name,
-            CompanyId = registerDto.CompanyId!=0 ? registerDto.CompanyId : null,
+            CompanyId = registerDto.CompanyId != 0 ? registerDto.CompanyId : null,
             PasswordHash = SHA1.Generate(registerDto.Password)
         };
 
@@ -150,7 +152,6 @@ public class UserService : IUserService
     // }
     public int? GetLoggedUserId()
     {
-        
         var userRoleString = _loggedUser.FindFirstValue("Id");
         if (int.TryParse(userRoleString, out var userId))
         {
@@ -178,18 +179,13 @@ public class UserService : IUserService
 
         return new SuccessDataResult<UserDTO>(user);
     }
-    
-    public  async Task<IDataResults<ICollection<UserForDropdownDTO>>> AdminListByCompanyId(int companyId)
+
+    public async Task<IDataResults<ICollection<UserForDropdownDTO>>> AdminListByCompanyId(int companyId)
     {
+        var userModel = _service.Where(x => !x.IsDeleted && x.CompanyId == companyId);
+        var user = _mapper.Map<ICollection<UserForDropdownDTO>>(await userModel.ToListAsync());
 
-    
-
-
-        var userModel =  _service.Where(x => !x.IsDeleted && x.CompanyId == companyId);
-        var  user = _mapper.Map<ICollection<UserForDropdownDTO>>(await userModel.ToListAsync());
-        
         return new SuccessDataResult<ICollection<UserForDropdownDTO>>(user, user.Count);
-
     }
 
     public async Task<IDataResults<AuthenticatedUserResponseDto>> Login(LoginDto loginDto)
@@ -220,7 +216,6 @@ public class UserService : IUserService
                 HttpStatusCode.BadRequest);
         }
 
-       
         var response = await Authenticate(_mapper.Map<UserRegisterDTO>(parent));
         return new SuccessDataResult<AuthenticatedUserResponseDto>(response);
     }
@@ -242,5 +237,32 @@ public class UserService : IUserService
             AccessTokenExpirationTime = accessToken.ExpirationTime,
             RefreshToken = refreshToken
         };
+    }
+
+
+    public async Task<IDataResults<AuthenticatedUserResponseDto>> GoogleLogin (GoogleLoginDTO model)
+    {
+        GoogleJsonWebSignature.ValidationSettings? settings = new GoogleJsonWebSignature.ValidationSettings()
+        {
+            Audience = new List<string>()
+                { "1067621219285-fukuebsj13aa2b611b4fcs2j7s447kl6.apps.googleusercontent.com" }
+        };
+        GoogleJsonWebSignature.Payload payload = await GoogleJsonWebSignature.ValidateAsync(model.IdToken, settings);
+
+        UserLoginInfo userLoginInfo = new(model.Provider, payload.Subject, model.Provider);
+
+        var user = await _service.FindAsync(x => x.Mail == payload.Email);
+        bool result = user != null;
+
+
+        if (!result)
+        {
+            return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.User_NotFound_Message,
+                HttpStatusCode.BadRequest);
+        }
+        
+
+        var response = await Authenticate(_mapper.Map<UserRegisterDTO>(user));
+        return new SuccessDataResult<AuthenticatedUserResponseDto>(response);
     }
 }

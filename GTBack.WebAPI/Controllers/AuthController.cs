@@ -51,9 +51,16 @@ namespace GTBack.WebAPI.Controllers
                 return ApiResult(await _userService.Register(request));
             }
 
+            [HttpPost("GoogleLogin")]
+            public async Task<IActionResult> GoogleLogin(GoogleLoginDTO request)
+            {
+            
+            
+                return ApiResult(await _userService.GoogleLogin(request));
+            }
 
 
-
+            
 
         }
     }

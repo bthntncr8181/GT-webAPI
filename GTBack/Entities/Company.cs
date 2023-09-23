@@ -10,6 +10,7 @@ public class Company:BaseEntity
     public float Latitude { get; set; }
     public float Longtitude { get; set; }
     public  virtual  ICollection<User> User { get; set; }
+    public virtual ICollection<FAQ>? Faq { get; set; }
     public  virtual  ICollection<EventTypeCompanyRelation> EventTypeCompanyRelation { get; set; }
     
 }

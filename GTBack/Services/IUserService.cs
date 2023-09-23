@@ -20,6 +20,7 @@ public interface IUserService
     Task<IDataResults<AuthenticatedUserResponseDto>> Login(LoginDto loginDto);
     Task<IResults> Delete(int id);
     Task<IDataResults<AuthenticatedUserResponseDto>> Register(UserRegisterDTO registerDto);
+    Task<IDataResults<AuthenticatedUserResponseDto>> GoogleLogin(GoogleLoginDTO model);
 
 
 

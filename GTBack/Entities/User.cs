@@ -21,6 +21,8 @@ public class User  : BaseEntity
     public virtual ICollection<SpecialAttributeRelation>? BlackListUserRelationsAdmin { get; set; }
     public virtual ICollection<SpecialAttributeRelation>? BlackListUserRelationsClient { get; set; }
     
+    public virtual ICollection<FAQ>? Faq { get; set; }
+    
     
     
     
