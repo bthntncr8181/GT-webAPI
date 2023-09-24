@@ -28,6 +28,24 @@ namespace GTBack.WebAPI.Controllers;
 
             return ApiResult(await _eventService.CreateEvent(model));
         }
+        
+        [Authorize]
+        [HttpDelete("Delete")]
+        
+        public async Task<IActionResult> DeleteEvent(int Id)
+        {
+
+            return ApiResult(await _eventService.DeleteEvent(Id));
+        }
+        
+        [Authorize]
+        [HttpGet("ChangeStatus")]
+        
+        public async Task<IActionResult> UpdateStatusIdEvent(int statusId,int eventId)
+        {
+
+            return ApiResult(await _eventService.ChangeStatus(statusId,eventId));
+        }
         [Authorize]
         [HttpGet("ListByClientId")]
         public async Task<IActionResult> GetListByClientId([FromQuery]DateTime date)

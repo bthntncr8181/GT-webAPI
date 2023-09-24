@@ -53,7 +53,8 @@ public class EventService : IEventService
         _tokenService = tokenService;
     }
 
-
+ 
+    
     public async Task<IResults> CreateEvent(EventAddRequestDTO model)
     {
         var valResult =
@@ -68,6 +69,36 @@ public class EventService : IEventService
         await _eventRepository.AddAsync(eventModel);
 
 
+        return new SuccessResult();
+    }
+    
+    public async Task<IResults> DeleteEvent(int eventId)
+    {
+        var eventItem = await _eventRepository.FindAsync(x => x.Id == eventId);
+        if (eventItem == null)
+        {
+            return new ErrorResult(message:"Randevu bulunamadı");
+        }
+
+        eventItem.IsDeleted = true;
+
+        _eventRepository.Update(eventItem);
+            
+        return new SuccessResult();
+    }
+    
+    public async Task<IResults> ChangeStatus(int statusId,int eventId)
+    {
+        var eventItem = await _eventRepository.FindAsync(x => x.Id == eventId);
+        if (eventItem == null)
+        {
+            return new ErrorResult(message:"Randevu bulunamadı");
+        }
+
+        eventItem.StatusId = statusId;
+
+        _eventRepository.Update(eventItem);
+            
         return new SuccessResult();
     }
 
@@ -89,7 +120,7 @@ public class EventService : IEventService
         var userId = GetLoggedUserId();
         // && ( x.Date>=date.AddHours(3)&&x.Date<=date.AddDays(1).AddHours(3))
         var eventRepo = _eventRepository.Where(x =>
-            !x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.StartDateTime.Month == date.Month);
+            !x.IsDeleted && (x.ClientUserId == userId || x.AdminUserId == userId) && x.StartDateTime.Month == date.Month);
         var eventTypeRepo = _eventTypeRepository.Where(x => !x.IsDeleted);
         var adminRepo = _userRepository.Where(x => !x.IsDeleted);
         var clientRepo = _userRepository.Where(x => !x.IsDeleted);

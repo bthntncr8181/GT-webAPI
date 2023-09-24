@@ -13,6 +13,8 @@ public interface IEventService
     Task<IResults> ChangeEventTime(ChageEventTimeDto eventTime);
     Task<IResults>  CreateEvent(EventAddRequestDTO eventId);
     Task<IDataResults<EventByEventId>> EventDetailByEventId(int eventId);
+    Task<IResults> DeleteEvent(int eventId);
+    Task<IResults> ChangeStatus(int statusId, int eventId);
 
 
 }
