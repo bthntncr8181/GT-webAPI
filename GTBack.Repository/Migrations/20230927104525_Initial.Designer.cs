@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GTBack.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230919122936_companyId")]
-    partial class companyId
+    [Migration("20230927104525_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,11 +45,11 @@ namespace GTBack.Repository.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Latitude")
-                        .HasColumnType("int");
+                    b.Property<float>("Latitude")
+                        .HasColumnType("real");
 
-                    b.Property<int>("Longtitude")
-                        .HasColumnType("int");
+                    b.Property<float>("Longtitude")
+                        .HasColumnType("real");
 
                     b.Property<string>("Mail")
                         .IsRequired()
@@ -91,9 +91,6 @@ namespace GTBack.Repository.Migrations
                     b.Property<int?>("CurrencyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -106,10 +103,6 @@ namespace GTBack.Repository.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Mail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime2");
@@ -181,10 +174,7 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EventTypeId")
+                    b.Property<int>("EventTypeId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -197,11 +187,52 @@ namespace GTBack.Repository.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("EventId");
-
                     b.HasIndex("EventTypeId");
 
                     b.ToTable("EventTypeCompanyRelations");
+                });
+
+            modelBuilder.Entity("GTBack.Core.Entities.FAQ", b =>
+                {
+                    b.Property<int>("SenderUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AnsweredUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Like")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("SenderUserId", "AnsweredUserId");
+
+                    b.HasIndex("AnsweredUserId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("FAQs");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.RefreshToken", b =>
@@ -270,7 +301,6 @@ namespace GTBack.Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CompanyId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
@@ -347,19 +377,42 @@ namespace GTBack.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GTBack.Core.Entities.Event", "Event")
-                        .WithMany()
-                        .HasForeignKey("EventId")
+                    b.HasOne("GTBack.Core.Entities.EventType", "EventType")
+                        .WithMany("EventTypeCompanyRelation")
+                        .HasForeignKey("EventTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GTBack.Core.Entities.EventType", null)
-                        .WithMany("EventTypeCompanyRelation")
-                        .HasForeignKey("EventTypeId");
+                    b.Navigation("Company");
+
+                    b.Navigation("EventType");
+                });
+
+            modelBuilder.Entity("GTBack.Core.Entities.FAQ", b =>
+                {
+                    b.HasOne("GTBack.Core.Entities.User", "AnsweredUser")
+                        .WithMany("Faq")
+                        .HasForeignKey("AnsweredUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GTBack.Core.Entities.Company", "Company")
+                        .WithMany("Faq")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GTBack.Core.Entities.User", "SenderUser")
+                        .WithMany()
+                        .HasForeignKey("SenderUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AnsweredUser");
 
                     b.Navigation("Company");
 
-                    b.Navigation("Event");
+                    b.Navigation("SenderUser");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.RefreshToken", b =>
@@ -394,9 +447,7 @@ namespace GTBack.Repository.Migrations
                 {
                     b.HasOne("GTBack.Core.Entities.Company", "Company")
                         .WithMany("User")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CompanyId");
 
                     b.Navigation("Company");
                 });
@@ -404,6 +455,8 @@ namespace GTBack.Repository.Migrations
             modelBuilder.Entity("GTBack.Core.Entities.Company", b =>
                 {
                     b.Navigation("EventTypeCompanyRelation");
+
+                    b.Navigation("Faq");
 
                     b.Navigation("User");
                 });
@@ -424,6 +477,8 @@ namespace GTBack.Repository.Migrations
                     b.Navigation("BlackListUserRelationsClient");
 
                     b.Navigation("ClientEvent");
+
+                    b.Navigation("Faq");
 
                     b.Navigation("RefreshTokens");
                 });

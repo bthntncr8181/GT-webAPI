@@ -81,10 +81,10 @@ var appConfig = builder.Configuration.Get<GoThereAppConfig>();
 
 
 SqlConnectionStringBuilder mySql = new SqlConnectionStringBuilder();
-mySql.DataSource = "database-1.c8fdlf1gvqc2.us-east-1.rds.amazonaws.com"; 
+mySql.DataSource = "database-2.cfcokfalhlyk.eu-central-1.rds.amazonaws.com"; 
 mySql.UserID = "admin";            
 mySql.Password = "Bthntncr81.";     
-mySql.InitialCatalog = "database-1";
+mySql.InitialCatalog = "database-2";
 
 
 builder.Services.AddDbContext<AppDbContext>(x =>
