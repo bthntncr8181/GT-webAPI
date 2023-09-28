@@ -182,7 +182,7 @@ public class UserService : IUserService
 
     public async Task<IDataResults<ICollection<UserForDropdownDTO>>> AdminListByCompanyId(int companyId)
     {
-        var userModel = _service.Where(x => !x.IsDeleted && x.CompanyId == companyId);
+        var userModel = _service.Where(x => !x.IsDeleted && x.CompanyId == companyId&&x.UserTypeId==1);
         var user = _mapper.Map<ICollection<UserForDropdownDTO>>(await userModel.ToListAsync());
 
         return new SuccessDataResult<ICollection<UserForDropdownDTO>>(user, user.Count);

@@ -15,6 +15,7 @@ public interface IEventService
     Task<IDataResults<EventByEventId>> EventDetailByEventId(int eventId);
     Task<IResults> DeleteEvent(int eventId);
     Task<IResults> ChangeStatus(int statusId, int eventId);
+    Task<IResults> CreateCompany(CreateCompanyDTO model);
 
 
 }

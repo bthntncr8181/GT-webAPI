@@ -71,7 +71,13 @@ public class EventService : IEventService
 
         return new SuccessResult();
     }
-    
+    public async Task<IResults> CreateCompany(CreateCompanyDTO model)
+    {
+;
+        var eventModel = _mapper.Map<Company>(model);
+        await _companyRepository.AddAsync(eventModel);
+        return new SuccessResult();
+    }
     public async Task<IResults> DeleteEvent(int eventId)
     {
         var eventItem = await _eventRepository.FindAsync(x => x.Id == eventId);

@@ -30,6 +30,15 @@ namespace GTBack.WebAPI.Controllers;
         }
         
         [Authorize]
+        [HttpPost("CreateCompany")]
+        
+        public async Task<IActionResult> CreateEvent(CreateCompanyDTO model)
+        {
+
+            return ApiResult(await _eventService.CreateCompany(model));
+        }
+        
+        [Authorize]
         [HttpDelete("Delete")]
         
         public async Task<IActionResult> DeleteEvent(int Id)

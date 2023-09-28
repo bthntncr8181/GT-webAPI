@@ -38,6 +38,7 @@ namespace GTBack.Service.Mapping
             CreateMap<ICollection<EventByEventId>, IQueryable<Event>>().ReverseMap();
             CreateMap<ICollection<EventByEventId>, Event>().ReverseMap();
             CreateMap<EventByEventId, Event>().ReverseMap();
+            CreateMap<CreateCompanyDTO, Company>().ReverseMap();
             CreateMap<EventByEventId, IQueryable<Event>>().ReverseMap();
 
             
