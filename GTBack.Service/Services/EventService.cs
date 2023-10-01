@@ -111,7 +111,7 @@ public class EventService : IEventService
     public async Task<IDataResults<ICollection<EventToMonthDTO>>> GetListDayByClientId(DateTime date)
     {
         var userId = GetLoggedUserId();
-
+        //BURASI YIL DA KONTROL ETMESİ LAZIM
         var query = _eventRepository.Where(x =>
             x.IsDeleted && x.ClientUserId == userId || x.AdminUserId == userId && x.StartDateTime.Month == date.Month);
 
@@ -126,7 +126,7 @@ public class EventService : IEventService
         var userId = GetLoggedUserId();
         // && ( x.Date>=date.AddHours(3)&&x.Date<=date.AddDays(1).AddHours(3))
         var eventRepo = _eventRepository.Where(x =>
-            !x.IsDeleted && (x.ClientUserId == userId || x.AdminUserId == userId) && x.StartDateTime.Month == date.Month);
+            !x.IsDeleted && (x.ClientUserId == userId || x.AdminUserId == userId) &&( x.StartDateTime <= date.AddMonths(1)||x.StartDateTime >= date.AddMonths(-1)));
         var eventTypeRepo = _eventTypeRepository.Where(x => !x.IsDeleted);
         var adminRepo = _userRepository.Where(x => !x.IsDeleted);
         var clientRepo = _userRepository.Where(x => !x.IsDeleted);
