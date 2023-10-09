@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using GTBack.WebAPI;
 using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -59,12 +60,12 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-
+builder.Services.Configure<MailSetting>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
-
 builder.Services.AddScoped<RefreshTokenRepository>();
 builder.Services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();
+builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddScoped(typeof(IJwtTokenService), typeof(JwtTokenService));
 builder.Services.AddScoped(typeof(IRefreshTokenService), typeof(RefreshTokenService));
 builder.Services.AddAppConfiguration(builder.Configuration);

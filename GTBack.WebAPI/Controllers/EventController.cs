@@ -1,5 +1,6 @@
 using AutoMapper;
 using GTBack.Core.DTO;
+using GTBack.Core.Entities;
 using GTBack.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,13 @@ namespace GTBack.WebAPI.Controllers;
 
         private readonly IMapper _mapper;
         private readonly IEventService _eventService;
+        private readonly IMailService _mailService;
 
-        public EventController( IMapper mapper,IEventService eventService)
+        public EventController( IMapper mapper,IEventService eventService,IMailService mailService)
         {
             _eventService = eventService;
             _mapper = mapper;
+            _mailService = mailService;
         }
         
         [Authorize]
@@ -94,5 +97,12 @@ namespace GTBack.WebAPI.Controllers;
         public async Task<IActionResult> EventDetailByEventId([FromQuery]int eventId)
         {
             return ApiResult(await _eventService.EventDetailByEventId(eventId));
+        }
+        
+        
+        [HttpPost("SendMail")]
+        public  Task SendMail(MailData data)
+        {
+            return _mailService.SendMail(data);
         }
     }
