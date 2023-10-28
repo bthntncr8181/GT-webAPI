@@ -8,9 +8,9 @@ using System.Net;
 
 namespace GTBack.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/randevu/[controller]")]
     [ApiController]
-    public class CustomBaseController : ControllerBase
+    public class CustomRandevuBaseController : ControllerBase
     {
 
 

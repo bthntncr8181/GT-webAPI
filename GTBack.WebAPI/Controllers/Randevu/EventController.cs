@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GTBack.WebAPI.Controllers;
 
-public class EventController : CustomBaseController
+public class EventController : CustomRandevuBaseController
 {
 
 

@@ -7,6 +7,5 @@ public class Payment:BaseEntity
     public  int PaymentMethod { get; set; }
     public  DateTime PaymentDate { get; set; }
     public  Addition Addition { get; set; }
-
-
+    
 }

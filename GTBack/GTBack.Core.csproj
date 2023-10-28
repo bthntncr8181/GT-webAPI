@@ -21,8 +21,6 @@
   </ItemGroup>
 
 
-  <ItemGroup>
-    <Folder Include="DTO\Restourant\" />
-  </ItemGroup>
+
 
 </Project>

@@ -25,10 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="..\GTBack.Service\GTBack.Service.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\Restourant\" />
-  </ItemGroup>
      
 
 </Project>

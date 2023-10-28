@@ -16,8 +16,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using GTBack.Core.DTO;
+using GTBack.Core.DTO.Restourant.Request;
+using GTBack.Service.Mapping.Resourant;
+using GTBack.Service.Services.RestourantServices;
 using GTBack.WebAPI;
 using Microsoft.Data.SqlClient;
+using IClientService = Google.Apis.Services.IClientService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,10 +77,12 @@ builder.Services.AddAppConfiguration(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
+builder.Services.AddScoped(typeof(GTBack.Core.Services.Restourant.IClientService), typeof(ClientService));
 builder.Services.AddScoped(typeof(IEventService), typeof(EventService));
 builder.Services.AddScoped(typeof(IService<>),typeof(Service<>));
 builder.Services.AddScoped(typeof(IEventTypeService),typeof(EventTypeService));
 builder.Services.AddAutoMapper(typeof(MapProfile));
+builder.Services.AddAutoMapper(typeof(RestourantMapProfile));
 builder.Services.LoadValidators();
 
 var appConfig = builder.Configuration.Get<GoThereAppConfig>();

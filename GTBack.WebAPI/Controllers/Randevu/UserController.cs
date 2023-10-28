@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GTBack.WebAPI.Controllers
 {
-    public class UserController : CustomBaseController
+    public class UserController : CustomRandevuBaseController
     {
       
       

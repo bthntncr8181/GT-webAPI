@@ -20,7 +20,7 @@ namespace GTBack.Service.Validation
             RuleFor(x => x.Mail)
                 .NotEmpty().WithMessage(ValidationMessages.Username_Not_Empty)
                 .MaximumLength(128).WithMessage(ValidationMessages.Max_Length);
-            RuleFor(x => x.password)
+            RuleFor(x => x.Password)
                 .NotEmpty().WithMessage(ValidationMessages.Password_Not_Empty)
                 .MaximumLength(128).WithMessage(ValidationMessages.Max_Length)
                 .MinimumLength(3).WithMessage(ValidationMessages.Min_Length);

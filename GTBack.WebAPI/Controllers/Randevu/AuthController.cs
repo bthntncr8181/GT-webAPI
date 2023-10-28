@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GTBack.WebAPI.Controllers
 {
-    public class AuthController : CustomBaseController
+    public class AuthController : CustomRandevuBaseController
     {
       
       

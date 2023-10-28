@@ -7,7 +7,7 @@ public class Table:BaseEntity
     public int ActiveId { get; set; }
     public int Capacity { get; set; }
     public int CompanyId { get; set; }
-    public Company Company { get; set; }
+    public RestoCompany RestoCompany { get; set; }
     public  virtual  TableArea TableArea { get; set; }
     public  virtual  ICollection<Reservation>? Reservation { get; set; }
     public  virtual  ICollection<Addition>? Addition { get; set; }

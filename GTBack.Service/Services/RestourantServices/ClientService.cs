@@ -4,33 +4,34 @@ using AutoMapper;
 using FluentValidation;
 using Google.Apis.Auth;
 using GTBack.Core.DTO;
-using GTBack.Core.Entities;
-using GTBack.Core.Enums;
+using GTBack.Core.DTO.Restourant.Request;
+using GTBack.Core.Entities.Restourant;
 using GTBack.Core.Results;
 using GTBack.Core.Services;
+using GTBack.Core.Services.Restourant;
 using GTBack.Core.UnitOfWorks;
 using GTBack.Service.Utilities;
 using GTBack.Service.Utilities.Jwt;
 using GTBack.Service.Validation;
+using GTBack.Service.Validation.Restourant;
 using GTBack.Service.Validation.Tool;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
-namespace GTBack.Service.Services;
+namespace GTBack.Service.Services.RestourantServices;
 
-public class UserService : IUserService
+public class ClientService : IClientService
 {
-    private readonly IService<User> _service;
+    private readonly IService<Client> _service;
     private readonly IRefreshTokenService _refreshTokenService;
     private readonly ClaimsPrincipal? _loggedUser;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IValidatorFactory _validatorFactory;
-    private readonly IJwtTokenService _tokenService;
+    private readonly  IJwtTokenService _tokenService;
 
-    public UserService(IRefreshTokenService refreshTokenService, IJwtTokenService tokenService,
-        IValidatorFactory validatorFactory, IHttpContextAccessor httpContextAccessor, IService<User> service,
+    public ClientService(IRefreshTokenService refreshTokenService,  IJwtTokenService tokenService,
+        IValidatorFactory validatorFactory, IHttpContextAccessor httpContextAccessor, IService<Client> service,
         IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
@@ -42,27 +43,32 @@ public class UserService : IUserService
         _tokenService = tokenService;
     }
 
-
+    //GET CLİENT BY ID METHOD
     public async Task<IDataResults<UserDTO>> GetById(int id)
     {
         var place = await _service.GetByIdAsync(x => x.Id == id);
         var data = _mapper.Map<UserDTO>(place);
         return new SuccessDataResult<UserDTO>(data);
     }
+    
 
-
+    
+    //DELETE CLİENT BY ID METHOD
     public async Task<IResults> Delete(int id)
     {
-        var place = await _service.GetByIdAsync(x => x.Id == id);
-        place.IsDeleted = true;
-        await _service.UpdateAsync(place);
+        var client = await _service.GetByIdAsync(x => x.Id == id);
+        client.IsDeleted = true;
+        await _service.UpdateAsync(client);
         return new SuccessResult();
     }
-
-    public async Task<IDataResults<AuthenticatedUserResponseDto>> Register(UserRegisterDTO registerDto)
+    
+    
+    ///Register CLİENT Method  we use validation TO DO:BATUHAN --> VALDATİONS DONE
+    public async Task<IDataResults<AuthenticatedUserResponseDto>> Register(ClientRegisterRequestDTO registerDto)
     {
         var valResult =
-            FluentValidationTool.ValidateModelWithKeyResult<UserRegisterDTO>(new CustomerDtoValidator(), registerDto);
+            FluentValidationTool.ValidateModelWithKeyResult<ClientRegisterRequestDTO>(new ClientRegisterValidator(), registerDto);
+        
         if (valResult.Success == false)
         {
             return new ErrorDataResults<AuthenticatedUserResponseDto>(HttpStatusCode.BadRequest, valResult.Errors);
@@ -79,69 +85,25 @@ public class UserService : IUserService
         }
 
 
-        user = new User()
+        user = new Client()
         {
             CreatedDate = DateTime.UtcNow,
             UpdatedDate = DateTime.UtcNow,
             Mail = registerDto.Mail,
-            UserTypeId = registerDto.UserTypeId,
             Address = registerDto.Address,
             Surname = registerDto.Surname,
             Phone = registerDto.Phone,
             IsDeleted = false,
             Name = registerDto.Name,
-            CompanyId = registerDto.CompanyId != 0 ? registerDto.CompanyId : null,
             PasswordHash = SHA1.Generate(registerDto.Password)
         };
 
         await _service.AddAsync(user);
 
-        var response = await Authenticate(_mapper.Map<UserRegisterDTO>(user));
+        var response = await Authenticate(_mapper.Map<ClientRegisterRequestDTO>(user));
         return new SuccessDataResult<AuthenticatedUserResponseDto>(response, HttpStatusCode.OK);
     }
 
-    //
-    // public async Task<IDataResults<ICollection<UserDTO>>> List(CustomerListParameters parameters)
-    // {
-    //     var query = _service
-    //         .Where(x => !x.IsDeleted)
-    //         .AsNoTracking();
-    //
-    //     switch (parameters.Order)
-    //     {
-    //         case ListOrderType.Ascending:
-    //             query = query.OrderBy(o => o.Id);
-    //             break;
-    //         case ListOrderType.Descending:
-    //             query = query.OrderByDescending(o => o.Id);
-    //             break;
-    //     }
-    //
-    //
-    //     if (parameters.customerId.HasValue)
-    //     {
-    //         query = query.Where(x => x.Id == parameters.customerId.Value);
-    //     }
-    //
-    //     var totalCount = await query.CountAsync();
-    //
-    //     if (parameters.Skip.HasValue)
-    //     {
-    //         query = query.Skip(parameters.Skip.Value);
-    //     }
-    //
-    //     if (parameters.Take.HasValue)
-    //     {
-    //         query = query.Take(parameters.Take.Value);
-    //     }
-    //     if (parameters.Search != null)
-    //     {
-    //         query = query.Where(x => x.Name == parameters.Search);
-    //     }
-    //    
-    //     var data = _mapper.Map<ICollection<UserDTO>>(await query.ToListAsync());
-    //     return new SuccessDataResult<ICollection<UserDTO>>(data, totalCount);
-    // }
     public int? GetLoggedUserId()
     {
         var userRoleString = _loggedUser.FindFirstValue("Id");
@@ -172,18 +134,12 @@ public class UserService : IUserService
         return new SuccessDataResult<UserDTO>(user);
     }
 
-    public async Task<IDataResults<ICollection<UserForDropdownDTO>>> AdminListByCompanyId(int companyId)
-    {
-        var userModel = _service.Where(x => !x.IsDeleted && x.CompanyId == companyId&&x.UserTypeId==1);
-        var user = _mapper.Map<ICollection<UserForDropdownDTO>>(await userModel.ToListAsync());
-
-        return new SuccessDataResult<ICollection<UserForDropdownDTO>>(user, user.Count);
-    }
+  
 
     public async Task<IDataResults<AuthenticatedUserResponseDto>> Login(LoginDto loginDto)
     {
         var valResult =
-            FluentValidationTool.ValidateModelWithKeyResult(_validatorFactory.GetValidator<LoginDto>(), loginDto);
+            FluentValidationTool.ValidateModelWithKeyResult(new ClientLoginValidator(), loginDto);
         if (valResult.Success == false)
         {
             return new ErrorDataResults<AuthenticatedUserResponseDto>(HttpStatusCode.BadRequest, valResult.Errors);
@@ -208,13 +164,13 @@ public class UserService : IUserService
                 HttpStatusCode.BadRequest);
         }
 
-        var response = await Authenticate(_mapper.Map<UserRegisterDTO>(parent));
+        var response = await Authenticate(_mapper.Map<ClientRegisterRequestDTO>(parent));
         return new SuccessDataResult<AuthenticatedUserResponseDto>(response);
     }
 
-    private async Task<AuthenticatedUserResponseDto> Authenticate(UserRegisterDTO userDto)
+    private async Task<AuthenticatedUserResponseDto> Authenticate(ClientRegisterRequestDTO userDto)
     {
-        var accessToken = _tokenService.GenerateAccessToken(userDto);
+        var accessToken = _tokenService.GenerateAccessTokenRestourant(userDto);
         var refreshToken = _tokenService.GenerateRefreshToken();
 
         var refreshTokenDto = new RefreshTokenDto()
@@ -254,7 +210,7 @@ public class UserService : IUserService
         }
         
 
-        var response = await Authenticate(_mapper.Map<UserRegisterDTO>(user));
+        var response = await Authenticate(_mapper.Map<ClientRegisterRequestDTO>(user));
         return new SuccessDataResult<AuthenticatedUserResponseDto>(response);
     }
 }

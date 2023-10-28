@@ -20,8 +20,11 @@ namespace GTBack.Service.Validation
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage(ValidationMessages.Username_Not_Empty)
                 .MaximumLength(128).WithMessage(ValidationMessages.Max_Length);
-
-            RuleFor(x => x.Name)
+            RuleFor(x => x.Address)
+                .NotEmpty().WithMessage(ValidationMessages.Name_Not_Empty);
+            RuleFor(x => x.Phone)
+                .NotEmpty().WithMessage(ValidationMessages.Name_Not_Empty);
+            RuleFor(x => x.Surname)
                 .NotEmpty().WithMessage(ValidationMessages.Name_Not_Empty);
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage(ValidationMessages.Name_Not_Empty)

@@ -1,6 +1,6 @@
 namespace GTBack.Core.Entities.Restourant;
 
-public class Employee
+public class Employee:BaseEntity
 {
     public String Name { get; set; }
     public String Surname { get; set; }

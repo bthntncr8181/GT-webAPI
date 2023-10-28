@@ -1,6 +1,6 @@
 namespace GTBack.Core.Entities.Restourant;
 
-public class MenuItem
+public class MenuItem:BaseEntity
 {
     public String Name { get; set; }
     public int CompanyId { get; set; }
