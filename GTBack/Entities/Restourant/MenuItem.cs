@@ -11,5 +11,5 @@ public class MenuItem
     public String Contains { get; set; }
     public int CategoryId { get; set; }
     public Category Category { get; set; }
-    public  virtual  ICollection<ExtraMenuItem>? ExtraMenuItem { get; set; }
+    public  virtual  ICollection<ExtraMenuItem> ExtraMenuItem { get; set; }
 }
