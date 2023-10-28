@@ -12,7 +12,18 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.2.2" />
+
+
+
+
+
+  <ItemGroup>
+    <Folder Include="DTO\Restourant\" />
   </ItemGroup>
+
+  </ItemGroup>
+
+
 
 
 </Project>
