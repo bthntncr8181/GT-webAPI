@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GTBack.Core.DTO
 {
-    public abstract class BaseDTO_
+    public abstract class BaseDTO
     {
 
 

@@ -4,6 +4,7 @@ using GTBack.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GTBack.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231029115212_Emp_changes")]
+    partial class Emp_changes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -605,42 +607,6 @@ namespace GTBack.Repository.Migrations
                     b.ToTable("EmployeeOrderRelation");
                 });
 
-            modelBuilder.Entity("GTBack.Core.Entities.Restourant.EmployeeRoleRelation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoleId1")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("RoleId1");
-
-                    b.ToTable("EmployeeRoleRelation");
-                });
-
             modelBuilder.Entity("GTBack.Core.Entities.Restourant.ExtraMenuItem", b =>
                 {
                     b.Property<int>("Id")
@@ -931,17 +897,17 @@ namespace GTBack.Repository.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<float?>("Lat")
+                    b.Property<float>("Lat")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Lng")
+                    b.Property<float>("Lng")
                         .HasColumnType("real");
 
                     b.Property<string>("Mail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MenuId")
+                    b.Property<int>("MenuId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -958,35 +924,6 @@ namespace GTBack.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RestoCompany");
-                });
-
-            modelBuilder.Entity("GTBack.Core.Entities.Restourant.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.Restourant.ShiftControl", b =>
@@ -1372,25 +1309,6 @@ namespace GTBack.Repository.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("GTBack.Core.Entities.Restourant.EmployeeRoleRelation", b =>
-                {
-                    b.HasOne("GTBack.Core.Entities.Restourant.Employee", "Employee")
-                        .WithMany("EmployeeRoleRelation")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GTBack.Core.Entities.Restourant.Role", "Role")
-                        .WithMany("EmployeeRoleRelation")
-                        .HasForeignKey("RoleId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("GTBack.Core.Entities.Restourant.ExtraMenuItem", b =>
                 {
                     b.HasOne("GTBack.Core.Entities.Restourant.MenuItem", "MenuItem")
@@ -1607,8 +1525,6 @@ namespace GTBack.Repository.Migrations
                 {
                     b.Navigation("Addition");
 
-                    b.Navigation("EmployeeRoleRelation");
-
                     b.Navigation("Reservation");
 
                     b.Navigation("ShiftControl");
@@ -1632,11 +1548,6 @@ namespace GTBack.Repository.Migrations
                         .IsRequired();
 
                     b.Navigation("TableArea");
-                });
-
-            modelBuilder.Entity("GTBack.Core.Entities.Restourant.Role", b =>
-                {
-                    b.Navigation("EmployeeRoleRelation");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.Restourant.Table", b =>

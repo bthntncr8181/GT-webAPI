@@ -1,6 +1,6 @@
 namespace GTBack.Core.DTO.Restourant.Request;
 
-public class ClientRegisterRequestDTO
+public class ClientRegisterRequestDTO:BaseDTO
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -8,6 +8,6 @@ public class ClientRegisterRequestDTO
     public string Address { get; set; }
     public string Phone { get; set; }
     public string Mail { get; set; }
-    public bool IsDeleted { get; set; }
+    
     public string Password { get; set; }
 }

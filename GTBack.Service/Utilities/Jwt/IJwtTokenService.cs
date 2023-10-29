@@ -13,6 +13,7 @@ namespace GTBack.Service.Utilities.Jwt
     {
         public AccessTokenDto GenerateAccessToken(UserRegisterDTO userDto);
         public AccessTokenDto GenerateAccessTokenRestourant(ClientRegisterRequestDTO userDto);
+        public AccessTokenDto GenerateAccessTokenRestourantEmployee(EmployeeRegisterDTO userDto);
         public string GenerateRefreshToken();
         public bool Validate(string refreshToken);
     }

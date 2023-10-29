@@ -18,6 +18,7 @@
     <Compile Update="DTO\Request\UpdateEventDTO.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
+
   </ItemGroup>
 
 

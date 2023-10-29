@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,6 +37,19 @@ namespace GTBack.Service.Services
             await _unitOfWork.CommitAsync();
             return entity;
            
+        }
+        
+        public Task SendMail(MailData mail)
+        {
+            var client = new SmtpClient("smtp-mail.outlook.com", 587)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential("batuhanntuncerr@hotmail.com", "170717doga")
+            };
+            MailMessage message = new MailMessage(mail.SenderMail, mail.RecieverMail, mail.EmailSubject, mail.EmailBody);
+
+            message.IsBodyHtml = true;
+            return client.SendMailAsync(message);
         }
 
         public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities)

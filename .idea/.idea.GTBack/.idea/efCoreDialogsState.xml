@@ -3,6 +3,7 @@
   <component name="EfCoreDialogsState">
     <option name="keyValueStorage">
       <map>
+        <entry key="Common:1d19aa4d-aa0b-41ac-bae8-54d4e042de43:dbContext" value="GTBack.Repository.AppDbContext" />
         <entry key="Common:633772d4-9006-4043-a809-29ceb3c8ac8a:dbContext" value="GTBack.Repository.AppDbContext" />
         <entry key="Common:buildConfiguration" value="Debug" />
         <entry key="Common:noBuild" value="false" />

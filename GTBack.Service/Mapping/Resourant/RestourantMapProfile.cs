@@ -14,6 +14,7 @@ public class RestourantMapProfile
         {
             CreateMap<Client, ClientRegisterRequestDTO>().ReverseMap();
             CreateMap<Client, UserDTO>().ReverseMap();
+            CreateMap<Employee, EmployeeRegisterDTO>().ReverseMap();
         }
     }
 }

@@ -12,7 +12,6 @@ using GTBack.Core.Services.Restourant;
 using GTBack.Core.UnitOfWorks;
 using GTBack.Service.Utilities;
 using GTBack.Service.Utilities.Jwt;
-using GTBack.Service.Validation;
 using GTBack.Service.Validation.Restourant;
 using GTBack.Service.Validation.Tool;
 using Microsoft.AspNetCore.Http;
@@ -25,20 +24,16 @@ public class ClientService : IClientService
     private readonly IService<Client> _service;
     private readonly IRefreshTokenService _refreshTokenService;
     private readonly ClaimsPrincipal? _loggedUser;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IValidatorFactory _validatorFactory;
     private readonly  IJwtTokenService _tokenService;
 
     public ClientService(IRefreshTokenService refreshTokenService,  IJwtTokenService tokenService,
-        IValidatorFactory validatorFactory, IHttpContextAccessor httpContextAccessor, IService<Client> service,
-        IUnitOfWork unitOfWork, IMapper mapper)
+        IHttpContextAccessor httpContextAccessor, IService<Client> service,
+         IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
         _mapper = mapper;
         _service = service;
         _loggedUser = httpContextAccessor.HttpContext?.User;
-        _validatorFactory = validatorFactory;
         _refreshTokenService = refreshTokenService;
         _tokenService = tokenService;
     }
@@ -186,8 +181,7 @@ public class ClientService : IClientService
             RefreshToken = refreshToken
         };
     }
-
-
+    
     public async Task<IDataResults<AuthenticatedUserResponseDto>> GoogleLogin (GoogleLoginDTO model)
     {
         GoogleJsonWebSignature.ValidationSettings? settings = new GoogleJsonWebSignature.ValidationSettings()

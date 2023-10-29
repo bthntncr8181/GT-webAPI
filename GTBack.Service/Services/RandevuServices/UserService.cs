@@ -24,16 +24,14 @@ public class UserService : IUserService
     private readonly IService<User> _service;
     private readonly IRefreshTokenService _refreshTokenService;
     private readonly ClaimsPrincipal? _loggedUser;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IValidatorFactory _validatorFactory;
     private readonly IJwtTokenService _tokenService;
 
     public UserService(IRefreshTokenService refreshTokenService, IJwtTokenService tokenService,
         IValidatorFactory validatorFactory, IHttpContextAccessor httpContextAccessor, IService<User> service,
-        IUnitOfWork unitOfWork, IMapper mapper)
+         IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
         _mapper = mapper;
         _service = service;
         _loggedUser = httpContextAccessor.HttpContext?.User;

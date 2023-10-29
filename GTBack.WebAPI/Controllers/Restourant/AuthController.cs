@@ -5,6 +5,7 @@ using GTBack.Core.Entities.Restourant;
 using GTBack.Core.Services;
 using GTBack.Core.Services.Restourant;
 using GTBack.Service.Services;
+using GTBack.Service.Services.RestourantServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,13 +15,14 @@ namespace GTBack.WebAPI.Controllers.Restourant
     {
         
         private readonly IMapper _mapper;
-        private readonly IService<Client> _service;
+     
         private readonly IClientService _clientService;
+        private readonly IEmployeeService _employeeService;
 
-        public AuthController(IService<Client> service, IMapper mapper,IClientService clientService)
+        public AuthController( IMapper mapper,IClientService clientService,IEmployeeService employeeService)
         {
             _clientService = clientService;
-            _service = service;
+            _employeeService = employeeService;
             _mapper = mapper;
         }
 
@@ -49,6 +51,11 @@ namespace GTBack.WebAPI.Controllers.Restourant
             
             
             return ApiResult(await _clientService.Register(request));
+        }
+        [HttpPost("EmployeeRegister")]
+        public async Task<IActionResult> EmpRegister(EmployeeRegisterDTO request)
+        {
+            return ApiResult(await _employeeService.Register(request));
         }
 
         [HttpPost("GoogleLogin")]

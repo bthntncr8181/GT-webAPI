@@ -1,0 +1,102 @@
+using System.Security.Claims;
+using AutoMapper;
+using GTBack.Core.DTO.Restourant.Request;
+using GTBack.Core.Entities.Restourant;
+using GTBack.Core.Results;
+using GTBack.Core.Services;
+using GTBack.Core.Services.Restourant;
+using GTBack.Service.Utilities;
+using GTBack.Service.Utilities.Jwt;
+using Microsoft.AspNetCore.Http;
+
+namespace GTBack.Service.Services.RestourantServices;
+
+public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO>
+{
+    private readonly IService<RestoCompany> _companyService;
+    private readonly IService<Department> _departmentService;
+    private readonly IService<Employee> _employeeService;
+    private readonly IRefreshTokenService _refreshTokenService;
+    private readonly ClaimsPrincipal? _loggedUser;
+    private readonly IMapper _mapper;
+    private readonly IJwtTokenService _tokenService;
+
+    public CompanyService(IRefreshTokenService refreshTokenService, IService<Employee> _employeeService,
+        IService<Department> departmentService, IJwtTokenService tokenService,
+        IHttpContextAccessor httpContextAccessor, IService<RestoCompany> companyService,
+        IMapper mapper)
+    {
+        _mapper = mapper;
+        _companyService = companyService;
+        _departmentService = departmentService;
+        _employeeService = this._employeeService;
+        _loggedUser = httpContextAccessor.HttpContext?.User;
+        _refreshTokenService = refreshTokenService;
+        _tokenService = tokenService;
+    }
+
+    public async Task<IDataResults<CompanyAddDTO>> Create(CompanyAddDTO model)
+    {
+        var randomGenerator = new Random();
+        var rndNum = randomGenerator.Next(100000, 999999);
+        var addedcompany = new RestoCompany
+        {
+            Name = model.CompanyName,
+            Address = model.CompanyAddress,
+            Mail = model.CompanyMail,
+            Phone = model.CompanyPhone,
+            Lat = model.Lat.HasValue ? model.Lat : 0,
+            Lng = model.Lng.HasValue ? model.Lng : 0,
+        };
+
+        var company = await _companyService.AddAsync(addedcompany);
+
+        var depAdded = new Department()
+        {
+            Name = "Manager",
+            Mail = company.Mail,
+            Phone = model.CompanyPhone,
+            CompanyId = company.Id,
+        };
+
+        var department = await _departmentService.AddAsync(depAdded);
+
+        var employeeAdded = new Employee()
+        {
+            CreatedDate = DateTime.UtcNow,
+            UpdatedDate = DateTime.UtcNow,
+            Mail = model.Mail,
+            Address = model.Address,
+            Surname = model.Surname,
+            DepartmentId = department.Id,
+            ShiftStart = model.ShiftStart,
+            ShiftEnd = model.ShiftEnd,
+            SalaryType = model.SalaryType,
+            Salary = model.Salary,
+            DeviceId = model.DeviceId,
+            Phone = model.Phone,
+            IsDeleted = false,
+            Name = model.Name,
+            PasswordHash = SHA1.Generate(model.Password)
+        };
+
+        var user = await _employeeService.AddAsync(employeeAdded);
+
+        return new SuccessDataResult<CompanyAddDTO>(model);
+    }
+
+    public Task<IDataResults<CompanyAddDTO>> Update(CompanyAddDTO model, int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IResults> Delete(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IResults> List()
+    {
+        throw new NotImplementedException();
+    }
+}
