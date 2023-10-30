@@ -10,4 +10,5 @@ public class Client:BaseEntity
     public string PasswordHash { get; set; }
     public  virtual  ICollection<Reservation>? Reservation { get; set; }
     public virtual ICollection<RefreshToken>? RefreshTokens { get; set; }
+
 }

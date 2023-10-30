@@ -2,6 +2,7 @@ using System.Security.Claims;
 using AutoMapper;
 using GTBack.Core.DTO;
 using GTBack.Core.DTO.Restourant.Request;
+using GTBack.Core.DTO.Restourant.Response;
 using GTBack.Core.Entities.Restourant;
 using GTBack.Core.Results;
 using GTBack.Core.Services;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace GTBack.Service.Services.RestourantServices;
 
-public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO>
+public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO,CompanyListDTO>
 {
     private readonly IService<RestoCompany> _companyService;
     private readonly IService<Department> _departmentService;
@@ -38,9 +39,8 @@ public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO>
 
     public async Task<IDataResults<CompanyAddDTO>> Create(CompanyAddDTO model)
     {
-        var randomGenerator = new Random();
-        var rndNum = randomGenerator.Next(100000, 999999);
-        var addedcompany = new RestoCompany
+     
+        var addedCompany = new RestoCompany
         {
             Name = model.CompanyName,
             Address = model.CompanyAddress,
@@ -50,7 +50,7 @@ public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO>
             Lng = model.Lng.HasValue ? model.Lng : 0,
         };
 
-        var company = await _companyService.AddAsync(addedcompany);
+        var company = await _companyService.AddAsync(addedCompany);
 
         var depAdded = new Department()
         {
@@ -96,7 +96,7 @@ public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO>
         throw new NotImplementedException();
     }
 
-    public Task<IResults> List()
+    public Task<IDataResults<ICollection<CompanyListDTO>>> List()
     {
         throw new NotImplementedException();
     }

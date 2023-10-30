@@ -1,3 +1,5 @@
+using GTBack.Core.Entities.SharedEntities;
+
 namespace GTBack.Core.Entities;
 
 public class EventType:BaseEntity

@@ -2,8 +2,8 @@ namespace GTBack.Core.Entities.Restourant;
 
 public class EmployeeOrderRelation:BaseEntity
 {
-    public  int EmployeeId { get; set; }
-    public  int AdditionId { get; set; }
+    public  long EmployeeId { get; set; }
+    public  long AdditionId { get; set; }
     public  Employee Employee { get; set; }
     public  Addition Addition { get; set; }
 

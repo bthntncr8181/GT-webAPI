@@ -38,11 +38,7 @@ namespace GTBack.WebAPI.Controllers.Restourant
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDto log)
         {
-            
-            
             return ApiResult(await _clientService.Login(log));
-            
-            
         }
             
         [HttpPost("Register")]

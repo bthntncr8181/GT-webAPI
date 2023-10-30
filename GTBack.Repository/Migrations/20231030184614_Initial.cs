@@ -5,46 +5,15 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GTBack.Repository.Migrations
 {
-    public partial class Restourant : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_EventTypeCompanyRelations_Companies_CompanyId",
-                table: "EventTypeCompanyRelations");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_FAQs_Companies_CompanyId",
-                table: "FAQs");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Users_Companies_CompanyId",
-                table: "Users");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Companies",
-                table: "Companies");
-
-            migrationBuilder.RenameTable(
-                name: "Companies",
-                newName: "Company");
-
-            migrationBuilder.AddColumn<int>(
-                name: "ClientId",
-                table: "RefreshToken",
-                type: "int",
-                nullable: true);
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Company",
-                table: "Company",
-                column: "Id");
-
             migrationBuilder.CreateTable(
                 name: "Client",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -62,10 +31,32 @@ namespace GTBack.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Company",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CompanyTypeId = table.Column<int>(type: "int", nullable: false),
+                    Mail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Latitude = table.Column<float>(type: "real", nullable: false),
+                    Longtitude = table.Column<float>(type: "real", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Company", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Currency",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -83,7 +74,7 @@ namespace GTBack.Repository.Migrations
                 name: "Device",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DeviceCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -97,18 +88,37 @@ namespace GTBack.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EventTypes",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RestoCompany",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Lat = table.Column<float>(type: "real", nullable: false),
-                    Lng = table.Column<float>(type: "real", nullable: false),
-                    MenuId = table.Column<int>(type: "int", nullable: false),
+                    Lat = table.Column<double>(type: "float", nullable: true),
+                    Lng = table.Column<double>(type: "float", nullable: true),
+                    MenuId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -119,16 +129,89 @@ namespace GTBack.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Role",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Role", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Mail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserTypeId = table.Column<long>(type: "bigint", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Company_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Company",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventTypeCompanyRelations",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventTypeId = table.Column<long>(type: "bigint", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventTypeCompanyRelations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EventTypeCompanyRelations_Company_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Company",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventTypeCompanyRelations_EventTypes_EventTypeId",
+                        column: x => x.EventTypeId,
+                        principalTable: "EventTypes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Department",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
-                    RestoCompanyId = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
+                    RestoCompanyId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -148,10 +231,10 @@ namespace GTBack.Repository.Migrations
                 name: "Menu",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -168,22 +251,154 @@ namespace GTBack.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    AdminUserId = table.Column<long>(type: "bigint", nullable: false),
+                    CurrencyId = table.Column<long>(type: "bigint", nullable: true),
+                    ClientUserId = table.Column<long>(type: "bigint", nullable: false),
+                    EventTypeId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Events_EventTypes_EventTypeId",
+                        column: x => x.EventTypeId,
+                        principalTable: "EventTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Events_Users_AdminUserId",
+                        column: x => x.AdminUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Events_Users_ClientUserId",
+                        column: x => x.ClientUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FAQs",
+                columns: table => new
+                {
+                    SenderUserId = table.Column<long>(type: "bigint", nullable: false),
+                    AnsweredUserId = table.Column<long>(type: "bigint", nullable: false),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Like = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FAQs", x => new { x.SenderUserId, x.AnsweredUserId });
+                    table.ForeignKey(
+                        name: "FK_FAQs_Company_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Company",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FAQs_Users_AnsweredUserId",
+                        column: x => x.AnsweredUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FAQs_Users_SenderUserId",
+                        column: x => x.SenderUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshToken",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: true),
+                    customerId = table.Column<int>(type: "int", nullable: true),
+                    ClientId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshToken", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshToken_Client_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Client",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RefreshToken_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SpecialAttributeRelations",
+                columns: table => new
+                {
+                    AdminUserId = table.Column<long>(type: "bigint", nullable: false),
+                    ClientUserId = table.Column<long>(type: "bigint", nullable: false),
+                    SpecialAttributeId = table.Column<long>(type: "bigint", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SpecialAttributeRelations", x => new { x.AdminUserId, x.ClientUserId });
+                    table.ForeignKey(
+                        name: "FK_SpecialAttributeRelations_Users_AdminUserId",
+                        column: x => x.AdminUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SpecialAttributeRelations_Users_ClientUserId",
+                        column: x => x.ClientUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Employee",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SalaryType = table.Column<int>(type: "int", nullable: true),
                     ShiftStart = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ShiftEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Salary = table.Column<int>(type: "int", nullable: false),
-                    DeviceId = table.Column<int>(type: "int", nullable: true),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false),
-                    CurrencyId = table.Column<int>(type: "int", nullable: false),
+                    Salary = table.Column<int>(type: "int", nullable: true),
+                    DeviceId = table.Column<long>(type: "bigint", nullable: true),
+                    DepartmentId = table.Column<long>(type: "bigint", nullable: false),
+                    CurrencyId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -195,8 +410,7 @@ namespace GTBack.Repository.Migrations
                         name: "FK_Employee_Currency_CurrencyId",
                         column: x => x.CurrencyId,
                         principalTable: "Currency",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Employee_Department_DepartmentId",
                         column: x => x.DepartmentId,
@@ -214,12 +428,12 @@ namespace GTBack.Repository.Migrations
                 name: "TableArea",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
-                    RestoCompanyId = table.Column<int>(type: "int", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
+                    RestoCompanyId = table.Column<long>(type: "bigint", nullable: false),
+                    DepartmentId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -244,10 +458,10 @@ namespace GTBack.Repository.Migrations
                 name: "Category",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MenuId = table.Column<int>(type: "int", nullable: false),
+                    MenuId = table.Column<long>(type: "bigint", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -265,14 +479,42 @@ namespace GTBack.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmployeeRoleRelation",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EmployeeId = table.Column<long>(type: "bigint", nullable: false),
+                    RoleId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeRoleRelation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmployeeRoleRelation_Employee_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employee",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EmployeeRoleRelation_Role_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Role",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ShiftControl",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EnterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LeaveDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -292,15 +534,16 @@ namespace GTBack.Repository.Migrations
                 name: "Table",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TableNumber = table.Column<int>(type: "int", nullable: false),
-                    ActiveId = table.Column<int>(type: "int", nullable: false),
+                    ActiveClientId = table.Column<long>(type: "bigint", nullable: true),
+                    ActiveAdditionId = table.Column<long>(type: "bigint", nullable: true),
                     Capacity = table.Column<int>(type: "int", nullable: false),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
-                    RestoCompanyId = table.Column<int>(type: "int", nullable: false),
-                    TableAreaId = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
+                    RestoCompanyId = table.Column<long>(type: "bigint", nullable: false),
+                    TableAreaId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -325,16 +568,16 @@ namespace GTBack.Repository.Migrations
                 name: "MenuItem",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Contains = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -354,16 +597,17 @@ namespace GTBack.Repository.Migrations
                 name: "Addition",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TableNumber = table.Column<int>(type: "int", nullable: false),
-                    ActiveId = table.Column<int>(type: "int", nullable: false),
                     Capacity = table.Column<int>(type: "int", nullable: false),
-                    TableId = table.Column<int>(type: "int", nullable: false),
-                    ClientId = table.Column<int>(type: "int", nullable: true),
-                    TableAreaId = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: true),
+                    TableId = table.Column<long>(type: "bigint", nullable: false),
+                    ClientId = table.Column<long>(type: "bigint", nullable: true),
+                    OpenedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ClosedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TableAreaId = table.Column<long>(type: "bigint", nullable: false),
+                    EmployeeId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -398,14 +642,14 @@ namespace GTBack.Repository.Migrations
                 name: "Reservation",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ReservationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReservationCancelDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Deposit = table.Column<int>(type: "int", nullable: true),
-                    ClientId = table.Column<int>(type: "int", nullable: false),
-                    TableId = table.Column<int>(type: "int", nullable: true),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
+                    ClientId = table.Column<long>(type: "bigint", nullable: false),
+                    TableId = table.Column<long>(type: "bigint", nullable: true),
+                    EmployeeId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -436,16 +680,16 @@ namespace GTBack.Repository.Migrations
                 name: "ExtraMenuItem",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Contains = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MenuItemId = table.Column<int>(type: "int", nullable: false),
+                    MenuItemId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -465,10 +709,10 @@ namespace GTBack.Repository.Migrations
                 name: "EmployeeOrderRelation",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    AdditionId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<long>(type: "bigint", nullable: false),
+                    AdditionId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -493,9 +737,9 @@ namespace GTBack.Repository.Migrations
                 name: "Payment",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AdditionId = table.Column<int>(type: "int", nullable: false),
+                    AdditionId = table.Column<long>(type: "bigint", nullable: false),
                     AmountPaid = table.Column<int>(type: "int", nullable: false),
                     PaymentMethod = table.Column<int>(type: "int", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -518,16 +762,16 @@ namespace GTBack.Repository.Migrations
                 name: "Order",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderNote = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ExtraMenuItemId = table.Column<int>(type: "int", nullable: true),
-                    AdditionId = table.Column<int>(type: "int", nullable: false),
+                    ExtraMenuItemId = table.Column<long>(type: "bigint", nullable: true),
+                    AdditionId = table.Column<long>(type: "bigint", nullable: false),
                     OrderStatus = table.Column<int>(type: "int", nullable: false),
                     OrderStartDate = table.Column<int>(type: "int", nullable: false),
                     OrderDeliveredDate = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: true),
+                    EmployeeId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -552,11 +796,6 @@ namespace GTBack.Repository.Migrations
                         principalTable: "ExtraMenuItem",
                         principalColumn: "Id");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RefreshToken_ClientId",
-                table: "RefreshToken",
-                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addition_ClientId",
@@ -614,9 +853,54 @@ namespace GTBack.Repository.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EmployeeRoleRelation_EmployeeId",
+                table: "EmployeeRoleRelation",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeRoleRelation_RoleId",
+                table: "EmployeeRoleRelation",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_AdminUserId",
+                table: "Events",
+                column: "AdminUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_ClientUserId",
+                table: "Events",
+                column: "ClientUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_EventTypeId",
+                table: "Events",
+                column: "EventTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventTypeCompanyRelations_CompanyId",
+                table: "EventTypeCompanyRelations",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventTypeCompanyRelations_EventTypeId",
+                table: "EventTypeCompanyRelations",
+                column: "EventTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ExtraMenuItem_MenuItemId",
                 table: "ExtraMenuItem",
                 column: "MenuItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FAQs_AnsweredUserId",
+                table: "FAQs",
+                column: "AnsweredUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FAQs_CompanyId",
+                table: "FAQs",
+                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Menu_CompanyId",
@@ -650,6 +934,16 @@ namespace GTBack.Repository.Migrations
                 column: "AdditionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RefreshToken_ClientId",
+                table: "RefreshToken",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshToken_UserId",
+                table: "RefreshToken",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reservation_ClientId",
                 table: "Reservation",
                 column: "ClientId");
@@ -668,6 +962,11 @@ namespace GTBack.Repository.Migrations
                 name: "IX_ShiftControl_EmployeeId",
                 table: "ShiftControl",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SpecialAttributeRelations_ClientUserId",
+                table: "SpecialAttributeRelations",
+                column: "ClientUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Table_RestoCompanyId",
@@ -689,57 +988,28 @@ namespace GTBack.Repository.Migrations
                 table: "TableArea",
                 column: "RestoCompanyId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_EventTypeCompanyRelations_Company_CompanyId",
-                table: "EventTypeCompanyRelations",
-                column: "CompanyId",
-                principalTable: "Company",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_FAQs_Company_CompanyId",
-                table: "FAQs",
-                column: "CompanyId",
-                principalTable: "Company",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_RefreshToken_Client_ClientId",
-                table: "RefreshToken",
-                column: "ClientId",
-                principalTable: "Client",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Users_Company_CompanyId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_CompanyId",
                 table: "Users",
-                column: "CompanyId",
-                principalTable: "Company",
-                principalColumn: "Id");
+                column: "CompanyId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_EventTypeCompanyRelations_Company_CompanyId",
-                table: "EventTypeCompanyRelations");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_FAQs_Company_CompanyId",
-                table: "FAQs");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_RefreshToken_Client_ClientId",
-                table: "RefreshToken");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Users_Company_CompanyId",
-                table: "Users");
-
             migrationBuilder.DropTable(
                 name: "EmployeeOrderRelation");
+
+            migrationBuilder.DropTable(
+                name: "EmployeeRoleRelation");
+
+            migrationBuilder.DropTable(
+                name: "Events");
+
+            migrationBuilder.DropTable(
+                name: "EventTypeCompanyRelations");
+
+            migrationBuilder.DropTable(
+                name: "FAQs");
 
             migrationBuilder.DropTable(
                 name: "Order");
@@ -748,16 +1018,31 @@ namespace GTBack.Repository.Migrations
                 name: "Payment");
 
             migrationBuilder.DropTable(
+                name: "RefreshToken");
+
+            migrationBuilder.DropTable(
                 name: "Reservation");
 
             migrationBuilder.DropTable(
                 name: "ShiftControl");
 
             migrationBuilder.DropTable(
+                name: "SpecialAttributeRelations");
+
+            migrationBuilder.DropTable(
+                name: "Role");
+
+            migrationBuilder.DropTable(
+                name: "EventTypes");
+
+            migrationBuilder.DropTable(
                 name: "ExtraMenuItem");
 
             migrationBuilder.DropTable(
                 name: "Addition");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "MenuItem");
@@ -770,6 +1055,9 @@ namespace GTBack.Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "Table");
+
+            migrationBuilder.DropTable(
+                name: "Company");
 
             migrationBuilder.DropTable(
                 name: "Category");
@@ -791,50 +1079,6 @@ namespace GTBack.Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "RestoCompany");
-
-            migrationBuilder.DropIndex(
-                name: "IX_RefreshToken_ClientId",
-                table: "RefreshToken");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Company",
-                table: "Company");
-
-            migrationBuilder.DropColumn(
-                name: "ClientId",
-                table: "RefreshToken");
-
-            migrationBuilder.RenameTable(
-                name: "Company",
-                newName: "Companies");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Companies",
-                table: "Companies",
-                column: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_EventTypeCompanyRelations_Companies_CompanyId",
-                table: "EventTypeCompanyRelations",
-                column: "CompanyId",
-                principalTable: "Companies",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_FAQs_Companies_CompanyId",
-                table: "FAQs",
-                column: "CompanyId",
-                principalTable: "Companies",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Users_Companies_CompanyId",
-                table: "Users",
-                column: "CompanyId",
-                principalTable: "Companies",
-                principalColumn: "Id");
         }
     }
 }

@@ -7,8 +7,9 @@ public class EmployeeRegisterDTO:BaseRegisterDTO
     public DateTime ShiftEnd { get; set; }
     public int SalaryType { get; set; }
     public int Salary { get; set; }
-    public int? DeviceId { get; set; }
-    public int DepartmentId { get; set; }
-    public int CurrencyId { get; set; }
+    public long? DeviceId { get; set; }
+    public long RoleId { get; set; }
+    public long DepartmentId { get; set; }
+    public long CurrencyId { get; set; }
 }
 

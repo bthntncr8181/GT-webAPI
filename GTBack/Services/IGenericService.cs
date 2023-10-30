@@ -2,10 +2,10 @@ using GTBack.Core.Results;
 
 namespace GTBack.Core.Services;
 
-public interface IGenericService<T>
+public interface IGenericService<T1,T2>
 {
-    Task<IDataResults<T>> Create(T model);
-    Task<IDataResults<T>> Update(T model,int id);
+    Task<IDataResults<T1>> Create(T1 model);
+    Task<IDataResults<T1>> Update(T1 model,int id);
     Task<IResults> Delete(int id);
-    Task<IResults> List();
+    Task<IDataResults<ICollection<T2>>> List();
 }

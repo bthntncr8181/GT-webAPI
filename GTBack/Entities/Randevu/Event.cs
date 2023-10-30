@@ -11,12 +11,12 @@ public class Event :BaseEntity
     public String Description { get; set; }
     
     public int  StatusId { get; set; }
-    public int AdminUserId { get; set; }
+    public long AdminUserId { get; set; }
     
-    public int? CurrencyId { get; set; }
-    public int ClientUserId { get; set; }
+    public long? CurrencyId { get; set; }
+    public long ClientUserId { get; set; }
     
-    public int EventTypeId { get; set; }
+    public long EventTypeId { get; set; }
     public virtual User  AdminUser { get; set; }
     
     public virtual EventType  EventType { get; set; }

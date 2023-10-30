@@ -13,9 +13,9 @@ public class Employee : BaseEntity
     public DateTime ShiftStart { get; set; }
     public DateTime ShiftEnd { get; set; }
     public int? Salary { get; set; }
-    public int? DeviceId { get; set; }
-    public int DepartmentId { get; set; }
-    public int? CurrencyId { get; set; }
+    public long? DeviceId { get; set; }
+    public long DepartmentId { get; set; }
+    public long? CurrencyId { get; set; }
     public Department Department { get; set; }
     public Currency Currency { get; set; }
     public Device? Device { get; set; }

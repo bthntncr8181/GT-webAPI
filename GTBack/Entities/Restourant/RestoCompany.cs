@@ -8,7 +8,7 @@ public class RestoCompany :BaseEntity
     public String Phone { get; set; }
     public double? Lat { get; set; }
     public double? Lng { get; set; }
-    public int? MenuId { get; set; }
+    public long? MenuId { get; set; }
     public  Menu Menu { get; set; }
     public  virtual  ICollection<Department> Department { get; set; }
     public  virtual  ICollection<TableArea> TableArea { get; set; }

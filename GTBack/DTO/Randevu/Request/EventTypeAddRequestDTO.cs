@@ -6,5 +6,5 @@ public class EventTypeAddRequestDTO
     public String Name { get; set; }
     public int Price { get; set; }
     public int Duration { get; set; }
-    public int CompanyId { get; set; }
+    public long CompanyId { get; set; }
 }

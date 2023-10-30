@@ -1,15 +1,17 @@
+using GTBack.Core.Entities.SharedEntities;
+
 namespace GTBack.Core.Entities;
 
 public class SpecialAttributeRelation:BaseEntity
 {
-    public int AdminUserId { get; set; }
-    public int ClientUserId { get; set; }
+    public long AdminUserId { get; set; }
+    public long ClientUserId { get; set; }
     
     public virtual User AdminUser { get; set; }
 
     
     public virtual User ClientUser { get; set; }
     
-    public int SpecialAttributeId { get; set; }
+    public long SpecialAttributeId { get; set; }
 
 }
