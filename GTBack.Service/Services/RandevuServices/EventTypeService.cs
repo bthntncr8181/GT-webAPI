@@ -29,14 +29,14 @@ public class EventTypeService : IEventTypeService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IValidatorFactory _validatorFactory;
-    private readonly IJwtTokenService _tokenService;
+    private readonly IJwtTokenService<BaseRegisterDTO> _tokenService;
 
     public EventTypeService(IGenericRepository<Event> eventRepository,
         IGenericRepository<EventType> eventTypeRepository,
         IGenericRepository<User> userRepository,
         IGenericRepository<EventTypeCompanyRelation> eventTypeCompanyRelationRepository,
         IGenericRepository<Company> companyRepository,
-        IRefreshTokenService refreshTokenService, IJwtTokenService tokenService,
+        IRefreshTokenService refreshTokenService, IJwtTokenService<BaseRegisterDTO> tokenService,
         IValidatorFactory validatorFactory, IHttpContextAccessor httpContextAccessor, IService<Event> service,
         IUnitOfWork unitOfWork, IMapper mapper)
     {

@@ -26,9 +26,9 @@ public class UserService : IUserService
     private readonly ClaimsPrincipal? _loggedUser;
     private readonly IMapper _mapper;
     private readonly IValidatorFactory _validatorFactory;
-    private readonly IJwtTokenService _tokenService;
+    private readonly IJwtTokenService<BaseRegisterDTO>_tokenService;
 
-    public UserService(IRefreshTokenService refreshTokenService, IJwtTokenService tokenService,
+    public UserService(IRefreshTokenService refreshTokenService, IJwtTokenService<BaseRegisterDTO>tokenService,
         IValidatorFactory validatorFactory, IHttpContextAccessor httpContextAccessor, IService<User> service,
          IMapper mapper)
     {

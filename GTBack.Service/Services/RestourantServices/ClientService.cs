@@ -25,9 +25,9 @@ public class ClientService : IClientService
     private readonly IRefreshTokenService _refreshTokenService;
     private readonly ClaimsPrincipal? _loggedUser;
     private readonly IMapper _mapper;
-    private readonly  IJwtTokenService _tokenService;
+    private readonly  IJwtTokenService<BaseRegisterDTO> _tokenService;
 
-    public ClientService(IRefreshTokenService refreshTokenService,  IJwtTokenService tokenService,
+    public ClientService(IRefreshTokenService refreshTokenService,  IJwtTokenService<BaseRegisterDTO> tokenService,
         IHttpContextAccessor httpContextAccessor, IService<Client> service,
          IMapper mapper)
     {
@@ -165,7 +165,7 @@ public class ClientService : IClientService
 
     private async Task<AuthenticatedUserResponseDto> Authenticate(ClientRegisterRequestDTO userDto)
     {
-        var accessToken = _tokenService.GenerateAccessTokenRestourant(userDto);
+        var accessToken = _tokenService.GenerateAccessToken(userDto);
         var refreshToken = _tokenService.GenerateRefreshToken();
 
         var refreshTokenDto = new RefreshTokenDto()

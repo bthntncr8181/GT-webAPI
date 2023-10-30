@@ -9,11 +9,10 @@ using GTBack.Core.Entities;
 
 namespace GTBack.Service.Utilities.Jwt
 {
-    public interface IJwtTokenService
+    public interface IJwtTokenService<T>  where T :BaseRegisterDTO
     {
-        public AccessTokenDto GenerateAccessToken(UserRegisterDTO userDto);
-        public AccessTokenDto GenerateAccessTokenRestourant(ClientRegisterRequestDTO userDto);
-        public AccessTokenDto GenerateAccessTokenRestourantEmployee(EmployeeRegisterDTO userDto);
+        public AccessTokenDto GenerateAccessToken(BaseRegisterDTO userDto);
+ 
         public string GenerateRefreshToken();
         public bool Validate(string refreshToken);
     }

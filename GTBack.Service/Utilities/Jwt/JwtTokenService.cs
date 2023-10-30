@@ -14,7 +14,7 @@ using GTBack.Core.Entities;
 
 namespace GTBack.Service.Utilities.Jwt
 {
-    public class JwtTokenService: IJwtTokenService
+    public class JwtTokenService<T>: IJwtTokenService<BaseRegisterDTO>
     {
         private readonly JwtConfiguration _configuration;
 
@@ -23,7 +23,7 @@ namespace GTBack.Service.Utilities.Jwt
             _configuration = configuration.JwtConfiguration;
         }
 
-        public AccessTokenDto GenerateAccessToken(UserRegisterDTO userDto)
+        public AccessTokenDto GenerateAccessToken(BaseRegisterDTO userDto)
         {
             var expirationTime = DateTime.UtcNow.AddHours(_configuration.AccessTokenExpirationMinutes);
          
@@ -55,65 +55,7 @@ namespace GTBack.Service.Utilities.Jwt
         }
 
         
-        public AccessTokenDto GenerateAccessTokenRestourant(ClientRegisterRequestDTO userDto)
-        {
-            var expirationTime = DateTime.UtcNow.AddHours(_configuration.AccessTokenExpirationMinutes);
-         
-            
-            var claims = new List<Claim>
-            {
-                new("Id", userDto.Id.ToString()),
-                new(ClaimTypes.Name, userDto.Name),
-                new(ClaimTypes.Expiration, expirationTime.ToString()),
-                new(ClaimTypes.Surname, userDto.Surname),
-            };
-            claims.Add(new Claim("name", userDto.Name));
-            claims.Add(new Claim("surname", userDto.Surname));
-
-            claims.Add(new Claim("ExpTime", expirationTime.ToString()));
-            var value = GenerateToken(
-                _configuration.AccessTokenSecret,
-                _configuration.Issuer,
-                _configuration.Audience,
-                expirationTime,
-                claims);
-            return new AccessTokenDto()
-            {
-                Value = value,
-                ExpirationTime = expirationTime
-            };
-        }
-
-        public AccessTokenDto GenerateAccessTokenRestourantEmployee(EmployeeRegisterDTO userDto)
-        {
-            var expirationTime = DateTime.UtcNow.AddHours(_configuration.AccessTokenExpirationMinutes);
-         
-            
-            var claims = new List<Claim>
-            {
-                new("Id", userDto.Id.ToString()),
-                new(ClaimTypes.Name, userDto.Name),
-                new(ClaimTypes.Expiration, expirationTime.ToString()),
-                new(ClaimTypes.Surname, userDto.Surname),
-            };
-            claims.Add(new Claim("name", userDto.Name));
-            claims.Add(new Claim("surname", userDto.Surname));
-
-            claims.Add(new Claim("ExpTime", expirationTime.ToString()));
-            var value = GenerateToken(
-                _configuration.AccessTokenSecret,
-                _configuration.Issuer,
-                _configuration.Audience,
-                expirationTime,
-                claims);
-            return new AccessTokenDto()
-            {
-                Value = value,
-                ExpirationTime = expirationTime
-            };
-        }
-
-
+     
         
         
     

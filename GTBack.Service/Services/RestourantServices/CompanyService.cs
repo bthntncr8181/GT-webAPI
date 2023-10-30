@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AutoMapper;
+using GTBack.Core.DTO;
 using GTBack.Core.DTO.Restourant.Request;
 using GTBack.Core.Entities.Restourant;
 using GTBack.Core.Results;
@@ -19,10 +20,10 @@ public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO>
     private readonly IRefreshTokenService _refreshTokenService;
     private readonly ClaimsPrincipal? _loggedUser;
     private readonly IMapper _mapper;
-    private readonly IJwtTokenService _tokenService;
+    private readonly IJwtTokenService<BaseRegisterDTO> _tokenService;
 
     public CompanyService(IRefreshTokenService refreshTokenService, IService<Employee> _employeeService,
-        IService<Department> departmentService, IJwtTokenService tokenService,
+        IService<Department> departmentService, IJwtTokenService<BaseRegisterDTO> tokenService,
         IHttpContextAccessor httpContextAccessor, IService<RestoCompany> companyService,
         IMapper mapper)
     {

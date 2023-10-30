@@ -23,9 +23,9 @@ public class EmployeeService:IEmployeeService
     private readonly IRefreshTokenService _refreshTokenService;
     private readonly ClaimsPrincipal? _loggedUser;
     private readonly IMapper _mapper;
-    private readonly  IJwtTokenService _tokenService;
+    private readonly  IJwtTokenService<BaseRegisterDTO> _tokenService;
 
-    public EmployeeService(IRefreshTokenService refreshTokenService,  IJwtTokenService tokenService,
+    public EmployeeService(IRefreshTokenService refreshTokenService,  IJwtTokenService<BaseRegisterDTO> tokenService,
         IHttpContextAccessor httpContextAccessor, IService<Employee> service,
         IMapper mapper)
     {
@@ -39,7 +39,7 @@ public class EmployeeService:IEmployeeService
     
     private async Task<AuthenticatedUserResponseDto> Authenticate(EmployeeRegisterDTO userDto)
     {
-        var accessToken = _tokenService.GenerateAccessTokenRestourantEmployee(userDto);
+        var accessToken = _tokenService.GenerateAccessToken(userDto);
         var refreshToken = _tokenService.GenerateRefreshToken();
 
         var refreshTokenDto = new RefreshTokenDto()
