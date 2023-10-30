@@ -72,7 +72,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository
 builder.Services.AddScoped<RefreshTokenRepository>();
 builder.Services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();
 builder.Services.AddTransient<IMailService, MailService>();
-builder.Services.AddScoped(typeof(IJwtTokenService), typeof(JwtTokenService));
+builder.Services.AddScoped(typeof(IJwtTokenService<BaseRegisterDTO>), typeof(JwtTokenService<BaseRegisterDTO>));
 builder.Services.AddScoped(typeof(IRefreshTokenService), typeof(RefreshTokenService));
 builder.Services.AddAppConfiguration(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
