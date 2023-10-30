@@ -1,5 +1,6 @@
 using AutoMapper;
 using GTBack.Core.DTO;
+using GTBack.Core.DTO.Restourant;
 using GTBack.Core.DTO.Restourant.Request;
 using GTBack.Core.DTO.Restourant.Response;
 using GTBack.Core.Entities.Restourant;
@@ -22,6 +23,8 @@ public class RestourantMapProfile:Profile
             CreateMap<RoleListDTO, Role>().ReverseMap();
             CreateMap<ICollection<RoleListDTO>, IQueryable<Role>>().ReverseMap();
             CreateMap<Role, RoleCreateDTO>().ReverseMap();
+            CreateMap<ICollection<RoleList>, IQueryable<EmployeeRoleRelation>>().ReverseMap();
+            CreateMap<RoleList,EmployeeRoleRelation>().ReverseMap();
             
             //DEPARTMENT
             CreateMap<DepartmentListDTO, Department>().ReverseMap();

@@ -1,3 +1,6 @@
+using GTBack.Core.DTO.Restourant;
+using GTBack.Core.DTO.Restourant.Response;
+
 namespace GTBack.Core.DTO;
 
 public class BaseRegisterDTO
@@ -10,6 +13,6 @@ public class BaseRegisterDTO
     public string Mail { get; set; }
     public int? UserTypeId { get; set; }
     public long  CompanyId { get; set; }
-    public long RoleId { get; set; }
+    public ICollection<RoleList> RoleList { get; set; }
     
 }

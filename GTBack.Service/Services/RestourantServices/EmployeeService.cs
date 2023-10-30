@@ -3,6 +3,7 @@ using System.Net.Mail;
 using System.Security.Claims;
 using AutoMapper;
 using GTBack.Core.DTO;
+using GTBack.Core.DTO.Restourant;
 using GTBack.Core.DTO.Restourant.Request;
 using GTBack.Core.Entities;
 using GTBack.Core.Entities.Restourant;
@@ -46,9 +47,12 @@ public class EmployeeService:IEmployeeService
     {
         
         var department =await  _depService.Where(x => x.Id == userDto.DepartmentId).FirstOrDefaultAsync();
-        var roleRel =await  _roleService.Where(x => x.EmployeeId == userDto.Id).FirstOrDefaultAsync();
+        var roleRel = await _roleService.Where(x => x.EmployeeId == userDto.Id).ToListAsync();
+        var roleRes =  _mapper.Map<ICollection<RoleList>>(roleRel);
+
         userDto.CompanyId = department.RestoCompanyId;
-        userDto.RoleId = roleRel.RoleId;
+        
+        userDto.RoleList = roleRes;
         var accessToken = _tokenService.GenerateAccessToken(userDto);
         var refreshToken = _tokenService.GenerateRefreshToken();
 
@@ -154,14 +158,17 @@ public class EmployeeService:IEmployeeService
             };
         
         await _service.AddAsync(employee);
-
-        var employeeRoleRelation = new EmployeeRoleRelation()
-        {
-            RoleId = registerDto.RoleId,
-            EmployeeId = employee.Id
-        };
+foreach (var roleList in registerDto.RoleList)
+{
+    var employeeRoleRelation = new EmployeeRoleRelation()
+    {
+        RoleId = roleList.RoleId,
+        EmployeeId = employee.Id
+    };
         
-        await _roleService.AddAsync(employeeRoleRelation);
+    await _roleService.AddAsync(employeeRoleRelation);
+}
+       
 
         await  _service.SendMail(mailToSend);
         return new SuccessResult();

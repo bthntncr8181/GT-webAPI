@@ -9,6 +9,7 @@ public class EmployeeRegisterDTO:BaseRegisterDTO
     public int Salary { get; set; }
     public long? DeviceId { get; set; }
     public long DepartmentId { get; set; }
+    
     public long CurrencyId { get; set; }
 }
 
