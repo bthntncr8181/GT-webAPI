@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace GTBack.Service.Services.RestourantServices;
 
-public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO,CompanyListDTO>
+public class CompanyService : IRestoCompanyService<CompanyAddDTO,CompanyListDTO>
 {
     private readonly IService<RestoCompany> _companyService;
     private readonly IService<Department> _departmentService;
@@ -23,7 +23,7 @@ public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO,CompanyListD
     private readonly IMapper _mapper;
     private readonly IJwtTokenService<BaseRegisterDTO> _tokenService;
 
-    public CompanyService(IRefreshTokenService refreshTokenService, IService<Employee> _employeeService,
+    public CompanyService(IRefreshTokenService refreshTokenService, IService<Employee> employeeService,
         IService<Department> departmentService, IJwtTokenService<BaseRegisterDTO> tokenService,
         IHttpContextAccessor httpContextAccessor, IService<RestoCompany> companyService,
         IMapper mapper)
@@ -31,7 +31,7 @@ public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO,CompanyListD
         _mapper = mapper;
         _companyService = companyService;
         _departmentService = departmentService;
-        _employeeService = this._employeeService;
+        _employeeService = employeeService;
         _loggedUser = httpContextAccessor.HttpContext?.User;
         _refreshTokenService = refreshTokenService;
         _tokenService = tokenService;
@@ -57,11 +57,10 @@ public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO,CompanyListD
             Name = "Manager",
             Mail = company.Mail,
             Phone = model.CompanyPhone,
-            CompanyId = company.Id,
+            RestoCompanyId = company.Id,
         };
 
         var department = await _departmentService.AddAsync(depAdded);
-
         var employeeAdded = new Employee()
         {
             CreatedDate = DateTime.UtcNow,
@@ -74,7 +73,6 @@ public class CompanyService<T> : IRestoCompanyService<CompanyAddDTO,CompanyListD
             ShiftEnd = model.ShiftEnd,
             SalaryType = model.SalaryType,
             Salary = model.Salary,
-            DeviceId = model.DeviceId,
             Phone = model.Phone,
             IsDeleted = false,
             Name = model.Name,

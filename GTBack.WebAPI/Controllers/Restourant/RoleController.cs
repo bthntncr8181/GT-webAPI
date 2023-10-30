@@ -28,7 +28,7 @@ public class RoleController: CustomRestourantBaseController
     }
     
     [HttpPost("List")]
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> List()
     {
         return ApiResult(await _roleService.List());
     }

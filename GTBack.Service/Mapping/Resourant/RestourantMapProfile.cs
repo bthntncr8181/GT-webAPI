@@ -22,7 +22,11 @@ public class RestourantMapProfile:Profile
             CreateMap<RoleListDTO, Role>().ReverseMap();
             CreateMap<ICollection<RoleListDTO>, IQueryable<Role>>().ReverseMap();
             CreateMap<Role, RoleCreateDTO>().ReverseMap();
-
+            
+            //DEPARTMENT
+            CreateMap<DepartmentListDTO, Department>().ReverseMap();
+            CreateMap<ICollection<DepartmentListDTO>, IQueryable<Department>>().ReverseMap();
+            CreateMap<Department, DepartmentAddDTO>().ReverseMap();
         }
     
 }

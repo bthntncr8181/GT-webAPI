@@ -98,7 +98,7 @@ namespace GTBack.Repository
             modelBuilder.Entity<GTBack.Core.Entities.Restourant.RestoCompany>()
                 .HasOne(a => a.Menu)
                 .WithOne(a => a.RestoCompany)
-                .HasForeignKey<Menu>(c => c.CompanyId);
+                .HasForeignKey<Menu>(c => c.RestoCompanyId);
 
         }
     }

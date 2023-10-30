@@ -82,6 +82,8 @@ builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
 builder.Services.AddScoped(typeof(GTBack.Core.Services.Restourant.IClientService), typeof(ClientService));
 builder.Services.AddScoped(typeof(IEventService), typeof(EventService));
 builder.Services.AddScoped(typeof(IRoleService<RoleCreateDTO,RoleListDTO>), typeof(RoleService));
+builder.Services.AddScoped(typeof(IRestoCompanyService<CompanyAddDTO,CompanyListDTO>), typeof(CompanyService));
+builder.Services.AddScoped(typeof(IDepartmentService<DepartmentAddDTO,DepartmentListDTO>), typeof(DepartmentService));
 builder.Services.AddScoped(typeof(IEmployeeService), typeof(EmployeeService));
 builder.Services.AddScoped(typeof(IService<>),typeof(Service<>));
 builder.Services.AddScoped(typeof(IEventTypeService),typeof(EventTypeService));
