@@ -14,24 +14,27 @@ using GTBack.Service.Utilities.Jwt;
 using GTBack.Service.Validation.Restourant;
 using GTBack.Service.Validation.Tool;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace GTBack.Service.Services.RestourantServices;
 
 public class EmployeeService:IEmployeeService
 {
     private readonly IService<Employee> _service;
+    private readonly IService<Department> _depService;
     private readonly IService<EmployeeRoleRelation> _roleService;
     private readonly IRefreshTokenService _refreshTokenService;
     private readonly ClaimsPrincipal? _loggedUser;
     private readonly IMapper _mapper;
     private readonly  IJwtTokenService<BaseRegisterDTO> _tokenService;
 
-    public EmployeeService(IRefreshTokenService refreshTokenService,IService<EmployeeRoleRelation> roleService,  IJwtTokenService<BaseRegisterDTO> tokenService,
+    public EmployeeService(IRefreshTokenService refreshTokenService,IService<Department> depService,IService<EmployeeRoleRelation> roleService,  IJwtTokenService<BaseRegisterDTO> tokenService,
         IHttpContextAccessor httpContextAccessor, IService<Employee> service,
         IMapper mapper)
     {
         _mapper = mapper;
         _service = service;
+        _depService = depService;
         _roleService = roleService;
         _loggedUser = httpContextAccessor.HttpContext?.User;
         _refreshTokenService = refreshTokenService;
@@ -41,6 +44,11 @@ public class EmployeeService:IEmployeeService
     
     private async Task<AuthenticatedUserResponseDto> Authenticate(EmployeeRegisterDTO userDto)
     {
+        
+        var department =await  _depService.Where(x => x.Id == userDto.DepartmentId).FirstOrDefaultAsync();
+        var roleRel =await  _roleService.Where(x => x.EmployeeId == userDto.Id).FirstOrDefaultAsync();
+        userDto.CompanyId = department.RestoCompanyId;
+        userDto.RoleId = roleRel.RoleId;
         var accessToken = _tokenService.GenerateAccessToken(userDto);
         var refreshToken = _tokenService.GenerateRefreshToken();
 
@@ -58,6 +66,39 @@ public class EmployeeService:IEmployeeService
         };
     }
 
+
+    public async Task<IDataResults<AuthenticatedUserResponseDto>> Login(LoginDto loginDto)
+    {
+        
+        var valResult =
+            FluentValidationTool.ValidateModelWithKeyResult(new EmployeeLoginValidator(), loginDto);
+        if (valResult.Success == false)
+        {
+            return new ErrorDataResults<AuthenticatedUserResponseDto>(HttpStatusCode.BadRequest, valResult.Errors);
+        }
+
+        var mail = loginDto.Mail.ToLower().Trim();
+        var parent =
+            await _service.GetByIdAsync((x => x.Mail.ToLower() == mail && !x.IsDeleted)); //get by mail eklenecek
+
+
+        if (parent?.PasswordHash == null)
+        {
+            valResult.Errors.Add("", Messages.User_NotFound_Message);
+            return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.User_NotFound_Message,
+                HttpStatusCode.BadRequest);
+        }
+
+        if (!Utilities.SHA1.Verify(loginDto.Password, parent.PasswordHash))
+        {
+            valResult.Errors.Add("", Messages.User_Login_Message_Notvalid);
+            return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.Password_Wrong,
+                HttpStatusCode.BadRequest);
+        }
+
+        var response = await Authenticate(_mapper.Map<EmployeeRegisterDTO>(parent));
+        return new SuccessDataResult<AuthenticatedUserResponseDto>(response);
+    }
 
     public async Task<IResults> Register(EmployeeRegisterDTO registerDto)
     {

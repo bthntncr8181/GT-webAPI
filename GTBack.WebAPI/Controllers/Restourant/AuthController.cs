@@ -53,6 +53,12 @@ namespace GTBack.WebAPI.Controllers.Restourant
         {
             return ApiResult(await _employeeService.Register(request));
         }
+        
+        [HttpPost("EmployeeLogin")]
+        public async Task<IActionResult> EmployeeLogin(LoginDto log)
+        {
+            return ApiResult(await _employeeService.Login(log));
+        }
 
         [HttpPost("GoogleLogin")]
         public async Task<IActionResult> GoogleLogin(GoogleLoginDTO request)
