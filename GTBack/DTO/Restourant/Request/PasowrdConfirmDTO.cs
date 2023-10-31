@@ -1,6 +1,6 @@
 namespace GTBack.Core.DTO.Restourant.Request;
 
-public class PasowrdConfirmDTO
+public class PasowordConfirmDTO
 {
     public String NewPassword { get; set; }
 }

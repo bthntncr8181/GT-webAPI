@@ -23,6 +23,6 @@ namespace GTBack.Service.Validation.Restourant;
             .NotEmpty().WithMessage(ValidationMessages.Surname_Not_Empty);
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage(ValidationMessages.Password_Not_Empty)
-            .MinimumLength(10).WithMessage(ValidationMessages.Min_Length);
+            .MinimumLength(8).WithMessage(ValidationMessages.Min_Length);
     }
 }

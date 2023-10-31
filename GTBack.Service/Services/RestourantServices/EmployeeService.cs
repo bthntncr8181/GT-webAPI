@@ -93,14 +93,25 @@ public class EmployeeService:IEmployeeService
                 HttpStatusCode.BadRequest);
         }
 
+        var response = new AuthenticatedUserResponseDto();
+        response.IsTemp = false;
         if (!Utilities.SHA1.Verify(loginDto.Password, parent.PasswordHash))
         {
-            valResult.Errors.Add("", Messages.User_Login_Message_Notvalid);
-            return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.Password_Wrong,
-                HttpStatusCode.BadRequest);
+            
+            if(!Utilities.SHA1.Verify(loginDto.Password, parent.TempPasswordHash))
+            {
+                valResult.Errors.Add("", Messages.User_Login_Message_Notvalid);
+                return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.Password_Wrong,
+                    HttpStatusCode.BadRequest);
+            }
+            else
+            { 
+                response = await Authenticate(_mapper.Map<EmployeeRegisterDTO>(parent));
+                response.IsTemp = true;
+
+            }
         }
 
-        var response = await Authenticate(_mapper.Map<EmployeeRegisterDTO>(parent));
         return new SuccessDataResult<AuthenticatedUserResponseDto>(response);
     }
 
@@ -114,7 +125,7 @@ public class EmployeeService:IEmployeeService
 
         return null;
     }
-    public async Task<IDataResults<AuthenticatedUserResponseDto>> PasswordChoose(PasowrdConfirmDTO passwordConfirmDto)
+    public async Task<IDataResults<AuthenticatedUserResponseDto>> PasswordChoose(PasowordConfirmDTO passwordConfirmDto)
     {
         var id=GetLoggedUserId();
         
@@ -151,7 +162,7 @@ public class EmployeeService:IEmployeeService
         }
         
         var randomGenerator = new Random();
-        var  rndNum=  randomGenerator.Next(100000,999999);
+        var  rndNum=  randomGenerator.Next(10000000,99999999);
         employee = new Employee()
         {
             CreatedDate = DateTime.UtcNow,
@@ -168,7 +179,9 @@ public class EmployeeService:IEmployeeService
             Phone = registerDto.Phone,
             IsDeleted = false,
             Name = registerDto.Name,
-            PasswordHash = SHA1.Generate(rndNum.ToString())
+            PasswordHash = ".",
+            TempPasswordHash =  SHA1.Generate(rndNum.ToString())
+                
         };
         
 

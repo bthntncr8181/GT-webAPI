@@ -7,5 +7,7 @@ namespace GTBack.Core.DTO
         public string AccessToken { get; set; }
         public DateTime AccessTokenExpirationTime { get; set; }
         public string RefreshToken { get; set; }
+        public bool IsTemp { get; set; }
+        
     }
 }

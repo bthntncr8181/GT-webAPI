@@ -8,6 +8,8 @@ public class Employee : BaseEntity
     public String Mail { get; set; }
     public String Phone { get; set; }
     public string PasswordHash { get; set; }
+    
+    public string? TempPasswordHash { get; set; }
     public int? SalaryType { get; set; }
 
     public DateTime ShiftStart { get; set; }

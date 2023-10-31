@@ -17,6 +17,6 @@ public class ClientLoginValidator : AbstractValidator<LoginDto>
             .MaximumLength(128).WithMessage(ValidationMessages.Max_Length);
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage(ValidationMessages.Password_Not_Empty)
-            .MinimumLength(10).WithMessage(ValidationMessages.Min_Length);
+            .MinimumLength(8).WithMessage(ValidationMessages.Min_Length);
     }
 }

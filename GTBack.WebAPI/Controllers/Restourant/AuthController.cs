@@ -55,7 +55,7 @@ namespace GTBack.WebAPI.Controllers.Restourant
         }
         [Authorize]
         [HttpPost("EmplooyeSelectPassowrd")]
-        public async Task<IActionResult> EmplooyeSelectPassowrd(PasowrdConfirmDTO request)
+        public async Task<IActionResult> EmplooyeSelectPassowrd(PasowordConfirmDTO request)
         {
             return ApiResult(await _employeeService.PasswordChoose(request));
         }

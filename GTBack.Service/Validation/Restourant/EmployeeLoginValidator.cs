@@ -12,6 +12,8 @@ public class EmployeeLoginValidator: AbstractValidator<LoginDto>
             .NotEmpty().WithMessage(ValidationMessages.Email_Not_Empty)
             .EmailAddress().WithMessage(ValidationMessages.Email_Invalid)
             .MaximumLength(128).WithMessage(ValidationMessages.Max_Length);
-     
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage(ValidationMessages.Password_Not_Empty)
+            .MinimumLength(8).WithMessage(ValidationMessages.Min_Length);
     }
 }
