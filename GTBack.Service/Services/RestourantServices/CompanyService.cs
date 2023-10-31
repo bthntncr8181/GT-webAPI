@@ -19,6 +19,7 @@ public class CompanyService : IRestoCompanyService<CompanyAddDTO,CompanyListDTO>
     private readonly IService<Department> _departmentService;
     private readonly IService<Employee> _employeeService;
     private readonly IRefreshTokenService _refreshTokenService;
+    private readonly IMenuAndCategoryService _menuService;
     private readonly ClaimsPrincipal? _loggedUser;
     private readonly IMapper _mapper;
     private readonly IJwtTokenService<BaseRegisterDTO> _tokenService;
@@ -49,8 +50,18 @@ public class CompanyService : IRestoCompanyService<CompanyAddDTO,CompanyListDTO>
             Lat = model.Lat.HasValue ? model.Lat : 0,
             Lng = model.Lng.HasValue ? model.Lng : 0,
         };
+        
+      
 
         var company = await _companyService.AddAsync(addedCompany);
+        
+        var menuAdded = new MenuCreateDTO()
+        {
+            Name = model.CompanyName,
+            RestoCompanyId = company.Id
+        };
+        
+         await  _menuService.MenuCreate(menuAdded);
 
         var depAdded = new Department()
         {

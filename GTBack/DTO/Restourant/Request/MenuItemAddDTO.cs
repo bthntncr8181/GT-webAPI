@@ -1,7 +1,8 @@
-namespace GTBack.Core.Entities.Restourant;
+namespace GTBack.Core.DTO.Restourant.Request;
 
-public class MenuItem:BaseEntity
+public class MenuItemAddDTO
 {
+    
     public String Name { get; set; }
     public int Price { get; set; }
     public int Stock { get; set; }
@@ -9,6 +10,4 @@ public class MenuItem:BaseEntity
     public String Description { get; set; }
     public String Contains { get; set; }
     public long CategoryId { get; set; }
-    public Category Category { get; set; }
-    public  virtual  ICollection<ExtraMenuItem> ExtraMenuItem { get; set; }
 }

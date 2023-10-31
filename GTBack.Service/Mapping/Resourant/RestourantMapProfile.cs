@@ -30,6 +30,28 @@ public class RestourantMapProfile:Profile
             CreateMap<DepartmentListDTO, Department>().ReverseMap();
             CreateMap<ICollection<DepartmentListDTO>, IQueryable<Department>>().ReverseMap();
             CreateMap<Department, DepartmentAddDTO>().ReverseMap();
+            
+            //MENU
+            // CreateMap<DepartmentListDTO, Department>().ReverseMap();
+            // CreateMap<ICollection<DepartmentListDTO>, IQueryable<Department>>().ReverseMap();
+            CreateMap<Menu, MenuCreateDTO>().ReverseMap();
+            
+            //CATEGORY
+            // CreateMap<DepartmentListDTO, Department>().ReverseMap();
+            // CreateMap<ICollection<DepartmentListDTO>, IQueryable<Department>>().ReverseMap();
+            CreateMap<Category, CategoryAddDTO>().ReverseMap();
+            
+           
+            
+            //MENUITEM
+            // CreateMap<DepartmentListDTO, Department>().ReverseMap();
+            // CreateMap<ICollection<DepartmentListDTO>, IQueryable<Department>>().ReverseMap();
+            CreateMap<MenuItem, MenuItemAddDTO>().ReverseMap();
+            
+            //EXTRAMENUITEM
+            // CreateMap<DepartmentListDTO, Department>().ReverseMap();
+            // CreateMap<ICollection<DepartmentListDTO>, IQueryable<Department>>().ReverseMap();
+            CreateMap<ExtraMenuItem, ExtraMenuItemAddDTO>().ReverseMap();
         }
     
 }

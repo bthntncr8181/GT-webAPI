@@ -27,9 +27,9 @@ public class DepartmentService:IDepartmentService<DepartmentAddDTO,DepartmentLis
         _loggedUser = httpContextAccessor.HttpContext?.User;
     }
 
-    public  async Task<IDataResults<ICollection<DepartmentListDTO>>> ListByCompanyId(int CompanyId)
+    public  async Task<IDataResults<ICollection<DepartmentListDTO>>> ListByCompanyId(int companyId)
     {
-        var depList =  _service.Where(x => !x.IsDeleted&&x.RestoCompanyId==CompanyId);
+        var depList =  _service.Where(x => !x.IsDeleted&&x.RestoCompanyId==companyId);
         var list = await depList.ToListAsync();
         var response = _mapper.Map<ICollection<DepartmentListDTO>>( list);
         return new SuccessDataResult<ICollection<DepartmentListDTO>>(response);    }
