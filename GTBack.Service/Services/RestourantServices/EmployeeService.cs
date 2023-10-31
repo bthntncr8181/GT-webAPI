@@ -104,6 +104,32 @@ public class EmployeeService:IEmployeeService
         return new SuccessDataResult<AuthenticatedUserResponseDto>(response);
     }
 
+    public int? GetLoggedUserId()
+    {
+        var userRoleString = _loggedUser.FindFirstValue("Id");
+        if (int.TryParse(userRoleString, out var userId))
+        {
+            return userId;
+        }
+
+        return null;
+    }
+    public async Task<IDataResults<AuthenticatedUserResponseDto>> PasswordChoose(PasowrdConfirmDTO passwordConfirmDto)
+    {
+        var id=GetLoggedUserId();
+        
+        var employee = await _service.GetByIdAsync((x => x.Id==id && !x.IsDeleted));
+
+        employee.PasswordHash = SHA1.Generate(passwordConfirmDto.NewPassword);
+
+        await _service.UpdateAsync(employee);
+
+        
+        var response = await Authenticate(_mapper.Map<EmployeeRegisterDTO>(employee));
+
+        return new SuccessDataResult<AuthenticatedUserResponseDto>(response);
+    }
+
     public async Task<IResults> Register(EmployeeRegisterDTO registerDto)
     {
         
