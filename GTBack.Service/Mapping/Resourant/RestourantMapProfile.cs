@@ -37,21 +37,21 @@ public class RestourantMapProfile:Profile
             CreateMap<Menu, MenuCreateDTO>().ReverseMap();
             
             //CATEGORY
-            // CreateMap<DepartmentListDTO, Department>().ReverseMap();
-            // CreateMap<ICollection<DepartmentListDTO>, IQueryable<Department>>().ReverseMap();
-            CreateMap<Category, CategoryAddDTO>().ReverseMap();
+            CreateMap<CategoryListDTO, Category>().ReverseMap();
+            CreateMap<ICollection<CategoryListDTO>, IQueryable<Category>>().ReverseMap();
+            CreateMap<Category, CategoryAddOrUpdateDTO>().ReverseMap();
             
            
             
             //MENUITEM
-            // CreateMap<DepartmentListDTO, Department>().ReverseMap();
-            // CreateMap<ICollection<DepartmentListDTO>, IQueryable<Department>>().ReverseMap();
-            CreateMap<MenuItem, MenuItemAddDTO>().ReverseMap();
+            CreateMap<MenuItemListDTO, MenuItem>().ReverseMap();
+            CreateMap<ICollection<MenuItemListDTO>, IQueryable<MenuItem>>().ReverseMap();
+            CreateMap<MenuItem, MenuItemAddOrUpdateDTO>().ReverseMap();
             
             //EXTRAMENUITEM
-            // CreateMap<DepartmentListDTO, Department>().ReverseMap();
-            // CreateMap<ICollection<DepartmentListDTO>, IQueryable<Department>>().ReverseMap();
-            CreateMap<ExtraMenuItem, ExtraMenuItemAddDTO>().ReverseMap();
+            CreateMap<ExtraMenuItemListDTO, ExtraMenuItem>().ReverseMap();
+            CreateMap<ICollection<ExtraMenuItemListDTO>, IQueryable<ExtraMenuItem>>().ReverseMap();
+            CreateMap<ExtraMenuItem, ExtraMenuItemAddOrUpdateDTO>().ReverseMap();
         }
     
 }

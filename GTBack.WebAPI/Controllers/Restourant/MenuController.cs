@@ -3,6 +3,7 @@ using GTBack.Core.DTO.Restourant.Request;
 using GTBack.Core.DTO.Restourant.Response;
 using GTBack.Core.Services;
 using GTBack.Core.Services.Restourant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GTBack.WebAPI.Controllers.Restourant;
@@ -28,21 +29,59 @@ public class MenuController: CustomRestourantBaseController
    
     
     [HttpPost("CategoryAdd")]
-    public async Task<IActionResult> CategoryAdd(CategoryAddDTO model)
+    public async Task<IActionResult> CategoryAddOrUpdate(CategoryAddOrUpdateDTO model)
     {
         return ApiResult(await _service.CategoryAdd(model));
     }
     
     [HttpPost("MenuItemAdd")]
-    public async Task<IActionResult> MenuItemAdd(MenuItemAddDTO model)
+    public async Task<IActionResult> MenuItemAddOrUpdate(MenuItemAddOrUpdateDTO model)
     {
         return ApiResult(await _service.MenuItemAdd(model));
     }
     
-    [HttpPost("ExtraMenuItemAdd")]
-    public async Task<IActionResult> ExtraMenuItemAdd(ExtraMenuItemAddDTO model)
+  
+    [Authorize]
+    [HttpGet("CategoryList")]
+    public async Task<IActionResult> CategoryList()
     {
-        return ApiResult(await _service.ExtraMenuItemAdd(model));
+        return ApiResult(await _service.AllCategoryListByCompanyId());
+    }
+    
+    [HttpGet("MenuItemListByCategoryId")]
+    public async Task<IActionResult> MenuItemListByCategoryId(int categoryId)
+    {
+        return ApiResult(await _service.MenuItemListByCategoryId(categoryId));
+    }
+    [Authorize]
+    [HttpGet("MenuItemListByCompanyId")]
+    public async Task<IActionResult> MenuItemListByCompanyId()
+    {
+        return ApiResult(await _service.AllMenuItemsByCompanyId());
+    }
+    
+    [HttpPost("ExtraMenuItemByMenuItemId")]
+    public async Task<IActionResult> ExtraMenuItemByMenuItemId(int menuItemId)
+    {
+        return ApiResult(await _service.ExtraMenuItemByMenuItemId(menuItemId));
+    }
+    
+    [HttpDelete("DeleteCategory")]
+    public async Task<IActionResult> DeleteCategory(int id)
+    {
+        return ApiResult(await _service.CategoryDelete(id));
+    }
+    
+    [HttpDelete("DeleteMenuItem")]
+    public async Task<IActionResult> DeleteMenuItem(int id)
+    {
+        return ApiResult(await _service.MenuItemDelete(id));
+    }
+    
+    [HttpDelete("DeleteExtraMenuItem")]
+    public async Task<IActionResult> DeleteExtraMenuItem(int id)
+    {
+        return ApiResult(await _service.ExtraMenuItemDelete(id));
     }
     
    
