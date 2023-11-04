@@ -32,16 +32,12 @@ public class RestourantMapProfile:Profile
             CreateMap<Department, DepartmentAddDTO>().ReverseMap();
             
             //MENU
-            // CreateMap<DepartmentListDTO, Department>().ReverseMap();
-            // CreateMap<ICollection<DepartmentListDTO>, IQueryable<Department>>().ReverseMap();
             CreateMap<Menu, MenuCreateDTO>().ReverseMap();
             
             //CATEGORY
             CreateMap<CategoryListDTO, Category>().ReverseMap();
             CreateMap<ICollection<CategoryListDTO>, IQueryable<Category>>().ReverseMap();
             CreateMap<Category, CategoryAddOrUpdateDTO>().ReverseMap();
-            
-           
             
             //MENUITEM
             CreateMap<MenuItemListDTO, MenuItem>().ReverseMap();
@@ -52,6 +48,26 @@ public class RestourantMapProfile:Profile
             CreateMap<ExtraMenuItemListDTO, ExtraMenuItem>().ReverseMap();
             CreateMap<ICollection<ExtraMenuItemListDTO>, IQueryable<ExtraMenuItem>>().ReverseMap();
             CreateMap<ExtraMenuItem, ExtraMenuItemAddOrUpdateDTO>().ReverseMap();
+            
+            //TABLEAREA
+            CreateMap<TableAreaListDTO, TableArea>().ReverseMap();
+            CreateMap<ICollection<TableAreaListDTO>, IQueryable<TableArea>>().ReverseMap();
+            CreateMap<TableArea, TableAreaAddOrUpdateDTO>().ReverseMap();
+            
+            //TABLE
+            CreateMap<TableListDTO, Table>().ReverseMap();
+            CreateMap<ICollection<TableListDTO>, IQueryable<Table>>().ReverseMap();
+            CreateMap<Table, TableAddOrUpdateDTO>().ReverseMap();
+            
+            //ADDİTİON
+            CreateMap<AdditionListDTO, Addition>().ReverseMap();
+            CreateMap<ICollection<AdditionListDTO>, IQueryable<Addition>>().ReverseMap();
+            CreateMap<Addition, AdditionAddOrUpdateDTO>().ReverseMap();
+            
+            //ORDER
+            CreateMap<OrderListDTO, Order>().ReverseMap();
+            CreateMap<ICollection<OrderListDTO>, IQueryable<Order>>().ReverseMap();
+            CreateMap<Order, OrderAddOrUpdateDTO>().ReverseMap();
         }
     
 }

@@ -34,12 +34,12 @@ public class RoleService : IRoleService<RoleCreateDTO,RoleListDTO>
         return new SuccessDataResult<RoleCreateDTO>(model);
     }
 
-    public Task<IDataResults<RoleCreateDTO>> Update(RoleCreateDTO model, int id)
+    public Task<IDataResults<RoleCreateDTO>> Update(RoleCreateDTO model, long id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IResults> Delete(int id)
+    public Task<IResults> Delete(long id)
     {
         throw new NotImplementedException();
     }

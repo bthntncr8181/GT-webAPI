@@ -21,8 +21,9 @@ public class Employee : BaseEntity
     public Department Department { get; set; }
     public Currency Currency { get; set; }
     public Device? Device { get; set; }
-    public virtual ICollection<Addition> Addition { get; set; }
     public virtual ICollection<Reservation> Reservation { get; set; }
     public virtual ICollection<ShiftControl> ShiftControl { get; set; }
     public virtual ICollection<EmployeeRoleRelation> EmployeeRoleRelation { get; set; }
+    public virtual ICollection<OrderProcess> OrderProcess { get; set; }
+    public virtual ICollection<Order> Order { get; set; }
 }

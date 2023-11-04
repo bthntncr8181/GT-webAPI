@@ -26,7 +26,7 @@ public class DepartmentController: CustomRestourantBaseController
     }
     
     [HttpPost("ListByCompanyId")]
-    public async Task<IActionResult> ListByCompanyId(int companyId)
+    public async Task<IActionResult> ListByCompanyId(long companyId)
     {
         return ApiResult(await _service.ListByCompanyId(companyId));
     }

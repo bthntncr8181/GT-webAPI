@@ -13,7 +13,7 @@ public class MenuController: CustomRestourantBaseController
     private readonly IMapper _mapper;
     private readonly IMenuAndCategoryService _service;
 
-    public MenuController( IMapper mapper,IRoleService<RoleCreateDTO,RoleListDTO> roleService,IMenuAndCategoryService service)
+    public MenuController( IMapper mapper,IMenuAndCategoryService service)
     {
         _service = service;
         _mapper = mapper;
@@ -49,7 +49,7 @@ public class MenuController: CustomRestourantBaseController
     }
     
     [HttpGet("MenuItemListByCategoryId")]
-    public async Task<IActionResult> MenuItemListByCategoryId(int categoryId)
+    public async Task<IActionResult> MenuItemListByCategoryId(long categoryId)
     {
         return ApiResult(await _service.MenuItemListByCategoryId(categoryId));
     }
@@ -61,25 +61,25 @@ public class MenuController: CustomRestourantBaseController
     }
     
     [HttpPost("ExtraMenuItemByMenuItemId")]
-    public async Task<IActionResult> ExtraMenuItemByMenuItemId(int menuItemId)
+    public async Task<IActionResult> ExtraMenuItemByMenuItemId(long menuItemId)
     {
         return ApiResult(await _service.ExtraMenuItemByMenuItemId(menuItemId));
     }
     
     [HttpDelete("DeleteCategory")]
-    public async Task<IActionResult> DeleteCategory(int id)
+    public async Task<IActionResult> DeleteCategory(long id)
     {
         return ApiResult(await _service.CategoryDelete(id));
     }
     
     [HttpDelete("DeleteMenuItem")]
-    public async Task<IActionResult> DeleteMenuItem(int id)
+    public async Task<IActionResult> DeleteMenuItem(long id)
     {
         return ApiResult(await _service.MenuItemDelete(id));
     }
     
     [HttpDelete("DeleteExtraMenuItem")]
-    public async Task<IActionResult> DeleteExtraMenuItem(int id)
+    public async Task<IActionResult> DeleteExtraMenuItem(long id)
     {
         return ApiResult(await _service.ExtraMenuItemDelete(id));
     }

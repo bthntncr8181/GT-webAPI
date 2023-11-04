@@ -116,10 +116,10 @@ public class EmployeeService : IEmployeeService
         return new SuccessDataResult<AuthenticatedUserResponseDto>(response);
     }
 
-    public int? GetLoggedUserId()
+    public long? GetLoggedUserId()
     {
         var userRoleString = _loggedUser.FindFirstValue("Id");
-        if (int.TryParse(userRoleString, out var userId))
+        if (long.TryParse(userRoleString, out var userId))
         {
             return userId;
         }

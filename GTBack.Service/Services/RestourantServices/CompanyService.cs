@@ -95,12 +95,12 @@ public class CompanyService : IRestoCompanyService<CompanyAddDTO,CompanyListDTO>
         return new SuccessDataResult<CompanyAddDTO>(model);
     }
 
-    public Task<IDataResults<CompanyAddDTO>> Update(CompanyAddDTO model, int id)
+    public Task<IDataResults<CompanyAddDTO>> Update(CompanyAddDTO model, long id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IResults> Delete(int id)
+    public Task<IResults> Delete(long id)
     {
         throw new NotImplementedException();
     }

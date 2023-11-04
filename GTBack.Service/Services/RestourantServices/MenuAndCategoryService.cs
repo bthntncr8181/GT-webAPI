@@ -87,7 +87,7 @@ public class MenuAndCategoryService : IMenuAndCategoryService
         }
     }
 
-    public async Task<IResults> MenuDelete(int id)
+    public async Task<IResults> MenuDelete(long id)
     {
         var menu = await _menuService.Where(x => x.Id == id).FirstOrDefaultAsync();
         menu.IsDeleted = true;
@@ -95,7 +95,7 @@ public class MenuAndCategoryService : IMenuAndCategoryService
         return new SuccessResult();
     }
 
-    public async Task<IResults> CategoryDelete(int id)
+    public async Task<IResults> CategoryDelete(long id)
     {
         var category = await _categoryService.Where(x => x.Id == id).FirstOrDefaultAsync();
         category.IsDeleted = true;
@@ -103,7 +103,7 @@ public class MenuAndCategoryService : IMenuAndCategoryService
         return new SuccessResult();
     }
 
-    public async Task<IResults> MenuItemDelete(int id)
+    public async Task<IResults> MenuItemDelete(long id)
     {
         var menu = await _menuItemService.Where(x => x.Id == id).FirstOrDefaultAsync();
         menu.IsDeleted = true;
@@ -111,7 +111,7 @@ public class MenuAndCategoryService : IMenuAndCategoryService
         return new SuccessResult();
     }
 
-    public async Task<IResults> ExtraMenuItemDelete(int id)
+    public async Task<IResults> ExtraMenuItemDelete(long id)
     {
         var menu = await _extraMenuItemService.Where(x => x.Id == id).FirstOrDefaultAsync();
         menu.IsDeleted = true;
@@ -141,14 +141,14 @@ public class MenuAndCategoryService : IMenuAndCategoryService
     }
     
 
-    public async Task<IDataResults<ICollection<MenuItemListDTO>>> MenuItemListByCategoryId(int categoryId)
+    public async Task<IDataResults<ICollection<MenuItemListDTO>>> MenuItemListByCategoryId(long categoryId)
     {
         var menuItems = await _menuItemService.Where(x => x.CategoryId == categoryId&&!x.IsDeleted).ToListAsync();
         var response = _mapper.Map<ICollection<MenuItemListDTO>>(menuItems);
         return new SuccessDataResult<ICollection<MenuItemListDTO>>(response);
     }
 
-    public async Task<IDataResults<ICollection<ExtraMenuItemListDTO>>> ExtraMenuItemByMenuItemId(int menuItemId)
+    public async Task<IDataResults<ICollection<ExtraMenuItemListDTO>>> ExtraMenuItemByMenuItemId(long menuItemId)
     {
         var menuItems = await _extraMenuItemService.Where(x => x.MenuItemId == menuItemId&&!x.IsDeleted).ToListAsync();
         var response = _mapper.Map<ICollection<ExtraMenuItemListDTO>>(menuItems);

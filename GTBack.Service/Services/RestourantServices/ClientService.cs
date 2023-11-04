@@ -39,7 +39,7 @@ public class ClientService : IClientService
     }
 
     //GET CLİENT BY ID METHOD
-    public async Task<IDataResults<UserDTO>> GetById(int id)
+    public async Task<IDataResults<UserDTO>> GetById(long id)
     {
         var place = await _service.GetByIdAsync(x => x.Id == id);
         var data = _mapper.Map<UserDTO>(place);
@@ -49,7 +49,7 @@ public class ClientService : IClientService
 
     
     //DELETE CLİENT BY ID METHOD
-    public async Task<IResults> Delete(int id)
+    public async Task<IResults> Delete(long id)
     {
         var client = await _service.GetByIdAsync(x => x.Id == id);
         client.IsDeleted = true;
@@ -99,10 +99,10 @@ public class ClientService : IClientService
         return new SuccessDataResult<AuthenticatedUserResponseDto>(response, HttpStatusCode.OK);
     }
 
-    public int? GetLoggedUserId()
+    public long? GetLoggedUserId()
     {
         var userRoleString = _loggedUser.FindFirstValue("Id");
-        if (int.TryParse(userRoleString, out var userId))
+        if (long.TryParse(userRoleString, out var userId))
         {
             return userId;
         }

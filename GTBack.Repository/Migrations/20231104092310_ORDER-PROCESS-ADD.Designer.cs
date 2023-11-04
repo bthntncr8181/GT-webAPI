@@ -4,6 +4,7 @@ using GTBack.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GTBack.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231104092310_ORDER-PROCESS-ADD")]
+    partial class ORDERPROCESSADD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,6 +280,9 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<long?>("EmployeeId")
+                        .HasColumnType("bigint");
+
                     b.Property<bool>("IsClosed")
                         .HasColumnType("bit");
 
@@ -297,6 +302,8 @@ namespace GTBack.Repository.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("TableId");
 
@@ -824,9 +831,6 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("EmployeeId")
-                        .HasColumnType("bigint");
-
                     b.Property<int?>("FinishedOrderStatus")
                         .HasColumnType("int");
 
@@ -843,8 +847,6 @@ namespace GTBack.Repository.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("OrderId");
 
@@ -1297,6 +1299,10 @@ namespace GTBack.Repository.Migrations
                         .WithMany()
                         .HasForeignKey("ClientId");
 
+                    b.HasOne("GTBack.Core.Entities.Restourant.Employee", null)
+                        .WithMany("Addition")
+                        .HasForeignKey("EmployeeId");
+
                     b.HasOne("GTBack.Core.Entities.Restourant.Table", "Table")
                         .WithMany("Addition")
                         .HasForeignKey("TableId")
@@ -1433,7 +1439,7 @@ namespace GTBack.Repository.Migrations
                         .IsRequired();
 
                     b.HasOne("GTBack.Core.Entities.Restourant.Employee", "Employee")
-                        .WithMany("Order")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1451,19 +1457,11 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Restourant.OrderProcess", b =>
                 {
-                    b.HasOne("GTBack.Core.Entities.Restourant.Employee", "Employee")
-                        .WithMany("OrderProcess")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("GTBack.Core.Entities.Restourant.Order", "Order")
                         .WithMany("OrderProcess")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Employee");
 
                     b.Navigation("Order");
                 });
@@ -1618,11 +1616,9 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Restourant.Employee", b =>
                 {
+                    b.Navigation("Addition");
+
                     b.Navigation("EmployeeRoleRelation");
-
-                    b.Navigation("Order");
-
-                    b.Navigation("OrderProcess");
 
                     b.Navigation("Reservation");
 

@@ -4,6 +4,7 @@ using GTBack.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GTBack.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231104083651_ORDER-CHANGE-2")]
+    partial class ORDERCHANGE2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,6 +280,9 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<long?>("EmployeeId")
+                        .HasColumnType("bigint");
+
                     b.Property<bool>("IsClosed")
                         .HasColumnType("bit");
 
@@ -297,6 +302,8 @@ namespace GTBack.Repository.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("TableId");
 
@@ -768,7 +775,7 @@ namespace GTBack.Repository.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("EmployeeId")
+                    b.Property<long?>("EmployeeId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("ExtraMenuItemId")
@@ -805,50 +812,6 @@ namespace GTBack.Repository.Migrations
                     b.HasIndex("ExtraMenuItemId");
 
                     b.ToTable("Order");
-                });
-
-            modelBuilder.Entity("GTBack.Core.Entities.Restourant.OrderProcess", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("ChangeDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ChangeNote")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("EmployeeId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("FinishedOrderStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("InitialOrderStatus")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("OrderId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderProcess");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.Restourant.Payment", b =>
@@ -1297,6 +1260,10 @@ namespace GTBack.Repository.Migrations
                         .WithMany()
                         .HasForeignKey("ClientId");
 
+                    b.HasOne("GTBack.Core.Entities.Restourant.Employee", null)
+                        .WithMany("Addition")
+                        .HasForeignKey("EmployeeId");
+
                     b.HasOne("GTBack.Core.Entities.Restourant.Table", "Table")
                         .WithMany("Addition")
                         .HasForeignKey("TableId")
@@ -1433,10 +1400,8 @@ namespace GTBack.Repository.Migrations
                         .IsRequired();
 
                     b.HasOne("GTBack.Core.Entities.Restourant.Employee", "Employee")
-                        .WithMany("Order")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("GTBack.Core.Entities.Restourant.ExtraMenuItem", "ExtraMenuItem")
                         .WithMany()
@@ -1447,25 +1412,6 @@ namespace GTBack.Repository.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("ExtraMenuItem");
-                });
-
-            modelBuilder.Entity("GTBack.Core.Entities.Restourant.OrderProcess", b =>
-                {
-                    b.HasOne("GTBack.Core.Entities.Restourant.Employee", "Employee")
-                        .WithMany("OrderProcess")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GTBack.Core.Entities.Restourant.Order", "Order")
-                        .WithMany("OrderProcess")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.Restourant.Payment", b =>
@@ -1618,11 +1564,9 @@ namespace GTBack.Repository.Migrations
 
             modelBuilder.Entity("GTBack.Core.Entities.Restourant.Employee", b =>
                 {
+                    b.Navigation("Addition");
+
                     b.Navigation("EmployeeRoleRelation");
-
-                    b.Navigation("Order");
-
-                    b.Navigation("OrderProcess");
 
                     b.Navigation("Reservation");
 
@@ -1637,11 +1581,6 @@ namespace GTBack.Repository.Migrations
             modelBuilder.Entity("GTBack.Core.Entities.Restourant.MenuItem", b =>
                 {
                     b.Navigation("ExtraMenuItem");
-                });
-
-            modelBuilder.Entity("GTBack.Core.Entities.Restourant.Order", b =>
-                {
-                    b.Navigation("OrderProcess");
                 });
 
             modelBuilder.Entity("GTBack.Core.Entities.Restourant.RestoCompany", b =>

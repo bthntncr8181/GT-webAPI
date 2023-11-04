@@ -27,7 +27,7 @@ public class DepartmentService:IDepartmentService<DepartmentAddDTO,DepartmentLis
         _loggedUser = httpContextAccessor.HttpContext?.User;
     }
 
-    public  async Task<IDataResults<ICollection<DepartmentListDTO>>> ListByCompanyId(int companyId)
+    public  async Task<IDataResults<ICollection<DepartmentListDTO>>> ListByCompanyId(long companyId)
     {
         var depList =  _service.Where(x => !x.IsDeleted&&x.RestoCompanyId==companyId);
         var list = await depList.ToListAsync();
@@ -42,13 +42,13 @@ public class DepartmentService:IDepartmentService<DepartmentAddDTO,DepartmentLis
         
     }
 
-    public async Task<IDataResults<DepartmentAddDTO>> Update(DepartmentAddDTO model, int id)
+    public async Task<IDataResults<DepartmentAddDTO>> Update(DepartmentAddDTO model, long id)
     {
         throw new NotImplementedException();
 
     }
 
-    public Task<IResults> Delete(int id)
+    public Task<IResults> Delete(long id)
     {
         
         throw new NotImplementedException();
