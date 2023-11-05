@@ -22,6 +22,7 @@ using GTBack.Core.DTO.Restourant.Response;
 using GTBack.Core.Services.Restourant;
 using GTBack.Service.Mapping.Resourant;
 using GTBack.Service.Services.RestourantServices;
+using GTBack.Service.Services.SharedServices;
 using GTBack.WebAPI;
 using Microsoft.Data.SqlClient;
 using IClientService = Google.Apis.Services.IClientService;
@@ -78,6 +79,7 @@ builder.Services.AddScoped(typeof(IRefreshTokenService), typeof(RefreshTokenServ
 builder.Services.AddAppConfiguration(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient(typeof(IListingServiceI<,>),typeof(ListService<,>));
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
 builder.Services.AddScoped(typeof(GTBack.Core.Services.Restourant.IClientService), typeof(ClientService));
 builder.Services.AddScoped(typeof(IEventService), typeof(EventService));

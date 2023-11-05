@@ -38,6 +38,8 @@ namespace GTBack.Service.Services
             return entity;
            
         }
+
+        
         
         public Task SendMail(MailData mail)
         {

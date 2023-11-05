@@ -12,11 +12,12 @@ namespace GTBack.Repository
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
-     //Shared Tables   
-     public DbSet<RefreshToken> RefreshToken { get; set; }
-     public DbSet<Currency> Currency { get; set; }
 
-    //Randevu
+        //Shared Tables   
+        public DbSet<RefreshToken> RefreshToken { get; set; }
+        public DbSet<Currency> Currency { get; set; }
+
+        //Randevu
         public DbSet<User> Users { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<EventType> EventTypes { get; set; }
@@ -24,25 +25,26 @@ namespace GTBack.Repository
         public DbSet<SpecialAttributeRelation> SpecialAttributeRelations { get; set; }
         public DbSet<EventTypeCompanyRelation> EventTypeCompanyRelations { get; set; }
         public DbSet<FAQ> FAQs { get; set; }
-    //Restourant
-    public DbSet<Client> Client{ get; set; }
-    public DbSet<Addition> Addition { get; set; }
-    public DbSet<Category> Category { get; set; }
-    public DbSet<Company> Company { get; set; }
-    public DbSet<Department> Department { get; set; }
-    public DbSet<Device> Device { get; set; }
-    public DbSet<Employee> Employee { get; set; }
-    public DbSet<EmployeeOrderRelation> EmployeeOrderRelation { get; set; }
-    public DbSet<ExtraMenuItem> ExtraMenuItem { get; set; }
-    public DbSet<Menu> Menu { get; set; }
-    public DbSet<MenuItem> MenuItem { get; set; }
-    public DbSet<Order> Order { get; set; }
-    public DbSet<Payment> Payment { get; set; }
-    public DbSet<Reservation> Reservation { get; set; }
-    public DbSet<ShiftControl> ShiftControl { get; set; }
-    public DbSet<Table> Table { get; set; }
-    public DbSet<TableArea> TableArea { get; set; }
-    
+
+        //Restourant
+        public DbSet<Client> Client { get; set; }
+        public DbSet<Addition> Addition { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<Company> Company { get; set; }
+        public DbSet<Department> Department { get; set; }
+        public DbSet<Device> Device { get; set; }
+        public DbSet<Employee> Employee { get; set; }
+        public DbSet<EmployeeOrderRelation> EmployeeOrderRelation { get; set; }
+        public DbSet<ExtraMenuItem> ExtraMenuItem { get; set; }
+        public DbSet<Menu> Menu { get; set; }
+        public DbSet<MenuItem> MenuItem { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<Payment> Payment { get; set; }
+        public DbSet<Reservation> Reservation { get; set; }
+        public DbSet<ShiftControl> ShiftControl { get; set; }
+        public DbSet<Table> Table { get; set; }
+        public DbSet<TableArea> TableArea { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 
         {
@@ -78,12 +80,12 @@ namespace GTBack.Repository
 
             modelBuilder.Entity<FAQ>()
                 .HasKey(e => new { e.SenderUserId, e.AnsweredUserId });
-            
+
             modelBuilder.Entity<FAQ>()
                 .HasOne(e => e.AnsweredUser)
                 .WithMany(e => e.Faq)
                 .HasForeignKey(e => e.AnsweredUserId);
-            
+
             // modelBuilder.Entity<FAQ>()
             //     .HasOne(e => e.SenderUser)
             //     .WithMany(e => e.FAQ)
@@ -94,12 +96,11 @@ namespace GTBack.Repository
                 .WithOne(e => e.Company)
                 .HasForeignKey(e => e.CompanyId)
                 .IsRequired(false);
-            
+
             modelBuilder.Entity<GTBack.Core.Entities.Restourant.RestoCompany>()
                 .HasOne(a => a.Menu)
                 .WithOne(a => a.RestoCompany)
                 .HasForeignKey<Menu>(c => c.RestoCompanyId);
-
         }
     }
 }

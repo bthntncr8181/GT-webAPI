@@ -1,3 +1,4 @@
+using GTBack.Core.DTO;
 using GTBack.Core.DTO.Restourant.Request;
 using GTBack.Core.DTO.Restourant.Response;
 using GTBack.Core.Enums.Restourant;
@@ -13,10 +14,8 @@ public interface IAdditionAndOrderService
     Task<IResults> OrderDelete(long id);
     Task<IResults> AdditionDelete(long id);
 
-    Task<IDataResults<ICollection<AdditionListDTO>>> AllAdditionList(int isActive);
-    Task<IDataResults<ICollection<OrderListDTO>>> OrderListByAdditionId(long additionId);
-    Task<IDataResults<ICollection<OrderListDTO>>> ActiveOrderListByAdditionId(long additionId);
-    Task<IDataResults<ICollection<OrderListDTO>>> AllOrderListByOrderStatus(OrderStatus orderStatus);
+    Task<IDataResults<BaseListDTO<AdditionListDTO,AdditionFilterRepresent>>> AllAdditionList(BaseListFilterDTO<AdditionFilterDTO>  filter);
+    Task<IDataResults<BaseListDTO<OrderListDTO,OrderFilterRepresent>>>OrderListByAdditionId(BaseListFilterDTO<OrderFilterDTO>  filter,long additionId);
     
     Task<IResults>  ChangeOrderStatus(ChangeOrderStatusDTO model);
     Task<IResults>  CloseAddition(long additionId);

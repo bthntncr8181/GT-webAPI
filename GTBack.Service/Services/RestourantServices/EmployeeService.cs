@@ -5,6 +5,7 @@ using AutoMapper;
 using GTBack.Core.DTO;
 using GTBack.Core.DTO.Restourant;
 using GTBack.Core.DTO.Restourant.Request;
+using GTBack.Core.DTO.Restourant.Response;
 using GTBack.Core.Entities;
 using GTBack.Core.Entities.Restourant;
 using GTBack.Core.Results;
@@ -16,6 +17,7 @@ using GTBack.Service.Validation.Restourant;
 using GTBack.Service.Validation.Tool;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using XAct;
 
 namespace GTBack.Service.Services.RestourantServices;
 
@@ -24,6 +26,7 @@ public class EmployeeService : IEmployeeService
     private readonly IService<Employee> _service;
     private readonly IService<Department> _depService;
     private readonly IService<EmployeeRoleRelation> _roleService;
+    private readonly IListingServiceI<Employee,EmployeeListFilter> _employeeListingService;
     private readonly IRefreshTokenService _refreshTokenService;
     private readonly ClaimsPrincipal? _loggedUser;
     private readonly IMapper _mapper;
@@ -31,7 +34,7 @@ public class EmployeeService : IEmployeeService
 
     public EmployeeService(IRefreshTokenService refreshTokenService, IService<Department> depService,
         IService<EmployeeRoleRelation> roleService, IJwtTokenService<BaseRegisterDTO> tokenService,
-        IHttpContextAccessor httpContextAccessor, IService<Employee> service,
+        IHttpContextAccessor httpContextAccessor, IService<Employee> service,IListingServiceI<Employee,EmployeeListFilter> employeeListingService,
         IMapper mapper)
     {
         _mapper = mapper;
@@ -39,6 +42,7 @@ public class EmployeeService : IEmployeeService
         _depService = depService;
         _roleService = roleService;
         _loggedUser = httpContextAccessor.HttpContext?.User;
+        _employeeListingService =employeeListingService;
         _refreshTokenService = refreshTokenService;
         _tokenService = tokenService;
     }
@@ -71,6 +75,81 @@ public class EmployeeService : IEmployeeService
     }
 
 
+    public Task<IDataResults<EmployeeListDTO>> GetById(int id)
+    {
+        throw new NotImplementedException();
+    }
+    
+ 
+
+    public async Task<IDataResults<BaseListDTO<EmployeeListDTO,EmployeeFilterRepresent>>> ListEmployee(BaseListFilterDTO<EmployeeListFilter> filter)
+    {
+        var query = _service.Where(x => !x.IsDeleted);
+        
+        // _employeeListingService.GenericListFilter(filter);
+
+
+        if (!(filter.RequestFilter.Name.IsNullOrEmpty()))
+        {
+            query = query.Where(x => x.Name.Equals(filter.RequestFilter.Name));
+        }
+
+        if (!filter.RequestFilter.Surname.IsNullOrEmpty())
+        {
+            query = query.Where(x => x.Surname.Equals(filter.RequestFilter.Surname));
+
+        }
+
+        if (!filter.RequestFilter.Mail.IsNullOrEmpty())
+        {
+            query = query.Where(x => x.Mail.Equals(filter.RequestFilter.Mail));
+
+        }
+
+        if (!filter.RequestFilter.Phone.IsNullOrEmpty())
+        {
+            query = query.Where(x => x.Phone.Equals(filter.RequestFilter.Phone));
+
+        }
+
+        if (filter.RequestFilter.Salary.HasValue)
+        {
+            query = query.Where(x => x.Salary==filter.RequestFilter.Salary);
+
+        }
+
+        if (filter.RequestFilter.SalaryType.HasValue)
+        {
+            query = query.Where(x => x.SalaryType==filter.RequestFilter.SalaryType);
+
+        }
+
+        if (filter.RequestFilter.DeviceId.HasValue)
+        {
+            query = query.Where(x => x.DeviceId==filter.RequestFilter.DeviceId);
+
+        }
+
+        if (filter.RequestFilter.ShiftStart.StartDate.HasValue)
+        {
+             query = query.Where(x => x.ShiftStart>filter.RequestFilter.ShiftStart.StartDate&&x.ShiftStart<filter.RequestFilter.ShiftStart.EndDate);
+
+        }
+
+        if (filter.RequestFilter.ShiftEnd.StartDate.HasValue)
+        {
+            query = query.Where(x => x.ShiftEnd>filter.RequestFilter.ShiftStart.StartDate&&x.ShiftEnd<filter.RequestFilter.ShiftStart.EndDate);
+
+        }
+        query = query.Skip(filter.PaginationFilter.Skip).Take(filter.PaginationFilter.Take);
+
+        BaseListDTO<EmployeeListDTO, EmployeeFilterRepresent> baseList = new BaseListDTO<EmployeeListDTO, EmployeeFilterRepresent>();
+        EmployeeFilterRepresent emp = new EmployeeFilterRepresent();
+        baseList.Filter = emp;
+        baseList.List = _mapper.Map<ICollection<EmployeeListDTO>>(await query.ToListAsync());
+        return new SuccessDataResult<BaseListDTO<EmployeeListDTO,EmployeeFilterRepresent>>(baseList);
+    }
+
     public async Task<IDataResults<AuthenticatedUserResponseDto>> Login(LoginDto loginDto)
     {
         var valResult =
@@ -94,7 +173,7 @@ public class EmployeeService : IEmployeeService
 
         var response = new AuthenticatedUserResponseDto();
         response.IsTemp = false;
-        
+
         if (!Utilities.SHA1.Verify(loginDto.Password, parent.PasswordHash))
         {
             if (!Utilities.SHA1.Verify(loginDto.Password, parent.TempPasswordHash))
@@ -109,7 +188,7 @@ public class EmployeeService : IEmployeeService
                 response.IsTemp = true;
             }
         }
-        
+
         response = await Authenticate(_mapper.Map<EmployeeRegisterDTO>(parent));
         response.IsTemp = true;
 
@@ -216,5 +295,10 @@ public class EmployeeService : IEmployeeService
 
         await _service.SendMail(mailToSend);
         return new SuccessResult();
+    }
+
+    public Task<IResults> EmployeeRoleChange(EmployeeRegisterDTO registerDto)
+    {
+        throw new NotImplementedException();
     }
 }

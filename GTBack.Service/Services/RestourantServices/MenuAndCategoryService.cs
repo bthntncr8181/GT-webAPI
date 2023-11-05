@@ -1,12 +1,16 @@
 using System.Security.Claims;
 using AutoMapper;
+using GTBack.Core.DTO;
 using GTBack.Core.DTO.Restourant.Request;
+using GTBack.Core.DTO.Restourant.Response;
 using GTBack.Core.Entities.Restourant;
 using GTBack.Core.Results;
 using GTBack.Core.Services;
 using GTBack.Core.Services.Restourant;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using XAct;
 
 namespace GTBack.Service.Services.RestourantServices;
 
@@ -134,42 +138,129 @@ public class MenuAndCategoryService : IMenuAndCategoryService
     {
         var companyId = GetLoggedCompanyId();
         var menu = await _menuService.Where(x => x.RestoCompanyId == companyId).FirstOrDefaultAsync();
-        var categories = await _categoryService.Where(x => x.MenuId == menu.Id&&!x.IsDeleted).ToListAsync();
-        
+        var categories = await _categoryService.Where(x => x.MenuId == menu.Id && !x.IsDeleted).ToListAsync();
+
         var response = _mapper.Map<ICollection<CategoryListDTO>>(categories);
         return new SuccessDataResult<ICollection<CategoryListDTO>>(response);
     }
-    
 
-    public async Task<IDataResults<ICollection<MenuItemListDTO>>> MenuItemListByCategoryId(long categoryId)
+
+    public async Task<IDataResults<BaseListDTO<MenuItemListDTO, MenuListFilterRespresent>>> MenuItemListByCategoryId(
+        BaseListFilterDTO<MenuListFilterDTO> menuFilter, long categoryId)
     {
-        var menuItems = await _menuItemService.Where(x => x.CategoryId == categoryId&&!x.IsDeleted).ToListAsync();
-        var response = _mapper.Map<ICollection<MenuItemListDTO>>(menuItems);
-        return new SuccessDataResult<ICollection<MenuItemListDTO>>(response);
+        var query = _menuItemService.Where(x => x.CategoryId == categoryId && !x.IsDeleted);
+        BaseListDTO<MenuItemListDTO, MenuListFilterRespresent> menuList =
+            new BaseListDTO<MenuItemListDTO, MenuListFilterRespresent>();
+
+
+        if (!CollectionUtilities.IsNullOrEmpty(menuFilter.RequestFilter.Name))
+        {
+            query = query.Where(x => x.Name.Contains(menuFilter.RequestFilter.Name));
+        }
+
+        if (!CollectionUtilities.IsNullOrEmpty(menuFilter.RequestFilter.Contains))
+        {
+            query = query.Where(x => x.Contains.Contains(menuFilter.RequestFilter.Contains));
+        }
+
+        if (!CollectionUtilities.IsNullOrEmpty(menuFilter.RequestFilter.Description))
+        {
+            query = query.Where(x => x.Description.Contains(menuFilter.RequestFilter.Description));
+        }
+
+        if (!ObjectExtensions.IsNull(menuFilter.RequestFilter.Price))
+        {
+            query = query.Where(x =>
+                x.Price < menuFilter.RequestFilter.Price.Max && x.Price > menuFilter.RequestFilter.Price.Min);
+        }
+
+        if (!ObjectExtensions.IsNull(menuFilter.RequestFilter.Stock))
+        {
+            query = query.Where(x =>
+                x.Stock < menuFilter.RequestFilter.Stock.Max && x.Stock > menuFilter.RequestFilter.Stock.Min);
+        }
+
+
+        menuList.List = _mapper.Map<ICollection<MenuItemListDTO>>(await query.ToListAsync());
+        menuList.Filter = new MenuListFilterRespresent();
+        return new SuccessDataResult<BaseListDTO<MenuItemListDTO, MenuListFilterRespresent>>(menuList);
     }
 
     public async Task<IDataResults<ICollection<ExtraMenuItemListDTO>>> ExtraMenuItemByMenuItemId(long menuItemId)
     {
-        var menuItems = await _extraMenuItemService.Where(x => x.MenuItemId == menuItemId&&!x.IsDeleted).ToListAsync();
+        var menuItems = await _extraMenuItemService.Where(x => x.MenuItemId == menuItemId && !x.IsDeleted)
+            .ToListAsync();
         var response = _mapper.Map<ICollection<ExtraMenuItemListDTO>>(menuItems);
         return new SuccessDataResult<ICollection<ExtraMenuItemListDTO>>(response);
     }
 
-    public async Task<IDataResults<ICollection<MenuItemListDTO>>> AllMenuItemsByCompanyId()
+    public async Task<IDataResults<BaseListDTO<MenuItemListDTO, MenuListFilterRespresent>>> AllMenuItemsByCompanyId(
+        BaseListFilterDTO<MenuListFilterDTO> menuFilter)
     {
         List<MenuItem> menuItems = new List<MenuItem>();
         var companyId = GetLoggedCompanyId();
-        var menu = await _menuService.Where(x => x.RestoCompanyId == companyId).FirstOrDefaultAsync();
-        var categories = await _categoryService.Where(x => x.MenuId == menu.Id&&!x.IsDeleted).ToListAsync();
-        
-        foreach (var category in categories)
-        {
-            var menuItemsTemp = await _menuItemService.Where(x => x.CategoryId == category.Id&&!x.IsDeleted).ToListAsync();
+        var categoryRepo = _categoryService.Where(x => !x.IsDeleted);
 
-            menuItems.AddRange(menuItemsTemp);
+        var menuRepo = _menuService.Where(x => x.RestoCompanyId == companyId && !x.IsDeleted);
+        var menuItemRepo = _menuItemService.Where(x => !x.IsDeleted);
+
+
+        var query = from menuItem in menuItemRepo
+            join category in categoryRepo on menuItem.CategoryId equals category.Id into categoryLeft
+            from category in categoryLeft.DefaultIfEmpty()
+            join menu in menuRepo on category.MenuId equals menu.Id into menuLeft
+            from menu in menuLeft.DefaultIfEmpty()
+            select new MenuItemListDTO()
+
+            {
+                Id = menuItem.Id,
+                Name = menuItem.Name,
+                Price = menuItem.Price,
+                Stock = menuItem.Stock,
+                Image = menuItem.Image,
+                Description = menuItem.Description,
+                Contains = menuItem.Contains,
+                CategoryId = category.Id,
+            };
+
+        var myCheckList = await query.ToListAsync();
+
+        if (!CollectionUtilities.IsNullOrEmpty(menuFilter.RequestFilter.Name))
+        {
+            query = query.Where(x => x.Name.Contains(menuFilter.RequestFilter.Name));
         }
+
+        if (!CollectionUtilities.IsNullOrEmpty(menuFilter.RequestFilter.Contains))
+        {
+            query = query.Where(x => x.Contains.Contains(menuFilter.RequestFilter.Contains));
+        }
+
+        if (!CollectionUtilities.IsNullOrEmpty(menuFilter.RequestFilter.Description))
+        {
+            query = query.Where(x => x.Description.Contains(menuFilter.RequestFilter.Description));
+        }
+
+        if (!ObjectExtensions.IsNull(menuFilter.RequestFilter.Price))
+        {
+            query = query.Where(x =>
+                x.Price < menuFilter.RequestFilter.Price.Max && x.Price > menuFilter.RequestFilter.Price.Min);
+        }
+
+        if (!ObjectExtensions.IsNull(menuFilter.RequestFilter.Stock))
+        {
+            query = query.Where(x =>
+                x.Stock < menuFilter.RequestFilter.Stock.Max && x.Stock > menuFilter.RequestFilter.Stock.Min);
+        }
+
+        query = query.Skip(menuFilter.PaginationFilter.Skip).Take(menuFilter.PaginationFilter.Take);
         
-        var response = _mapper.Map<ICollection<MenuItemListDTO>>(menuItems);
-        return new SuccessDataResult<ICollection<MenuItemListDTO>>(response);
+
+        BaseListDTO<MenuItemListDTO, MenuListFilterRespresent> menuList =
+            new BaseListDTO<MenuItemListDTO, MenuListFilterRespresent>();
+
+        menuList.List = _mapper.Map<ICollection<MenuItemListDTO>>(await query.ToListAsync());
+        menuList.Filter = new MenuListFilterRespresent();
+
+        return new SuccessDataResult<BaseListDTO<MenuItemListDTO, MenuListFilterRespresent>>(menuList);
     }
 }

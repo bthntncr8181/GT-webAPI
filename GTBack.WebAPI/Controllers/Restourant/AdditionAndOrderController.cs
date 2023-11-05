@@ -1,4 +1,5 @@
 using AutoMapper;
+using GTBack.Core.DTO;
 using GTBack.Core.DTO.Restourant.Request;
 using GTBack.Core.Enums.Restourant;
 using GTBack.Core.Services.Restourant;
@@ -44,33 +45,21 @@ public class AdditionAndOrderController: CustomRestourantBaseController
         return ApiResult(await _service.CloseAddition(additionId));
     }
     
-    [HttpGet("AllAdditionList")]
-    public async Task<IActionResult> AllAdditionList(int activeStatus)
+    [HttpPost("AllAdditionList")]
+    public async Task<IActionResult> AllAdditionList(BaseListFilterDTO<AdditionFilterDTO> filter)
     {
-        return ApiResult(await _service.AllAdditionList(activeStatus));
+        return ApiResult(await _service.AllAdditionList(filter));
     }
     
     
     
-    [HttpGet("OrderListByAdditionId")]
-    public async Task<IActionResult> OrderListByAdditionId(long additionId)
+    [HttpPost("OrderListByAdditionId")]
+    public async Task<IActionResult> OrderListByAdditionId(BaseListFilterDTO<OrderFilterDTO> filter, long additionId)
     {
-        return ApiResult(await _service.OrderListByAdditionId(additionId));
+        return ApiResult(await _service.OrderListByAdditionId(filter,additionId));
     }
     
-    [HttpGet("ActiveOrderListByAdditionId")]
-    public async Task<IActionResult> ActiveOrderListByAdditionId(long additionId)
-    {
-        return ApiResult(await _service.ActiveOrderListByAdditionId(additionId));
-    }
-    
-    
-    [HttpGet("AllOrderListByOrderStatus")]
-    public async Task<IActionResult> AllOrderListByOrderStatus(OrderStatus orderStatus)
-    {
-        return ApiResult(await _service.AllOrderListByOrderStatus(orderStatus));
-    }
-    
+
    
     
     [HttpDelete("AdditionDelete")]

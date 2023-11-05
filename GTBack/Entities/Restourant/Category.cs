@@ -7,5 +7,5 @@ public class Category:BaseEntity
     public long MenuId { get; set; }
     public Menu Menu { get; set; }
     public string Image { get; set; }
-    public  virtual  ICollection<MenuItem>? MenuItem { get; set; }
+    public  virtual  ICollection<MenuItem> MenuItem { get; set; }
 }

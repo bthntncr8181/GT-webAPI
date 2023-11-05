@@ -18,6 +18,8 @@ public class RestourantMapProfile:Profile
             
             //EMPLOYEE
             CreateMap<Employee, EmployeeRegisterDTO>().ReverseMap();
+            CreateMap<EmployeeListDTO, Employee>().ReverseMap();
+            CreateMap<ICollection<EmployeeListDTO>, IQueryable<Employee>>().ReverseMap();
             
             //ROLE
             CreateMap<RoleListDTO, Role>().ReverseMap();

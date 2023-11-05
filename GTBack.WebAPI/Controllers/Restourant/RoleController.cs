@@ -11,13 +11,11 @@ namespace GTBack.WebAPI.Controllers.Restourant;
 
 public class RoleController: CustomRestourantBaseController
 {
-    private readonly IMapper _mapper;
     private readonly IRoleService<RoleCreateDTO,RoleListDTO> _roleService;
 
-    public RoleController( IMapper mapper,IRoleService<RoleCreateDTO,RoleListDTO> roleService,IEmployeeService employeeService)
+    public RoleController(IRoleService<RoleCreateDTO,RoleListDTO> roleService,IEmployeeService employeeService)
     {
         _roleService = roleService;
-        _mapper = mapper;
     }
     
          

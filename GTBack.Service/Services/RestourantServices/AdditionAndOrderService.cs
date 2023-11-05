@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AutoMapper;
+using GTBack.Core.DTO;
 using GTBack.Core.DTO.Restourant.Request;
 using GTBack.Core.DTO.Restourant.Response;
 using GTBack.Core.Entities.Restourant;
@@ -9,6 +10,8 @@ using GTBack.Core.Services;
 using GTBack.Core.Services.Restourant;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using XAct;
 
 namespace GTBack.Service.Services.RestourantServices;
 
@@ -45,8 +48,6 @@ public class AdditionAndOrderService : IAdditionAndOrderService
         model.IsClosed = false;
         if (model.Id != 0)
         {
-            
-           
             var response = _mapper.Map<Addition>(model);
             await _additionService.AddAsync(response);
             return new SuccessResult();
@@ -63,22 +64,20 @@ public class AdditionAndOrderService : IAdditionAndOrderService
     {
         if (model.Id != 0)
         {
-            
-           
             var response = _mapper.Map<Order>(model);
-           var addedOrder= await _orderService.AddAsync(response);
-            
+            var addedOrder = await _orderService.AddAsync(response);
+
             var orderProcess = new OrderProcess()
             {
-                InitialOrderStatus =OrderStatus.ORDERED,
+                InitialOrderStatus = OrderStatus.ORDERED,
                 FinishedOrderStatus = OrderStatus.ORDERED,
                 ChangeDate = DateTime.UtcNow,
                 ChangeNote = addedOrder.OrderNote,
                 OrderId = addedOrder.Id,
                 EmployeeId = GetLoggedUserId()
             };
-            
-             await _orderProcessService.AddAsync(orderProcess);
+
+            await _orderProcessService.AddAsync(orderProcess);
 
             return new SuccessResult();
         }
@@ -120,25 +119,14 @@ public class AdditionAndOrderService : IAdditionAndOrderService
         }
     }
 
-    public async Task<IDataResults<ICollection<AdditionListDTO>>> AllAdditionList(int isActive)
+    public async Task<IDataResults<BaseListDTO<AdditionListDTO, AdditionFilterRepresent>>> AllAdditionList(
+        BaseListFilterDTO<AdditionFilterDTO> filter)
     {
         var companyId = GetLoggedCompanyId();
         var tableRepo = _tableService.Where(x => !x.IsDeleted);
         var tableAreaRepo = _tableAreaService.Where(x => !x.IsDeleted);
         var additionRepo = _additionService.Where(x => !x.IsDeleted);
 
-        if (isActive == 0)
-        {
-            additionRepo = _additionService.Where(x => !x.IsDeleted && !x.IsClosed);
-        }
-        else if (isActive == 1)
-        {
-            additionRepo = _additionService.Where(x => !x.IsDeleted && x.IsClosed);
-        }
-        else
-        {
-            additionRepo = _additionService.Where(x => !x.IsDeleted);
-        }
 
         var query = from addition in additionRepo
             join table in tableRepo on addition.TableId equals table.Id into tableLeft
@@ -159,33 +147,124 @@ public class AdditionAndOrderService : IAdditionAndOrderService
                 CreatedDate = addition.CreatedDate
             };
 
+        var myLis = await query.ToListAsync();
+        if (filter.RequestFilter.IsClosed.HasValue)
+        {
+            query = query.Where(x => x.IsClosed == filter.RequestFilter.IsClosed);
+        }
+
+        if (!CollectionUtilities.IsNullOrEmpty(filter.RequestFilter.Name))
+        {
+            query = query.Where(x => x.Name.Contains(filter.RequestFilter.Name));
+        }
+
+        if (filter.RequestFilter.ClientId.HasValue)
+        {
+            query = query.Where(x => x.ClientId == filter.RequestFilter.ClientId);
+        }
+
+        if (!ObjectExtensions.IsNull(filter.RequestFilter.ClosedDate))
+        {
+            query = query.Where(x =>
+                x.ClosedDate > filter.RequestFilter.ClosedDate.StartDate &&
+                x.ClosedDate < filter.RequestFilter.ClosedDate.EndDate);
+        }
+        
+        if (!ObjectExtensions.IsNull(filter.RequestFilter.CreatedDate))
+        {
+            query = query.Where(x =>
+                x.CreatedDate > filter.RequestFilter.CreatedDate.StartDate &&
+                x.CreatedDate < filter.RequestFilter.CreatedDate.EndDate);
+        }
+
+   
+
+        if (filter.RequestFilter.TableNumber.HasValue)
+        {
+            query = query.Where(x => x.TableNumber == filter.RequestFilter.TableNumber);
+        }
+
+        if (!CollectionUtilities.IsNullOrEmpty(filter.RequestFilter.TableAreaName))
+        {
+            query = query.Where(x => x.TableAreaName.Contains(filter.RequestFilter.TableAreaName));
+        }
+        query = query.Skip(filter.PaginationFilter.Skip).Take(filter.PaginationFilter.Take);
+
+        BaseListDTO<AdditionListDTO, AdditionFilterRepresent> additionList =
+            new BaseListDTO<AdditionListDTO, AdditionFilterRepresent>();
         var response = _mapper.Map<ICollection<AdditionListDTO>>(await query.ToListAsync());
-        return new SuccessDataResult<ICollection<AdditionListDTO>>(response);
+        additionList.List = response;
+        additionList.Filter = new AdditionFilterRepresent();
+        return new SuccessDataResult<BaseListDTO<AdditionListDTO, AdditionFilterRepresent>>(additionList);
     }
 
-
-    public async Task<IDataResults<ICollection<OrderListDTO>>> OrderListByAdditionId(long additionId)
+    public async Task<IDataResults<BaseListDTO<OrderListDTO, OrderFilterRepresent>>> OrderListByAdditionId(BaseListFilterDTO<OrderFilterDTO> filter, long additionId)
     {
-        var orderList = await _orderService.Where(x => x.AdditionId == additionId).ToListAsync();
-        var response = _mapper.Map<ICollection<OrderListDTO>>(orderList);
-        return new SuccessDataResult<ICollection<OrderListDTO>>(response);
+        var query =  _orderService.Where(x => x.AdditionId == additionId);
+
+        var myObject = await query.ToListAsync();
+
+     
+
+        if (!CollectionUtilities.IsNullOrEmpty(filter.RequestFilter.Name))
+        {
+            query = query.Where(x => x.Name.Contains(filter.RequestFilter.Name));
+        }
+
+
+        if (!CollectionUtilities.IsNullOrEmpty(filter.RequestFilter.OrderNote))
+        {
+            query = query.Where(x => x.Name.Contains(filter.RequestFilter.OrderNote));
+        }
+        if (filter.RequestFilter.OrderStatus.HasValue)
+        {
+            query = query.Where(x => x.OrderStatus == filter.RequestFilter.OrderStatus);
+        }
+        if (filter.RequestFilter.AdditionId.HasValue)
+        {
+            query = query.Where(x => x.AdditionId == filter.RequestFilter.AdditionId);
+        }
+
+    
+        if (!ObjectExtensions.IsNull(filter.RequestFilter.OrderDeliveredDate))
+        {
+            query = query.Where(x =>
+                x.OrderDeliveredDate > filter.RequestFilter.OrderDeliveredDate.StartDate &&
+                x.OrderDeliveredDate < filter.RequestFilter.OrderDeliveredDate.EndDate);
+        }
+        
+        if (!ObjectExtensions.IsNull(filter.RequestFilter.OrderStartDate))
+        {
+            query = query.Where(x =>
+                x.OrderStartDate > filter.RequestFilter.OrderStartDate.StartDate &&
+                x.OrderStartDate < filter.RequestFilter.OrderStartDate.EndDate);
+        }
+        
+        
+
+        if (filter.RequestFilter.EmployeeId.HasValue)
+        {
+            query = query.Where(x => x.EmployeeId == filter.RequestFilter.EmployeeId);
+        }
+
+        if (filter.RequestFilter.ExtraMenuItemId.HasValue)
+        {
+            query = query.Where(x => x.ExtraMenuItemId == filter.RequestFilter.ExtraMenuItemId);
+        }
+
+        query = query.Skip(filter.PaginationFilter.Skip).Take(filter.PaginationFilter.Take);
+
+        BaseListDTO<OrderListDTO, OrderFilterRepresent> orderList =
+            new BaseListDTO<OrderListDTO, OrderFilterRepresent>();
+
+        var response = _mapper.Map<ICollection<OrderListDTO>>(await query.ToListAsync());
+
+        orderList.List = response;
+        orderList.Filter = new OrderFilterRepresent();
+
+        return new SuccessDataResult<BaseListDTO<OrderListDTO, OrderFilterRepresent>>(orderList);
     }
 
-    public async Task<IDataResults<ICollection<OrderListDTO>>> ActiveOrderListByAdditionId(long additionId)
-    {
-        var orderList = await _orderService.Where(x =>
-            !x.IsDeleted && x.AdditionId == additionId && (x.OrderStatus.Equals(OrderStatus.DELİVERED) ||
-                                                           x.OrderStatus.Equals(OrderStatus.CANCELED))).ToListAsync();
-        var response = _mapper.Map<ICollection<OrderListDTO>>(orderList);
-        return new SuccessDataResult<ICollection<OrderListDTO>>(response);
-    }
-
-    public async Task<IDataResults<ICollection<OrderListDTO>>> AllOrderListByOrderStatus(OrderStatus orderStatus)
-    {
-        var orderList = await _orderService.Where(x => !x.IsDeleted && x.OrderStatus.Equals(orderStatus)).ToListAsync();
-        var response = _mapper.Map<ICollection<OrderListDTO>>(orderList);
-        return new SuccessDataResult<ICollection<OrderListDTO>>(response);
-    }
 
     public async Task<IResults> ChangeOrderStatus(ChangeOrderStatusDTO model)
     {

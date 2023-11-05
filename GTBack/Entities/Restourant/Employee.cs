@@ -1,3 +1,5 @@
+using GTBack.Core.Enums.Restourant;
+
 namespace GTBack.Core.Entities.Restourant;
 
 public class Employee : BaseEntity
@@ -10,7 +12,7 @@ public class Employee : BaseEntity
     public string PasswordHash { get; set; }
     
     public string? TempPasswordHash { get; set; }
-    public int? SalaryType { get; set; }
+    public SalaryType? SalaryType { get; set; }
 
     public DateTime ShiftStart { get; set; }
     public DateTime ShiftEnd { get; set; }

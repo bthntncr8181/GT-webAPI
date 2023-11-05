@@ -1,4 +1,5 @@
 using AutoMapper;
+using GTBack.Core.DTO;
 using GTBack.Core.DTO.Restourant.Request;
 using GTBack.Core.DTO.Restourant.Response;
 using GTBack.Core.Services;
@@ -48,16 +49,16 @@ public class MenuController: CustomRestourantBaseController
         return ApiResult(await _service.AllCategoryListByCompanyId());
     }
     
-    [HttpGet("MenuItemListByCategoryId")]
-    public async Task<IActionResult> MenuItemListByCategoryId(long categoryId)
+    [HttpPost("MenuItemListByCategoryId")]
+    public async Task<IActionResult> MenuItemListByCategoryId([FromBody]BaseListFilterDTO<MenuListFilterDTO>  menuFilter,long categoryId)
     {
-        return ApiResult(await _service.MenuItemListByCategoryId(categoryId));
+        return ApiResult(await _service.MenuItemListByCategoryId(menuFilter,categoryId));
     }
     [Authorize]
-    [HttpGet("MenuItemListByCompanyId")]
-    public async Task<IActionResult> MenuItemListByCompanyId()
+    [HttpPost("AllMenuItems")]
+    public async Task<IActionResult> AllMenuItemsByCompanyId( BaseListFilterDTO<MenuListFilterDTO> menuFilter)
     {
-        return ApiResult(await _service.AllMenuItemsByCompanyId());
+        return ApiResult(await _service.AllMenuItemsByCompanyId(menuFilter));
     }
     
     [HttpPost("ExtraMenuItemByMenuItemId")]
