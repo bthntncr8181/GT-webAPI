@@ -124,7 +124,7 @@ public class AdditionAndOrderService : IAdditionAndOrderService
     {
         var companyId = GetLoggedCompanyId();
         var tableRepo = _tableService.Where(x => !x.IsDeleted);
-        var tableAreaRepo = _tableAreaService.Where(x => !x.IsDeleted);
+        var tableAreaRepo = _tableAreaService.Where(x => !x.IsDeleted&&x.RestoCompanyId==companyId);
         var additionRepo = _additionService.Where(x => !x.IsDeleted);
 
 
@@ -238,6 +238,7 @@ public class AdditionAndOrderService : IAdditionAndOrderService
             query = query.Where(x =>
                 x.OrderStartDate > filter.RequestFilter.OrderStartDate.StartDate &&
                 x.OrderStartDate < filter.RequestFilter.OrderStartDate.EndDate);
+            
         }
         
         

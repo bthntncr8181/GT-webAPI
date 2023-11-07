@@ -13,6 +13,6 @@ public class BaseRegisterDTO
     public string Mail { get; set; }
     public int? UserTypeId { get; set; }
     public long  CompanyId { get; set; }
-    public ICollection<RoleList> RoleList { get; set; }
+    public ICollection<RoleList>? RoleList { get; set; }
     
 }

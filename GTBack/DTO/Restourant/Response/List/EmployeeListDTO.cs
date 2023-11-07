@@ -10,8 +10,8 @@ public class EmployeeListDTO
     public string Surname { get; set; }
     public DateTime ShiftStart { get; set; }
     public DateTime ShiftEnd { get; set; }
-    public SalaryType SalaryType { get; set; }
-    public int Salary { get; set; }
+    public SalaryType? SalaryType { get; set; }
+    public int? Salary { get; set; }
     public long? DeviceId { get; set; }
     public long DepartmentId { get; set; }
     public string Address { get; set; }

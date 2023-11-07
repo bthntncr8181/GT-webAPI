@@ -39,4 +39,10 @@ public class ListService<T1,T2>:IListingServiceI<T1,T2> where T1 :BaseEntity whe
         }
         return query;
     }
+    
+    
+    public  BaseListFilterDTO<T2> CacheKey(BaseListFilterDTO<T2> model)
+    {
+        return model;
+    }
 }

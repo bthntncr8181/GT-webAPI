@@ -95,6 +95,7 @@ builder.Services.AddScoped(typeof(IEventTypeService),typeof(EventTypeService));
 builder.Services.AddAutoMapper(typeof(RestourantMapProfile));
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.LoadValidators();
+builder.Services.AddMemoryCache();
 
 var appConfig = builder.Configuration.Get<GoThereAppConfig>();
 

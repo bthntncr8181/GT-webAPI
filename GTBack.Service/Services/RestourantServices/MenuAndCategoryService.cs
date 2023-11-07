@@ -199,21 +199,19 @@ public class MenuAndCategoryService : IMenuAndCategoryService
     {
         List<MenuItem> menuItems = new List<MenuItem>();
         var companyId = GetLoggedCompanyId();
+        var menuRepo =  _menuService.Where(x =>  !x.IsDeleted);
         var categoryRepo = _categoryService.Where(x => !x.IsDeleted);
-
-        var menuRepo = _menuService.Where(x => x.RestoCompanyId == companyId && !x.IsDeleted);
         var menuItemRepo = _menuItemService.Where(x => !x.IsDeleted);
 
-
-        var query = from menuItem in menuItemRepo
-            join category in categoryRepo on menuItem.CategoryId equals category.Id into categoryLeft
-            from category in categoryLeft.DefaultIfEmpty()
-            join menu in menuRepo on category.MenuId equals menu.Id into menuLeft
-            from menu in menuLeft.DefaultIfEmpty()
+        var query = from menu in menuRepo.Where(x=>x.RestoCompanyId==companyId)
+            join category in categoryRepo on menu.Id equals category.MenuId into categoryLeft
+            from category in categoryLeft
+            join menuItem in menuItemRepo on category.Id equals menuItem.CategoryId into menuItemLeft
+            from menuItem in menuItemLeft
             select new MenuItemListDTO()
 
             {
-                Id = menuItem.Id,
+                Id = menuItem.Id.IsNull()? 0 :menuItem.Id,
                 Name = menuItem.Name,
                 Price = menuItem.Price,
                 Stock = menuItem.Stock,

@@ -38,6 +38,8 @@ namespace GTBack.Service.Services
             return entity;
            
         }
+        
+        
 
         
         
@@ -125,6 +127,8 @@ return await _repository.AnyAsync(expression);
         {
               _repository.Remove(expression);
         }
+        
+     
 
     }
 }

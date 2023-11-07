@@ -17,6 +17,7 @@ using GTBack.Service.Validation.Restourant;
 using GTBack.Service.Validation.Tool;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using XAct;
 
 namespace GTBack.Service.Services.RestourantServices;
@@ -24,34 +25,42 @@ namespace GTBack.Service.Services.RestourantServices;
 public class EmployeeService : IEmployeeService
 {
     private readonly IService<Employee> _service;
+    private readonly IMemoryCache _cache;
     private readonly IService<Department> _depService;
-    private readonly IService<EmployeeRoleRelation> _roleService;
-    private readonly IListingServiceI<Employee,EmployeeListFilter> _employeeListingService;
+    private readonly IService<RestoCompany> _companyService;
+    private readonly IService<EmployeeRoleRelation> _empRoleRelation;
+    private readonly IService<Role> _roleService;
+    private readonly IListingServiceI<Employee, EmployeeListFilter> _employeeListingService;
     private readonly IRefreshTokenService _refreshTokenService;
     private readonly ClaimsPrincipal? _loggedUser;
     private readonly IMapper _mapper;
     private readonly IJwtTokenService<BaseRegisterDTO> _tokenService;
 
     public EmployeeService(IRefreshTokenService refreshTokenService, IService<Department> depService,
-        IService<EmployeeRoleRelation> roleService, IJwtTokenService<BaseRegisterDTO> tokenService,
-        IHttpContextAccessor httpContextAccessor, IService<Employee> service,IListingServiceI<Employee,EmployeeListFilter> employeeListingService,
-        IMapper mapper)
+        IService<Role> roleService, IJwtTokenService<BaseRegisterDTO> tokenService,
+        IHttpContextAccessor httpContextAccessor, IService<Employee> service,
+        IListingServiceI<Employee, EmployeeListFilter> employeeListingService,
+        IMapper mapper, IMemoryCache cache, IService<RestoCompany> companyService,
+        IService<EmployeeRoleRelation> empRoleRelation)
     {
         _mapper = mapper;
         _service = service;
         _depService = depService;
+        _companyService = companyService;
         _roleService = roleService;
         _loggedUser = httpContextAccessor.HttpContext?.User;
-        _employeeListingService =employeeListingService;
+        _employeeListingService = employeeListingService;
+        _empRoleRelation = empRoleRelation;
         _refreshTokenService = refreshTokenService;
         _tokenService = tokenService;
+        _cache = cache;
     }
 
 
     private async Task<AuthenticatedUserResponseDto> Authenticate(EmployeeRegisterDTO userDto)
     {
         var department = await _depService.Where(x => x.Id == userDto.DepartmentId).FirstOrDefaultAsync();
-        var roleRel = await _roleService.Where(x => x.EmployeeId == userDto.Id).ToListAsync();
+        var roleRel = await _empRoleRelation.Where(x => x.EmployeeId == userDto.Id).ToListAsync();
         var roleRes = _mapper.Map<ICollection<RoleList>>(roleRel);
 
         userDto.CompanyId = department.RestoCompanyId;
@@ -79,75 +88,109 @@ public class EmployeeService : IEmployeeService
     {
         throw new NotImplementedException();
     }
-    
- 
 
-    public async Task<IDataResults<BaseListDTO<EmployeeListDTO,EmployeeFilterRepresent>>> ListEmployee(BaseListFilterDTO<EmployeeListFilter> filter)
+
+    public async Task<IDataResults<BaseListDTO<EmployeeListDTO, EmployeeFilterRepresent>>> ListEmployee(
+        BaseListFilterDTO<EmployeeListFilter> filter)
     {
-        var query = _service.Where(x => !x.IsDeleted);
-        
-        // _employeeListingService.GenericListFilter(filter);
-
-
-        if (!(filter.RequestFilter.Name.IsNullOrEmpty()))
+        var resource = await _cache.GetOrCreateAsync(_employeeListingService.CacheKey(filter), async entry =>
         {
-            query = query.Where(x => x.Name.Equals(filter.RequestFilter.Name));
-        }
+            entry.SlidingExpiration = TimeSpan.FromMinutes(2);
+            var companyId = GetLoggedCompanyId();
 
-        if (!filter.RequestFilter.Surname.IsNullOrEmpty())
-        {
-            query = query.Where(x => x.Surname.Equals(filter.RequestFilter.Surname));
 
-        }
+            var employeeRepo = _service.Where(x => !x.IsDeleted);
+            var companyRepo = _companyService.Where(x => !x.IsDeleted);
+            var departmenRepo = _depService.Where(x => !x.IsDeleted);
+            var roleRepo = _roleService.Where(x => !x.IsDeleted);
+            var empRolRepo = _empRoleRelation.Where(x => !x.IsDeleted);
 
-        if (!filter.RequestFilter.Mail.IsNullOrEmpty())
-        {
-            query = query.Where(x => x.Mail.Equals(filter.RequestFilter.Mail));
+            var query = from department in departmenRepo.Where(x=>x.RestoCompanyId==companyId)
+                join employee in employeeRepo on department.Id equals employee.DepartmentId into departmentLeft 
+                from employee in departmentLeft.DefaultIfEmpty()
+                select new EmployeeListDTO()
+                {
+                    Id = employee.Id,
+                    Name = employee.Name,
+                    Surname = employee.Surname,
+                    ShiftStart = employee.ShiftStart,
+                    ShiftEnd = employee.ShiftEnd,
+                    SalaryType = employee.SalaryType,
+                    Salary = employee.Salary,
+                    DeviceId = employee.DeviceId,
+                    DepartmentId = employee.DepartmentId,
+                    Address = employee.Address,
+                    Phone = employee.Phone,
+                    Mail = employee.Mail,
+                    RoleList =  ( from empRolRel in empRolRepo.Where(x=>x.EmployeeId==employee.Id)
+                        join role in roleRepo on empRolRel.RoleId equals role.Id into roleLeft
+                        from role in roleLeft.DefaultIfEmpty()
+                    select new RoleList()
+                    {
+                        RoleName = role.Name.IsNullOrEmpty() ? " ":  role.Name ,
+                    }).ToList()
+                };
 
-        }
 
-        if (!filter.RequestFilter.Phone.IsNullOrEmpty())
-        {
-            query = query.Where(x => x.Phone.Equals(filter.RequestFilter.Phone));
+            if (!(filter.RequestFilter.Name.IsNullOrEmpty()))
+            {
+                query = query.Where(x => x.Name.Equals(filter.RequestFilter.Name));
+            }
 
-        }
+            if (!filter.RequestFilter.Surname.IsNullOrEmpty())
+            {
+                query = query.Where(x => x.Surname.Equals(filter.RequestFilter.Surname));
+            }
 
-        if (filter.RequestFilter.Salary.HasValue)
-        {
-            query = query.Where(x => x.Salary==filter.RequestFilter.Salary);
+            if (!filter.RequestFilter.Mail.IsNullOrEmpty())
+            {
+                query = query.Where(x => x.Mail.Equals(filter.RequestFilter.Mail));
+            }
 
-        }
+            if (!filter.RequestFilter.Phone.IsNullOrEmpty())
+            {
+                query = query.Where(x => x.Phone.Equals(filter.RequestFilter.Phone));
+            }
 
-        if (filter.RequestFilter.SalaryType.HasValue)
-        {
-            query = query.Where(x => x.SalaryType==filter.RequestFilter.SalaryType);
+            if (filter.RequestFilter.Salary.HasValue)
+            {
+                query = query.Where(x => x.Salary == filter.RequestFilter.Salary);
+            }
 
-        }
+            if (filter.RequestFilter.SalaryType.HasValue)
+            {
+                query = query.Where(x => x.SalaryType == filter.RequestFilter.SalaryType);
+            }
 
-        if (filter.RequestFilter.DeviceId.HasValue)
-        {
-            query = query.Where(x => x.DeviceId==filter.RequestFilter.DeviceId);
+            if (filter.RequestFilter.DeviceId.HasValue)
+            {
+                query = query.Where(x => x.DeviceId == filter.RequestFilter.DeviceId);
+            }
 
-        }
+            if (!ObjectExtensions.IsNull(filter.RequestFilter.ShiftStart))
+            {
+                query = query.Where(x =>
+                    x.ShiftStart > filter.RequestFilter.ShiftStart.StartDate &&
+                    x.ShiftStart < filter.RequestFilter.ShiftStart.EndDate);
+            }
 
-        if (filter.RequestFilter.ShiftStart.StartDate.HasValue)
-        {
-             query = query.Where(x => x.ShiftStart>filter.RequestFilter.ShiftStart.StartDate&&x.ShiftStart<filter.RequestFilter.ShiftStart.EndDate);
+            if (!ObjectExtensions.IsNull(filter.RequestFilter.ShiftEnd))
+            {
+                query = query.Where(x =>
+                    x.ShiftEnd > filter.RequestFilter.ShiftStart.StartDate &&
+                    x.ShiftEnd < filter.RequestFilter.ShiftStart.EndDate);
+            }
 
-        }
+            query = query.Skip(filter.PaginationFilter.Skip).Take(filter.PaginationFilter.Take);
 
-        if (filter.RequestFilter.ShiftEnd.StartDate.HasValue)
-        {
-            query = query.Where(x => x.ShiftEnd>filter.RequestFilter.ShiftStart.StartDate&&x.ShiftEnd<filter.RequestFilter.ShiftStart.EndDate);
-
-        }
-        query = query.Skip(filter.PaginationFilter.Skip).Take(filter.PaginationFilter.Take);
-
-        BaseListDTO<EmployeeListDTO, EmployeeFilterRepresent> baseList = new BaseListDTO<EmployeeListDTO, EmployeeFilterRepresent>();
-        EmployeeFilterRepresent emp = new EmployeeFilterRepresent();
-        baseList.Filter = emp;
-        baseList.List = _mapper.Map<ICollection<EmployeeListDTO>>(await query.ToListAsync());
-        return new SuccessDataResult<BaseListDTO<EmployeeListDTO,EmployeeFilterRepresent>>(baseList);
+            BaseListDTO<EmployeeListDTO, EmployeeFilterRepresent> baseList =
+                new BaseListDTO<EmployeeListDTO, EmployeeFilterRepresent>();
+            EmployeeFilterRepresent emp = new EmployeeFilterRepresent();
+            baseList.Filter = emp;
+            baseList.List = _mapper.Map<ICollection<EmployeeListDTO>>(await query.ToListAsync());
+            return new SuccessDataResult<BaseListDTO<EmployeeListDTO, EmployeeFilterRepresent>>(baseList);
+        });
+        return resource;
     }
 
     public async Task<IDataResults<AuthenticatedUserResponseDto>> Login(LoginDto loginDto)
@@ -206,6 +249,17 @@ public class EmployeeService : IEmployeeService
         return null;
     }
 
+    public long? GetLoggedCompanyId()
+    {
+        var userRoleString = _loggedUser.FindFirstValue("companyId");
+        if (long.TryParse(userRoleString, out var userId))
+        {
+            return userId;
+        }
+
+        return null;
+    }
+
     public async Task<IDataResults<AuthenticatedUserResponseDto>> PasswordChoose(PasowordConfirmDTO passwordConfirmDto)
     {
         var id = GetLoggedUserId();
@@ -239,11 +293,6 @@ public class EmployeeService : IEmployeeService
             await _service.GetByIdAsync((x => x.Mail.ToLower() == mail && !x.IsDeleted)); //get by mail eklenecek
 
 
-        if (employee != null)
-        {
-            valResult.Errors.Add("", Messages.User_Email_Exists);
-            return new ErrorDataResults<AuthenticatedUserResponseDto>(HttpStatusCode.BadRequest, valResult.Errors);
-        }
 
         var randomGenerator = new Random();
         var rndNum = randomGenerator.Next(10000000, 99999999);
@@ -289,7 +338,7 @@ public class EmployeeService : IEmployeeService
                 EmployeeId = employee.Id
             };
 
-            await _roleService.AddAsync(employeeRoleRelation);
+            await _empRoleRelation.AddAsync(employeeRoleRelation);
         }
 
 

@@ -26,7 +26,7 @@ public class CompanyService : IRestoCompanyService<CompanyAddDTO,CompanyListDTO>
 
     public CompanyService(IRefreshTokenService refreshTokenService, IService<Employee> employeeService,
         IService<Department> departmentService, IJwtTokenService<BaseRegisterDTO> tokenService,
-        IHttpContextAccessor httpContextAccessor, IService<RestoCompany> companyService,
+        IHttpContextAccessor httpContextAccessor, IService<RestoCompany> companyService,IMenuAndCategoryService menuService,
         IMapper mapper)
     {
         _mapper = mapper;
@@ -36,6 +36,7 @@ public class CompanyService : IRestoCompanyService<CompanyAddDTO,CompanyListDTO>
         _loggedUser = httpContextAccessor.HttpContext?.User;
         _refreshTokenService = refreshTokenService;
         _tokenService = tokenService;
+        _menuService = menuService;
     }
 
     public async Task<IDataResults<CompanyAddDTO>> Create(CompanyAddDTO model)
