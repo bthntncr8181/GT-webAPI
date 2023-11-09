@@ -81,10 +81,10 @@ public class AdditionAndOrderService : IAdditionAndOrderService
         }
     }
 
-    public async void SendOrderNotification(string title, string body, string token, int orderId)
+    public  void SendOrderNotification(string title, string body, string token, long orderId)
     {
-        var orderProcessList = await _orderProcessService.Where(x => x.OrderId == orderId)
-            .OrderByDescending(x => x.ChangeDate).ToListAsync();
+        var orderProcessList =  _orderProcessService.Where(x => x.OrderId == orderId)
+            .OrderByDescending(x => x.ChangeDate).ToList();
 
         if (orderProcessList[0].FinishedOrderStatus != OrderStatus.DELİVERED ||
             orderProcessList[0].FinishedOrderStatus != OrderStatus.CANCELED)
@@ -111,7 +111,7 @@ public class AdditionAndOrderService : IAdditionAndOrderService
     {
         var extra = await _extraMenuService.Where(x => x.Id == model.ExtraMenuItemId).FirstOrDefaultAsync();
         var employee = await _employeeService.Where(x => x.Id == model.EmployeeId).FirstOrDefaultAsync();
-        if (model.Id != 0)
+        if (model.Id == 0)
         {
             var response = _mapper.Map<Order>(model);
             var addedOrder = await _orderService.AddAsync(response);
@@ -129,8 +129,8 @@ public class AdditionAndOrderService : IAdditionAndOrderService
             await _orderProcessService.AddAsync(orderProcess);
 
 
-            _backgroundJobClient.Schedule(() => SendiNotification("Teslimat Alarmı",
-                    "Yiyeceğin tahmini teslim süresine son 10 dakika", employee.ApiKey)
+            _backgroundJobClient.Schedule(() => SendOrderNotification("Teslimat Alarmı",
+                    "Yiyeceğin tahmini teslim süresine son 10 dakika", employee.ApiKey,addedOrder.Id)
                 , TimeSpan.FromMinutes(extra.EstimatedTime - 10));
 
             return new SuccessResult();
@@ -139,10 +139,6 @@ public class AdditionAndOrderService : IAdditionAndOrderService
         {
             var response = _mapper.Map<Order>(model);
             await _orderService.UpdateAsync(response);
-            _backgroundJobClient.Schedule(() =>
-                    SendiNotification("Teslimat Alarmı", "Yiyeceğin tahmini teslim süresine son 10 dakika",
-                        employee.ApiKey)
-                , TimeSpan.FromMinutes(extra.EstimatedTime - 10));
             return new SuccessResult();
         }
     }
