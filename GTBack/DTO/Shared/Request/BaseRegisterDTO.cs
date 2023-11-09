@@ -6,6 +6,7 @@ namespace GTBack.Core.DTO;
 public class BaseRegisterDTO
 {
     public string Name { get; set; }
+    public string UserName { get; set; }
     public long Id { get; set; }
     public string Surname { get; set; }
     public string Address { get; set; }

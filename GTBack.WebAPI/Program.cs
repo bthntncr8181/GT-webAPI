@@ -16,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using GTBack.Core.DTO;
 using GTBack.Core.DTO.Restourant.Request;
 using GTBack.Core.DTO.Restourant.Response;
@@ -24,6 +26,8 @@ using GTBack.Service.Mapping.Resourant;
 using GTBack.Service.Services.RestourantServices;
 using GTBack.Service.Services.SharedServices;
 using GTBack.WebAPI;
+using Hangfire;
+using HangfireBasicAuthenticationFilter;
 using Microsoft.Data.SqlClient;
 using IClientService = Google.Apis.Services.IClientService;
 
@@ -68,6 +72,21 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+SqlConnectionStringBuilder mySql = new SqlConnectionStringBuilder();
+mySql.DataSource = "database-2.cfcokfalhlyk.eu-central-1.rds.amazonaws.com"; 
+mySql.UserID = "admin";            
+mySql.Password = "Bthntncr81.";     
+mySql.InitialCatalog = "database-2";
+
+builder.Services.AddHangfire((sp, config) =>
+{
+    config.UseSqlServerStorage(mySql.ConnectionString).SetDataCompatibilityLevel(CompatibilityLevel.Version_180).UseSimpleAssemblyNameTypeSerializer().UseRecommendedSerializerSettings();
+});
+FirebaseApp.Create(new AppOptions()
+{
+    Credential = GoogleCredential.FromFile("/Users/omerbatuhantuncer/Documents/GitHub/GT-webAPI/GTBack.WebAPI/private_key.json")
+});
+builder.Services.AddHangfireServer();
 builder.Services.Configure<MailSetting>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
@@ -100,11 +119,7 @@ builder.Services.AddMemoryCache();
 var appConfig = builder.Configuration.Get<GoThereAppConfig>();
 
 
-SqlConnectionStringBuilder mySql = new SqlConnectionStringBuilder();
-mySql.DataSource = "database-2.cfcokfalhlyk.eu-central-1.rds.amazonaws.com"; 
-mySql.UserID = "admin";            
-mySql.Password = "Bthntncr81.";     
-mySql.InitialCatalog = "database-2";
+
 
 
 builder.Services.AddDbContext<AppDbContext>(x =>
@@ -116,6 +131,8 @@ builder.Services.AddDbContext<AppDbContext>(x =>
 
 
 });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -123,10 +140,22 @@ var app = builder.Build();
 
 
 app.UseSwagger();
+
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoThere API v1");
     c.ConfigObject.AdditionalItems.Add("persistAuthorization", "true");
+});
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[]
+    {
+        new HangfireCustomBasicAuthenticationFilter
+        {
+            User = app.Configuration.GetSection("HangfireOptions:User").Value,
+            Pass = app.Configuration.GetSection("HangfireOptions:Pass").Value
+        }
+    }
 });
 app.UseAuthentication();
 

@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AutoMapper;
+using FirebaseAdmin.Messaging;
 using GTBack.Core.DTO;
 using GTBack.Core.DTO.Restourant.Request;
 using GTBack.Core.DTO.Restourant.Response;
@@ -12,6 +13,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using XAct;
+using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
+using Google.Apis.Auth.OAuth2;
+using Hangfire;
 
 namespace GTBack.Service.Services.RestourantServices;
 
@@ -21,21 +26,37 @@ public class AdditionAndOrderService : IAdditionAndOrderService
     private readonly IService<Order> _orderService;
     private readonly IService<Table> _tableService;
     private readonly IService<OrderProcess> _orderProcessService;
+    private readonly IService<ExtraMenuItem> _extraMenuService;
+    private readonly IService<Employee> _employeeService;
+    private readonly IService<MenuItem> _menuItemService;
     private readonly IService<TableArea> _tableAreaService;
     private readonly ITableAndAreaService _tableAndAreaService;
+    public readonly IBackgroundJobClient _backgroundJobClient;
     private readonly IMapper _mapper;
     private readonly ClaimsPrincipal? _loggedUser;
 
 
     public AdditionAndOrderService(
-        IHttpContextAccessor httpContextAccessor, IService<OrderProcess> orderProcessService,
-        IService<Table> tableService, IService<TableArea> tableAreaService,
-        ITableAndAreaService tableAndAreaService, IService<Addition> additionService, IService<Order> orderService,
-        IMapper mapper)
+        IHttpContextAccessor httpContextAccessor,
+        IService<OrderProcess> orderProcessService,
+        IService<Table> tableService,
+        IService<TableArea> tableAreaService,
+        ITableAndAreaService tableAndAreaService,
+        IService<Addition> additionService,
+        IService<Order> orderService,
+        IMapper mapper,
+        IService<MenuItem> menuItemService,
+        IService<ExtraMenuItem> extraMenuService,
+        IService<Employee> employeeService,
+        IBackgroundJobClient backgroundJobClient)
     {
         _mapper = mapper;
         _orderService = orderService;
+        _employeeService = employeeService;
+        _backgroundJobClient = backgroundJobClient;
         _tableAndAreaService = tableAndAreaService;
+        _menuItemService = menuItemService;
+        _extraMenuService = extraMenuService;
         _additionService = additionService;
         _orderProcessService = orderProcessService;
         _tableService = tableService;
@@ -60,8 +81,36 @@ public class AdditionAndOrderService : IAdditionAndOrderService
         }
     }
 
+    public async void SendOrderNotification(string title, string body, string token, int orderId)
+    {
+        var orderProcessList = await _orderProcessService.Where(x => x.OrderId == orderId)
+            .OrderByDescending(x => x.ChangeDate).ToListAsync();
+
+        if (orderProcessList[0].FinishedOrderStatus != OrderStatus.DELİVERED ||
+            orderProcessList[0].FinishedOrderStatus != OrderStatus.CANCELED)
+        {
+            var message = new Message()
+            {
+                Data = new Dictionary<string, string>()
+                {
+                    { "myData", "1337" },
+                },
+                Token = token,
+                Notification = new Notification()
+                {
+                    Title = title,
+                    Body = body
+                }
+            };
+            string response = FirebaseMessaging.DefaultInstance.SendAsync(message).Result;
+            Console.WriteLine("Successfully sent message: " + response);
+        }
+    }
+
     public async Task<IResults> OrderAddOrUpdate(OrderAddOrUpdateDTO model)
     {
+        var extra = await _extraMenuService.Where(x => x.Id == model.ExtraMenuItemId).FirstOrDefaultAsync();
+        var employee = await _employeeService.Where(x => x.Id == model.EmployeeId).FirstOrDefaultAsync();
         if (model.Id != 0)
         {
             var response = _mapper.Map<Order>(model);
@@ -79,12 +128,21 @@ public class AdditionAndOrderService : IAdditionAndOrderService
 
             await _orderProcessService.AddAsync(orderProcess);
 
+
+            _backgroundJobClient.Schedule(() => SendiNotification("Teslimat Alarmı",
+                    "Yiyeceğin tahmini teslim süresine son 10 dakika", employee.ApiKey)
+                , TimeSpan.FromMinutes(extra.EstimatedTime - 10));
+
             return new SuccessResult();
         }
         else
         {
             var response = _mapper.Map<Order>(model);
             await _orderService.UpdateAsync(response);
+            _backgroundJobClient.Schedule(() =>
+                    SendiNotification("Teslimat Alarmı", "Yiyeceğin tahmini teslim süresine son 10 dakika",
+                        employee.ApiKey)
+                , TimeSpan.FromMinutes(extra.EstimatedTime - 10));
             return new SuccessResult();
         }
     }
@@ -124,7 +182,7 @@ public class AdditionAndOrderService : IAdditionAndOrderService
     {
         var companyId = GetLoggedCompanyId();
         var tableRepo = _tableService.Where(x => !x.IsDeleted);
-        var tableAreaRepo = _tableAreaService.Where(x => !x.IsDeleted&&x.RestoCompanyId==companyId);
+        var tableAreaRepo = _tableAreaService.Where(x => !x.IsDeleted && x.RestoCompanyId == companyId);
         var additionRepo = _additionService.Where(x => !x.IsDeleted);
 
 
@@ -169,7 +227,7 @@ public class AdditionAndOrderService : IAdditionAndOrderService
                 x.ClosedDate > filter.RequestFilter.ClosedDate.StartDate &&
                 x.ClosedDate < filter.RequestFilter.ClosedDate.EndDate);
         }
-        
+
         if (!ObjectExtensions.IsNull(filter.RequestFilter.CreatedDate))
         {
             query = query.Where(x =>
@@ -177,7 +235,6 @@ public class AdditionAndOrderService : IAdditionAndOrderService
                 x.CreatedDate < filter.RequestFilter.CreatedDate.EndDate);
         }
 
-   
 
         if (filter.RequestFilter.TableNumber.HasValue)
         {
@@ -188,6 +245,7 @@ public class AdditionAndOrderService : IAdditionAndOrderService
         {
             query = query.Where(x => x.TableAreaName.Contains(filter.RequestFilter.TableAreaName));
         }
+
         query = query.Skip(filter.PaginationFilter.Skip).Take(filter.PaginationFilter.Take);
 
         BaseListDTO<AdditionListDTO, AdditionFilterRepresent> additionList =
@@ -198,13 +256,13 @@ public class AdditionAndOrderService : IAdditionAndOrderService
         return new SuccessDataResult<BaseListDTO<AdditionListDTO, AdditionFilterRepresent>>(additionList);
     }
 
-    public async Task<IDataResults<BaseListDTO<OrderListDTO, OrderFilterRepresent>>> OrderListByAdditionId(BaseListFilterDTO<OrderFilterDTO> filter, long additionId)
+    public async Task<IDataResults<BaseListDTO<OrderListDTO, OrderFilterRepresent>>> OrderListByAdditionId(
+        BaseListFilterDTO<OrderFilterDTO> filter, long additionId)
     {
-        var query =  _orderService.Where(x => x.AdditionId == additionId);
+        var query = _orderService.Where(x => x.AdditionId == additionId);
 
         var myObject = await query.ToListAsync();
 
-     
 
         if (!CollectionUtilities.IsNullOrEmpty(filter.RequestFilter.Name))
         {
@@ -216,32 +274,32 @@ public class AdditionAndOrderService : IAdditionAndOrderService
         {
             query = query.Where(x => x.Name.Contains(filter.RequestFilter.OrderNote));
         }
+
         if (filter.RequestFilter.OrderStatus.HasValue)
         {
             query = query.Where(x => x.OrderStatus == filter.RequestFilter.OrderStatus);
         }
+
         if (filter.RequestFilter.AdditionId.HasValue)
         {
             query = query.Where(x => x.AdditionId == filter.RequestFilter.AdditionId);
         }
 
-    
+
         if (!ObjectExtensions.IsNull(filter.RequestFilter.OrderDeliveredDate))
         {
             query = query.Where(x =>
                 x.OrderDeliveredDate > filter.RequestFilter.OrderDeliveredDate.StartDate &&
                 x.OrderDeliveredDate < filter.RequestFilter.OrderDeliveredDate.EndDate);
         }
-        
+
         if (!ObjectExtensions.IsNull(filter.RequestFilter.OrderStartDate))
         {
             query = query.Where(x =>
                 x.OrderStartDate > filter.RequestFilter.OrderStartDate.StartDate &&
                 x.OrderStartDate < filter.RequestFilter.OrderStartDate.EndDate);
-            
         }
-        
-        
+
 
         if (filter.RequestFilter.EmployeeId.HasValue)
         {

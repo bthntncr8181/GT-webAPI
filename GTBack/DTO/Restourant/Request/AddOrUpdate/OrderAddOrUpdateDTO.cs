@@ -8,6 +8,7 @@ public class OrderAddOrUpdateDTO
     public String Name { get; set; }
     public String? OrderNote { get; set; }
     public long EmployeeId { get; set; }
+    public int EstimtedTime { get; set; }
     public long? ExtraMenuItemId { get; set; }
     public long AdditionId { get; set; }
     public OrderStatus OrderStatus { get; set; }

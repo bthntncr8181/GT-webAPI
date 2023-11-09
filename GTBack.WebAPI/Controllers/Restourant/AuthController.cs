@@ -61,7 +61,7 @@ namespace GTBack.WebAPI.Controllers.Restourant
         }
         
         [HttpPost("EmployeeLogin")]
-        public async Task<IActionResult> EmployeeLogin(LoginDto log)
+        public async Task<IActionResult> EmployeeLogin(LoginRestourantDTO log)
         {
             return ApiResult(await _employeeService.Login(log));
         }

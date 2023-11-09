@@ -5,6 +5,7 @@ namespace GTBack.Core.Entities.Restourant;
 public class Employee : BaseEntity
 {
     public String Name { get; set; }
+    public String UserName { get; set; }
     public String Surname { get; set; }
     public String Address { get; set; }
     public String Mail { get; set; }
@@ -12,6 +13,7 @@ public class Employee : BaseEntity
     public string PasswordHash { get; set; }
     
     public string? TempPasswordHash { get; set; }
+    public string? ApiKey { get; set; }
     public SalaryType? SalaryType { get; set; }
 
     public DateTime ShiftStart { get; set; }

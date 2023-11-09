@@ -1,16 +1,16 @@
 using FluentValidation;
 using GTBack.Core.DTO;
+using GTBack.Core.DTO.Restourant.Request;
 using GTBack.Service.Utilities.Consts;
 
 namespace GTBack.Service.Validation.Restourant;
 
-public class EmployeeLoginValidator: AbstractValidator<LoginDto>
+public class EmployeeLoginValidator: AbstractValidator<LoginRestourantDTO>
 {
     public EmployeeLoginValidator()
     {
-        RuleFor(x => x.Mail)
+        RuleFor(x => x.UserName)
             .NotEmpty().WithMessage(ValidationMessages.Email_Not_Empty)
-            .EmailAddress().WithMessage(ValidationMessages.Email_Invalid)
             .MaximumLength(128).WithMessage(ValidationMessages.Max_Length);
         // RuleFor(x => x.Password)
         //     .NotEmpty().WithMessage(ValidationMessages.Password_Not_Empty)

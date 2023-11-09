@@ -193,7 +193,7 @@ public class EmployeeService : IEmployeeService
         return resource;
     }
 
-    public async Task<IDataResults<AuthenticatedUserResponseDto>> Login(LoginDto loginDto)
+    public async Task<IDataResults<AuthenticatedUserResponseDto>> Login(LoginRestourantDTO loginDto)
     {
         var valResult =
             FluentValidationTool.ValidateModelWithKeyResult(new EmployeeLoginValidator(), loginDto);
@@ -202,10 +202,11 @@ public class EmployeeService : IEmployeeService
             return new ErrorDataResults<AuthenticatedUserResponseDto>(HttpStatusCode.BadRequest, valResult.Errors);
         }
 
-        var mail = loginDto.Mail.ToLower().Trim();
+        var userName = loginDto.UserName.ToLower().Trim();
         var parent =
-            await _service.GetByIdAsync((x => x.Mail.ToLower() == mail && !x.IsDeleted)); //get by mail eklenecek
+            await _service.GetByIdAsync((x => x.UserName.ToLower() == userName && !x.IsDeleted)); //get by mail eklenecek
 
+     
 
         if (parent?.PasswordHash == null)
         {
@@ -293,7 +294,12 @@ public class EmployeeService : IEmployeeService
             await _service.GetByIdAsync((x => x.Mail.ToLower() == mail && !x.IsDeleted)); //get by mail eklenecek
 
 
-
+        if (!employee.IsNull())
+        {
+            return new ErrorDataResults<AuthenticatedUserResponseDto>(Messages.User_Username_Exist,
+                HttpStatusCode.BadRequest);
+        }
+        
         var randomGenerator = new Random();
         var rndNum = randomGenerator.Next(10000000, 99999999);
         employee = new Employee()
